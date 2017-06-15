@@ -3,6 +3,7 @@ import 'whatwg-fetch'
 import React, { Component } from 'react';
 import EdiTable from './EdiTable'
 const tableStyleList = "table table-bordered table-hover"
+
 class FetchData extends Component {
     constructor(props) {
         super(props)
@@ -11,9 +12,11 @@ class FetchData extends Component {
             thead: {}
         }
     }
-
-    getData(e, target,url) {
-        fetch(url, {
+    FetchData() {
+        return this.getData(this, "result", this.props.url)
+    }
+    getData(e, target, url) {
+        return fetch(url, {
             mode: 'cors',
             headers: {
                 'Accept': 'application/json',
@@ -25,6 +28,10 @@ class FetchData extends Component {
             console.log(error.message)
         }).then(function (json) {
             e.setDataHelper(json, target);
+            e.props = {
+                result: json
+            }
+            return json
         })
     }
     setDataHelper(arr, target) {
@@ -39,8 +46,11 @@ class FetchData extends Component {
         }
     }
     componentDidMount() {
-        this.getData(this, "tbody",this.props.bUrl)
-        this.getData(this, "thead",this.props.hUrl)
+        // this.getData(this, "tbody", this.props.bUrl)
+        // this.getData(this, "thead", this.props.hUrl)
+
+        this.getData(this, "result", this.props.url)
+
     }
 
     render() {
@@ -52,4 +62,4 @@ class FetchData extends Component {
     }
 }
 
-export default FetchData
+export default FetchData 

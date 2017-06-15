@@ -10,12 +10,28 @@ class EdiTable extends Component {
 
     constructor(props) {
         super(props)
+        this.state = {
+            thead: [],
+            tbody: []
+        }
+    }
+    componentDidMount() {
+        this.props.pBody.then(json => {
+            this.setState({
+                tbody: json
+            })
+        })
+        this.props.pHead.then(json => {
+            this.setState({
+                thead: json
+            })
+        })
     }
     render() {
         return (
             <table className="item table-bordered table-hover">
-                    <Thead content={this.props.thead}/>
-                    <Tbody content={this.props.tbody}/>
+                <Thead content={this.state.thead} />
+                <Tbody content={this.state.tbody} />
             </table>
         )
     }
