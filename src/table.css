@@ -1,0 +1,10 @@
+.box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+th,td{
+    vertical-align: middle;
+    text-align: center;
+}
