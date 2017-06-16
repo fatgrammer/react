@@ -31,7 +31,7 @@ class EdiTable extends Component {
         return (
             <table className="item table-bordered table-hover">
                 <Thead content={this.state.thead} />
-                <Tbody content={this.state.tbody} />
+                {/*<Tbody content={this.state.tbody} />*/}
             </table>
         )
     }

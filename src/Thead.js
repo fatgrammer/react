@@ -32,6 +32,22 @@ class Thead extends Component {
         return [first, second];
     }
 
+    renderFloatingThead(headsList) {
+        return Object.values(headsList).map(heads => {
+            // console.log(heads)
+            return <tr>{Object.values(heads).map(head => {
+               return  <th colSpan={head.colSpan} rowSpan={head.rowSpan}>{head.headField}</th>
+            })}</tr>
+        })
+
+    }
+    renderFixedHead(headList){
+        return Object.values(headList).map(heads=>{
+            return Object.values(heads).map(head=>{
+                return <tr><th>{head.headField}</th></tr>
+            })
+        })
+    }
     trize(obj) {
         let depth = obj["depth"]
         let trs = this.thize(obj, depth)
@@ -39,8 +55,10 @@ class Thead extends Component {
         return trs.map((tr, index) => <tr key={index}>{tr}</tr>)
     }
     render() {
+        console.log("thead is ",this.renderFloatingThead(this.props.content))
         return (
-            <thead>{this.trize(this.props.content)}</thead>
+            <thead>{this.renderFloatingThead(this.props.content)}</thead>
+        
         )
     }
 }
@@ -49,7 +67,7 @@ class Th extends Component {
         super(props)
     }
     render() {
-        return <th  rowSpan={this.props.RowSpan} colSpan={this.props.ColSpan}>{this.props.content}</th>
+        return <th rowSpan={this.props.RowSpan} colSpan={this.props.ColSpan}>{this.props.content}</th>
     }
 }
 
