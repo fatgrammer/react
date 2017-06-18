@@ -1,36 +1,30 @@
 import React, { Component } from 'react';
 // let Thead = require("./Thead.js")
-import Thead from './Thead'
+import {TheadRen} from './Thead'
 import Tbody from './Tbody'
 
 
-const tableStyleList = "table table-bordered table-hover table-condensed"
+// const tableStyleList = "table table-bordered table-hover table-condensed"
 
 class EdiTable extends Component {
-
-    constructor(props) {
+    constructor(props){
         super(props)
         this.state = {
-            thead: [],
-            tbody: []
+            thead:[]
         }
     }
-    componentDidMount() {
-        this.props.pBody.then(json => {
-            this.setState({
-                tbody: json
-            })
-        })
-        this.props.pHead.then(json => {
+    componentWillMount() {
+        this.props.thead.then(json => {
             this.setState({
                 thead: json
             })
         })
     }
+
     render() {
         return (
             <table className="item table-bordered table-hover">
-                <Thead content={this.state.thead} />
+                <TheadRen content={this.state.thead} />
                 {/*<Tbody content={this.state.tbody} />*/}
             </table>
         )
