@@ -1,38 +1,18 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-import App from './App';
-// import Category from './Category'
-
-// import actionCreator from './Act'
-// import registerServiceWorker from './registerServiceWorker';
-// import './index.css';
-
-// import { createStore } from 'redux'
-// import todoApp from './reducers'
-
-// let store = createStore(todoApp)
-
-
-
-
+import ReactDOM from 'react-dom';
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import { createStore } from 'redux'
-import todoApp from './reducers'
-import TodoApp from './components/TodoApp'
-// import './exp/Ex.js'
-// let store = createStore(todoApp)
-
-// const ren = ()=>{
-//   ReactDOM.render(
-
-//     <Provider store={store}>
-//       <TodoApp />
-//     </Provider>,
-//     document.getElementById('root')
-//   )
+// import { Provider } from 'react-redux'
+import { createStore, combineReducers } from 'redux'
+import $ from 'jquery'
+import EdiTable from './EdiTable'
+import { cellPairApp } from './reducer/reducers'
+import TableApp from './custom_table/TableApp'
+import { CellPairs } from './reducer/reducers'
+import {store} from './custom_table/TableApp'
+ReactDOM.render(<EdiTable thead={$.getJSON("http://localhost:20080/floatingHead/3-9")} />, document.getElementById('root'));
+// ReactDOM.render(<TableApp store={store} />, document.getElementById("root"))
+// const ren = () => {
+//     ReactDOM.render(<TableApp cells = {store.getState().cellPairs}/>, document.getElementById("root"))
 // }
-// store.subscribe(ren)
+// store.subscribe(ren);
 // ren();
-ReactDOM.render(<App />, document.getElementById('root'));
+

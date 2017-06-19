@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './table.css';
 class Tbody extends Component {
     constructor(props) {
         super(props);
@@ -18,20 +17,6 @@ class Tbody extends Component {
         return (
             <tbody suppressContentEditableWarning={true} contentEditable>{this.jToTrA(this.props.content)}</tbody>
         )
-    }
-}
-
-
-class TrTd extends Component {
-    renderData() {
-        return (
-            <tr>
-                {this.props.content.map((data, index) => <td key={index}>{data}</td>)}
-            </tr>)
-    }
-    render() {
-        return this.renderData()
-
     }
 }
 
