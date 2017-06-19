@@ -1,9 +1,15 @@
-
 import React from 'react'
-export default class CellPair extends React.Component {
+import {store} from './TableApp'
+export  class CellPair extends React.Component {
+    componentDidMount(){
+        console.log("key is", this.props.id)
+    }
     render() {
         return (
-            <tr><th>asd</th><td>asd</td></tr>
+            <tr ><th onClick={()=>store.dispatch({
+                    type:'POP_STRUCTURE',
+                    id: this.props.id
+                })}>head</th><td>body</td></tr>
         )
     }
 }

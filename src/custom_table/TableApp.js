@@ -1,10 +1,9 @@
-
 import React from 'react'
 import TablePanel from './TablePanel'
 import { cellPairs, cellPairApp } from '../reducer/reducers'
 import { createStore, combineReducers } from 'redux'
 import { addCellPair } from '../action/actions'
-let CellId = 0;
+export let CellId = 0;
 export let store = createStore(cellPairApp)
 export default class TableApp extends React.Component {
     render() {
@@ -18,14 +17,23 @@ export default class TableApp extends React.Component {
                 }}>
                     add
                 </button>
-                {console.log("cell is ", this.props.cells)}
                 <table className="table table-bordered">
                     <thead>
                         {this.props.cells.map(cell => {
                             return cell.cellPair
+                            {/*return cell.headProps*/ }
                         })}
+
                     </thead>
                 </table>
+                {
+                    this.props.cells.filter(cell => {
+                        return cell.showProps
+                    }).map(cell => {
+                        return cell.headProps
+                    })
+                }
+                <button>save</button>
             </div>
         )
     }

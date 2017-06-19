@@ -1,6 +1,7 @@
 
 import React from 'react'
-import CellPair from './CellPair'
+import {CellPair} from './CellPair'
+
 import { addCellPair } from '../action/actions'
 import {cellPairs} from '../reducer/reducers'
 import { connect } from 'react-redux'
