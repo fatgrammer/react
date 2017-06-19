@@ -17,7 +17,7 @@ class UL extends Component {
     render() {
         return (
             <ul>
-                <li> <Button value={this.state.result}/></li>
+                {this.state.result.map(e=><li> <Button value={e}/></li>)}
             </ul>
         )
     }
