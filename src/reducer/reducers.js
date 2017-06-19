@@ -1,7 +1,8 @@
 import React from 'react'
 import { CellPair } from '../custom_table/CellPair'
 import { combineReducers } from 'redux'
-import { HeadProps } from '../custom_table/HeadProps'
+import { HeadProps, PropBar } from '../custom_table/HeadProps'
+import { store, getDispatcher } from '../custom_table/TableApp'
 const cellPair = (state, action) => {
     switch (action.type) {
         case 'ADD_CELLPAIR':
@@ -10,7 +11,7 @@ const cellPair = (state, action) => {
             return {
                 id: action.id,
                 cellPair: <CellPair key={idx} id={idx} />,
-                headProps: <HeadProps level="1st:" key={idx} id={idx} />,
+                headProps: <HeadProps bars={[<PropBar dispatcher={getDispatcher('FIRST', idx)} id={idx} key={idx} />]} key={idx} id={idx} />,
                 showProps: false
             }
         case "TOGGLE_CELL":
@@ -20,6 +21,35 @@ const cellPair = (state, action) => {
             return {
                 ...state,
                 spark: !state.spark
+            }
+        case 'ADD_SECOND':
+            let idx_2 = ++action.id 
+            if (state.headProps.props.id !== action.id) {
+                return state;
+            }
+            console.log("t.head is ", state.headProps.props.bars.length)
+            Object.values(state.headProps).map(e => {
+                // console.log("hah ",e)
+            })
+            return {
+                ...state,
+                headProps: <HeadProps id={state.headProps.props.id} key={state.headProps.key}
+                    bars={
+                        [...state.headProps.props.bars,
+                        <PropBar level='_2nd'
+                            dispatcher={getDispatcher('SECOND', idx_2)}
+                            key={idx_2} />]
+                    } />
+
+            }
+        case 'ADD_THIRD':
+            alert()
+            if (state.headProps.porps.id !== action.id) {
+                return state;
+            }
+            return {
+
+
             }
     }
 }
@@ -33,7 +63,6 @@ export const cellPairs = (state = [], action) => {
 
         case 'TOGGLE_CELL':
             return state.map(t => cellPair(t, action))
-
         case 'POP_STRUCTURE':
             return state.map(t => {
                 if (t.headProps.props.id !== action.id) {
@@ -44,27 +73,23 @@ export const cellPairs = (state = [], action) => {
                 }
                 return {
                     ...t,
-                    // headProps: toggleVis(state.headProps)
                     showProps: true
                 }
             })
-        default:
-            return state;
-    }
-}
-const headProps = (state = [], action) => {
-    console.log(state)
-    switch (action.type) {
+
         case 'ADD_SECOND':
-            return [
-                ...state.slice(0, action.idx + 1),
-                <HeadProps level=' 2nd' />,
-                ...state.slice(action.idx + 1)
-            ]
+            return state.map(t => cellPair(t, action))
         default:
             return state;
     }
 }
+// const headProps = (state = [<PropBar level='1st' />], action) => {
+//     console.log("bar state ", state)
+//     switch (action.type) {
+//         default:
+//             return state;
+//     }
+// }
 
 export const validation = (state = [], action) => {
     return state;
@@ -81,7 +106,7 @@ export const visibilityFilter = (state = [], action) => {
 export const cellPairApp = combineReducers({
     cellPairs,
     visibilityFilter,
-    headProps
+    // headProps
 })
 
 const toggleCell = () => { }

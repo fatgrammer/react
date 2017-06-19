@@ -5,25 +5,41 @@ import { createStore, combineReducers } from 'redux'
 import { addCellPair } from '../action/actions'
 export let CellId = 0;
 export let store = createStore(cellPairApp)
+
+
+export const getDispatcher = (level, id) => {
+    switch (level) {
+        case 'PAIR':
+            return ()=>store.dispatch({
+                type: 'ADD_CELLPAIR',
+                id
+            })
+        case 'FIRST':
+            return ()=>store.dispatch({
+                type: 'ADD_SECOND',
+                id
+            })
+        case 'SECOND':
+            return ()=>store.dispatch({
+                type: 'ADD_THIRD',
+                id
+            })
+        default:
+            return {}
+    }
+}
 export default class TableApp extends React.Component {
     render() {
         return (
             <div>
-                <button onClick={() => {
-                    store.dispatch({
-                        type: "ADD_CELLPAIR",
-                        id: CellId++
-                    })
-                }}>
+                <button onClick={getDispatcher('PAIR',CellId++)}>
                     add
                 </button>
                 <table className="table table-bordered">
                     <thead>
                         {this.props.cells.map(cell => {
                             return cell.cellPair
-                            {/*return cell.headProps*/ }
                         })}
-
                     </thead>
                 </table>
                 {
@@ -38,3 +54,4 @@ export default class TableApp extends React.Component {
         )
     }
 }
+
