@@ -1,16 +1,12 @@
 import React from 'react'
 import { store } from './TableApp'
+import {connect} from 'react-redux'
 export const CellPair = ({
-    onClick,
+    onHeadClick,
     id
 }) => {
     return (
-        <tr ><th onClick={
-            () => store.dispatch({
-                type: 'POP_STRUCTURE',
-                id: id
-            })
-        }>head</th><td>body</td></tr>
+        <tr ><th onClick= {onHeadClick}>head</th><td>body</td></tr>
     )
 }
 export const PairList = ({
@@ -40,3 +36,25 @@ export const ETableApp = () => (
             })}
     />
 )
+const mapStateToProps = (state) => {
+    return {
+        cellPairs: store.getState().cellPairs.map(e => {
+            return e.cellPair
+        })
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onHeadClick: (id) => {
+            dispatch({
+                type: 'POP_STRUCTURE',
+                id
+            })
+        }
+
+    }
+}
+const PopedBox = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(CellPair)

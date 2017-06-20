@@ -22,7 +22,6 @@ export class HeadProps extends React.Component {
             <div >
                 <h1>Head props</h1>
                 {this.props.bars}
-            
             </div>
         )
     }
