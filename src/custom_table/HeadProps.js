@@ -1,28 +1,31 @@
 import React from 'react'
 import { store } from './TableApp'
+import PropTypes from 'prop-types'
+
 export class PropBar extends React.Component {
-    // () => store.dispatch({
-    //                 type: 'ADD_SECOND',
-    //                 id: this.props.id 
-    //             })
-    render(){
+    render() {
+        let display = {}
+        if (this.props.level === '__3rd') {
+            display = {
+                display: 'none',
+            }
+        }
         return (
             <div>
                 {this.props.level}<input placeholder='Head Name' />
-                <button onClick={this.props.dispatcher} >Add</button>
-                <button>Del</button>
+                <button style={display} onClick={this.props.onBarClick} >Add</button>
+                <button onClick={this.props.deleteAction}>Del</button>
+                {this.props.foos}
             </div>
         )
     }
 }
-export class HeadProps extends React.Component {
+export const HeadProps = ({ bars }) => {
 
-    render() {
-        return (
-            <div >
-                <h1>Head props</h1>
-                {this.props.bars}
-            </div>
-        )
-    }
+    return (
+        <div >
+            <h1>Head props</h1>
+            {bars}
+        </div>
+    )
 }

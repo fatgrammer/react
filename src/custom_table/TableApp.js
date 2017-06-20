@@ -4,11 +4,13 @@ import { cellPairs, cellPairApp } from '../reducer/reducers'
 import { createStore, combineReducers } from 'redux'
 import { addCellPair } from '../action/actions'
 import { connect } from 'react-redux'
+import { HeadProps } from './HeadProps'
+import { PropTypes } from 'prop-types'
 export let CellId = 0;
 export let store = createStore(cellPairApp)
 
 
-export const getDispatcher = (level, id) => {
+export const getDispatcher = (level, id, barId) => {
     switch (level) {
         case 'PAIR':
             return () => store.dispatch({
@@ -18,17 +20,25 @@ export const getDispatcher = (level, id) => {
         case 'FIRST':
             return () => store.dispatch({
                 type: 'ADD_SECOND',
-                id
+                id,
+                barId
             })
         case 'SECOND':
             return () => store.dispatch({
                 type: 'ADD_THIRD',
-                id
+                id,
+                barId
             })
         case 'POP':
             return () => store.dispatch({
                 type: 'POP_STRUCTURE',
                 id
+            })
+        case 'DEL_BAR':
+            return () => store.dispatch({
+                type: 'DELETE_BAR',
+                id,
+                barId
             })
         default:
             return {}
@@ -44,6 +54,8 @@ class Button extends React.Component {
         )
     }
 }
+
+
 class TableScope extends React.Component {
     render() {
         return (
@@ -57,28 +69,17 @@ class TableScope extends React.Component {
         )
     }
 }
+
 const getRelPOP = (POPs) => {
+    console.log('prop  ', POPs)
     return POPs.filter(
         e => e.showProps
     ).map(e => e.headProps)
 }
 
-const mapStateToProps = state => {
-    return {
-        POPs: getRelPOP(state.cellPairs)
-    }
-}
-const mapDispatchToProps = dispatch => {
-    return {
-        onCellClick:(id)=>{
-            getDispatcher("PAIR",id)
-        }
-    }
-}
-const TempScope =   connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(HeadProps)
+
+
+
 class ConfigScope extends React.Component {
     render() {
         return (
@@ -89,22 +90,23 @@ class ConfigScope extends React.Component {
     }
 }
 
-const TableApp = ({ cells }, { store }, { state }) => {
+const TableApp = ({ cells }, { store }) => {
+    const state = store.getState()
     return (
         <div>
             <Button onClick={getDispatcher('PAIR', CellId++)} />
-            <TableScope cells={store.getState().cellPairs} />
-            <ConfigScope POPs={store.getState().cellPairs} />
-
+            <TableScope cells={state.cellPairs} />
+            <ConfigScope POPs={store.getState().headProps} />
             <button>save</button>
         </div>
     )
 }
 TableApp.contextTypes = {
-    store: React.PropTypes.object,
-    state: React.PropTypes.object,
-    cells: React.PropTypes.object
+    store: PropTypes.object,
+    state: PropTypes.object,
+    cells: PropTypes.object,
 }
+
 
 export default TableApp
 

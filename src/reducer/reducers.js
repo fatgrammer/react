@@ -3,7 +3,9 @@ import { CellPair } from '../custom_table/CellPair'
 import { combineReducers } from 'redux'
 import { HeadProps, PropBar } from '../custom_table/HeadProps'
 import { store, getDispatcher } from '../custom_table/TableApp'
+import PropTypes from 'prop-types'
 let barId = 0;
+let fooId = 0;
 const cellPair = (state, action) => {
     const idx = action.id
     switch (action.type) {
@@ -12,8 +14,6 @@ const cellPair = (state, action) => {
             return {
                 id: action.id,
                 cellPair: <CellPair onHeadClick={getDispatcher('POP', idx)} key={idx} id={idx} />,
-                headProps: <HeadProps bars={[<PropBar dispatcher={getDispatcher('FIRST', idx)} id={idx} key={++barId} />]} key={idx} id={idx} />,
-                showProps: false
             }
         case "TOGGLE_CELL":
             if (state.id !== action.id) {
@@ -24,26 +24,65 @@ const cellPair = (state, action) => {
                 spark: !state.spark
             }
         case 'ADD_SECOND':
-            if (state.headProps.props.id !== action.id) {
-                return state;
-            }
-            console.log("t.head is ", state.headProps.props.bars.length)
-            Object.values(state.headProps).map(e => {
-                // console.log("hah ",e)
-            })
-            return {
-                ...state,
-                headProps: <HeadProps id={state.headProps.props.id} key={state.headProps.key}
-                    bars={
-                        [...state.headProps.props.bars,
-                        <PropBar level='_2nd'
-                            dispatcher={getDispatcher('SECOND', idx)}
-                            id={idx} key={++barId} />]
-                    } />
-
-            }
-
+            return alterHeadProp(state, action,
+                [...state.headProps.props.bars,
+                <PropBar level='_2nd'
+                    onBarClick={getDispatcher('SECOND', idx, barId)}
+                    deleteAction={getDispatcher('DEL_BAR', idx, barId)}
+                    foos={[]}
+                    id={idx} key={barId++} />]
+            )
+        case 'ADD_THIRD':
+            const bars = state.headProps.props.bars
+            return alterHeadProp(state, action,
+                matchBar(bars, barId, idx)
+            )
+        case 'DELETE_BAR':
+            console.log("ss", ...action)
+            return alterHeadProp(state, action,
+                [...state.headProps.props.bars.slice(0, action.barId),
+                ...state.headProps.props.bars.slice(action.barId + 1)
+                ])
     }
+}
+const matchBar = (bars, barId, idx) => {
+    console.log(barId)
+    return bars.map(bar => {
+        if (bar.key === barId) {
+            return Object.assign({}, bar, {
+                foos: [...bar.props.foos,
+                <PropBar level='__3rd'
+                    id={idx} barId={barId} key={fooId++}
+                    deleteAction={getDispatcher('DEL_BAR', idx, barId)} />]
+            })
+        } else {
+            return bar;
+        }
+    })
+}
+const nextSec = (bars, id) => {
+    const idx = bars.find(
+        e => e.props.id === id)
+    if (idx === undefined || idx.props.level !== '2_nd') {
+        return bars[bars.length - 1].key + 1;
+    } else {
+        return idx.key;
+    }
+}
+const alterHeadProp = (state, action, decBar) => {
+    const stateId = state.headProps.props.id
+    if (stateId !== action.id) {
+        return state;
+    }
+    return {
+        ...state,
+        headProps: <HeadProps id={stateId} key={state.headProps.key}
+            bars={decBar}
+        />
+    }
+}
+alterHeadProp.PropType = {
+    state: PropTypes.object
 }
 
 export const cellPairs = (state = [], action) => {
@@ -56,6 +95,24 @@ export const cellPairs = (state = [], action) => {
 
         case 'TOGGLE_CELL':
             return state.map(t => cellPair(t, action))
+
+        default:
+            return state;
+    }
+}
+
+const headProps = (state = [], action) => {
+
+    let idx = action.id
+    switch (action.type) {
+        case 'ADD_CELLPAIR':
+            return [...state, {
+                id: action.id,
+                headProps: <HeadProps
+                    bars={[<PropBar onBarClick={getDispatcher('FIRST', idx)} id={idx} key={barId++} />]}
+                    key={idx} id={idx} />,
+                showProps: false
+            }]
         case 'POP_STRUCTURE':
             return state.map(t => {
                 if (t.headProps.props.id !== action.id) {
@@ -70,19 +127,11 @@ export const cellPairs = (state = [], action) => {
                 }
             })
         case 'ADD_SECOND':
-            console.log('triggers')
             return state.map(t => cellPair(t, action))
-        default:
-            return state;
-    }
-}
-
-const headProps = (state = [], action) => {
-
-    switch (action.type) {
         case 'ADD_THIRD':
-            console.log("bar state ", state)
-            return [...state, <PropBar level='__3rd' />]
+            return state.map(t => cellPair(t, action))
+        case 'DELETE_BAR':
+            return state.map(t => cellPair(t, action))
         default:
             return state;
     }
