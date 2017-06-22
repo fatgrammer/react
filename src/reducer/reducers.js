@@ -108,7 +108,7 @@ const headProps = (state = [], action) => {
         case 'ADD_CELLPAIR':
             return [...state, {
                 id: action.id,
-                headProps: <HeadProps
+                headProps: <HeadProps 
                     bars={[<PropBar onBarClick={getDispatcher('FIRST', idx)} id={idx} key={barId++} />]}
                     key={idx} id={idx} />,
                 showProps: false
