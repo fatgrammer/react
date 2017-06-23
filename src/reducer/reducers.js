@@ -1,7 +1,7 @@
 import React from 'react'
 import { CellPair } from '../custom_table/CellPair'
 import { combineReducers } from 'redux'
-import { HeadProps, PropBar } from '../custom_table/HeadProps'
+import { TableTrie, HeadProps, PropBar } from '../custom_table/HeadProps'
 import { store, getDispatcher } from '../custom_table/TableApp'
 import PropTypes from 'prop-types'
 let barId = 0;
@@ -108,7 +108,7 @@ const headProps = (state = [], action) => {
         case 'ADD_CELLPAIR':
             return [...state, {
                 id: action.id,
-                headProps: <HeadProps 
+                headProps: <HeadProps
                     bars={[<PropBar onBarClick={getDispatcher('FIRST', idx)} id={idx} key={barId++} />]}
                     key={idx} id={idx} />,
                 showProps: false
@@ -136,7 +136,26 @@ const headProps = (state = [], action) => {
             return state;
     }
 }
-
+const theadPak = (state = [], action) => {
+    switch (action.type) {
+        case 'ADD':
+            return [...state, {
+                id: action.id,
+                trie: new TableTrie(["placeHolder"], 0)
+            }];
+        case 'ADD_CHILD':
+            return state.map(ele => {
+                if (ele.id === action.id) {
+                    ele.trie.insert(action.curHeadPrefix, action.headName)
+                    return ele
+                } else {
+                    return ele;
+                }
+            })
+        default:
+            return state
+    }
+}
 export const validation = (state = [], action) => {
     return state;
 }
@@ -152,7 +171,8 @@ export const visibilityFilter = (state = [], action) => {
 export const cellPairApp = combineReducers({
     cellPairs,
     visibilityFilter,
-    headProps
+    headProps,
+    theadPak
 })
 
 const toggleCell = () => { }

@@ -75,13 +75,51 @@ export class TableTrie {
             } while (stack.length)
         } while (stack.length)
     }
-    static traverse(root) {
+    inOrderData() {
+        let node = this
+        let stack = [];
+        let data = []
+        //the number of element which output after pop
+        let pushCount = 0;
+        do {
+            while (node) {
+                stack.push(node);
+                pushCount += 1;
+                node = node.children[0];
+            }
+            do {
+                //problematic
+                // TableTrie.printStack(stack)
+                data.push(this.mapData(stack.slice(stack.length - pushCount)))
+                // data.push(stack)
+                pushCount = 0
+                stack.pop();
+               let top = stack[stack.length - 1]
+                if (top && top.nextChild() !== null) {
+                    node = top.nextChild();
+                    top.index += 1
+                    break;
+                }
+            } while (stack.length)
+        } while (stack.length)
+        return data
+    }
+    mapData(heads){
+        return heads.map(ele=>{
+            return {
+                head : ele.head()
+            }
+        })
+
+    }
+    traverse() {
         let stacks = [3]
         for (let i = 1; i <= 3; ++i) {
             stacks[i - 1] = []
-            TableTrie.traverseBase(root, i, stacks[i - 1])
+            TableTrie.traverseBase(this, i, stacks[i - 1])
         }
         printStack(stacks);
+        return retStack(stacks)
     }
     static traverseBase(node, level, stack) {
         debugger
@@ -113,7 +151,7 @@ export class TableTrie {
             }, 0)
             return;
         } else {
-            root.children.map(ch => {
+            root.children.forEach(ch => {
                 TableTrie.findAndInsert(ch, des, dir);
             })
             root.width = root.children.map(ch => ch.width).reduce((prev, next) => {
@@ -122,8 +160,8 @@ export class TableTrie {
             }, 0)
         }
     }
-    static sFindSert(root, des, dir) {
-        let node = root
+    sFindSert(des, dir) {
+        let node = this
         des.slice(1).forEach(d => {
             node = node.children.filter(b => {
                 return b.head() === d
@@ -133,8 +171,38 @@ export class TableTrie {
         node.children.push(new TableTrie(des.concat(dir), node.height + 1))
         node.width = calcWidth(node)
 
-        root.width = calcWidth(root)
+        this.width = calcWidth(this)
     }
+}
+function retStack(stacks = []) {
+    return stacks.map(stack =>
+        stack.map(ele => ({
+            headField: ele.head(),
+            colSpan: ele.width,
+            rowSpan: ele.span
+        })
+        ).reduce((prev, next) => {
+            if (!prev) {
+                return []
+            }
+            return prev.concat(next)
+        }, [])
+    )
+}
+function printStack(stacks = []) {
+
+    stacks.forEach(stack => {
+        stack.map(ele => ({
+            headField: ele.head(),
+            colSpan: ele.width,
+            rowSpan: ele.span
+        })).reduce((prev, next) => {
+            return prev.concat(next)
+        }, []).forEach(e =>
+            console.log('stack ele ', e)
+            )
+        console.log('----------')
+    })
 }
 function calcWidth(node) {
     return node.children.map(ch => ch.width).reduce((prev, next) => {
@@ -142,26 +210,7 @@ function calcWidth(node) {
         return pWidth + next
     })
 }
-function printStack(stacks = []) {
-    // stack.map(e => e.headPrefix).forEach(a => {
-    //     a.forEach(f => {
-    //         console.log(f)
-    //     })
-    //     console.log('-------')
-    // })
-    stacks.forEach(stack => {
-        stack.map(ele => ({
-            head: ele.head(),
-            width: ele.width,
-            span: ele.span
-        })).reduce((prev, next) => {
-            return prev.concat(next)
-        }, []).forEach(e =>
-            console.log(e)
-            )
-        console.log('----------')
-    })
-}
+
 export class TheadPak extends React.Component {
     render() {
         return (
@@ -174,16 +223,16 @@ export class TheadPak extends React.Component {
 export class PropBar extends React.Component {
     render() {
         let root = new TableTrie(['A'], 0)
-        TableTrie.sFindSert(root, ['A'], 'B');
-        TableTrie.sFindSert(root, ['A'], 'C');
-        TableTrie.sFindSert(root, ['A'], 'D');
-        TableTrie.sFindSert(root, ['A', 'C'], 'E');
-        TableTrie.sFindSert(root, ['A', 'C'], 'F');
-        TableTrie.sFindSert(root, ['A', 'D'], 'E');
-        TableTrie.sFindSert(root, ['A', 'D'], 'F');
-        TableTrie.sFindSert(root, ['A'], 'E');
+        root.sFindSert(['A'], 'B');
+        root.sFindSert(['A'], 'C');
+        root.sFindSert(['A'], 'D');
+        root.sFindSert(['A', 'C'], 'E');
+        root.sFindSert(['A', 'C'], 'F');
+        root.sFindSert(['A', 'D'], 'E');
+        root.sFindSert(['A', 'D'], 'F');
+        root.sFindSert(['A'], 'E');
         TableTrie.prefixTraverse(root);
-        TableTrie.traverse(root)
+        root.traverse()
 
         let display = {}
         if (this.props.level === '__3rd') {

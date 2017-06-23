@@ -1,35 +1,47 @@
 import React, { Component } from 'react';
 // let Thead = require("./Thead.js")
-import {TheadRen} from './Thead'
+import { TheadRen, TbodyRen } from './TableRen'
 import Tbody from './Tbody'
+import {Table} from 'react-bootstrap/lib';
 
 
-// const tableStyleList = "table table-bordered table-hover table-condensed"
+const tableStyleList = "table table-bordered table-hover table-condensed"
 
 class EdiTable extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            thead:[]
-        }
-    }
-    componentWillMount() {
-        this.props.thead.then(json => {
-            this.setState({
-                thead: json
-            })
-        })
-    }
+    // constructor(props){
+    //     super(props)
+    //     this.state = {
+    //         thead:[]
+    //     }
+    // }
+    // componentWillMount() {
+    //     this.props.thead.then(json => {
+    //         this.setState({
+    //             thead: json
+    //         })
+    //     })
+    // }
 
     render() {
         return (
-            <table className="item table-bordered table-hover">
-                <TheadRen content={this.state.thead} />
+            <Table cstriped bordered condensed hover>
+                {/*<RenHead content={this.props.thead} />*/}
+                <TheadRen content={this.props.thead} />
+                <TbodyRen length={this.props.bodyLength} />
                 {/*<Tbody content={this.state.tbody} />*/}
-            </table>
+            </Table>
         )
     }
 }
+// const RenHead = (content) => {
+//     return content.content.map(bigCell =>
+//         <tr>
+//             {cells.map(cell => <th>{cell}</th>)}
+//         </tr>
+//     )
+// }
+
+
 
 
 
