@@ -76,11 +76,12 @@ export class TableTrie {
         } while (stack.length)
     }
     static traverse(root) {
-        let stack = []
+        let stacks = [3]
         for (let i = 1; i <= 3; ++i) {
-            TableTrie.traverseBase(root, i, stack)
+            stacks[i - 1] = []
+            TableTrie.traverseBase(root, i, stacks[i - 1])
         }
-        printStack(stack);
+        printStack(stacks);
     }
     static traverseBase(node, level, stack) {
         debugger
@@ -89,10 +90,15 @@ export class TableTrie {
         }
         if (level === 1) {
             // console.log(node.head())
+            if (node.children.length) {
+                node.span = 1
+            } else {
+                node.span = 3 - node.height
+            }
             stack.push(node)
         } else {
             while (node.child() !== null) {
-                TableTrie.traverseBase(node.child(), level - 1,stack)
+                TableTrie.traverseBase(node.child(), level - 1, stack)
                 node.index += 1;
             }
         }
@@ -123,8 +129,10 @@ export class TableTrie {
                 return b.head() === d
             })[0]
         })
-        node.children.push(new TableTrie(des.concat(dir), 1))
+        // node.height -= 1
+        node.children.push(new TableTrie(des.concat(dir), node.height + 1))
         node.width = calcWidth(node)
+
         root.width = calcWidth(root)
     }
 }
@@ -134,15 +142,24 @@ function calcWidth(node) {
         return pWidth + next
     })
 }
-function printStack(stack = []) {
+function printStack(stacks = []) {
     // stack.map(e => e.headPrefix).forEach(a => {
     //     a.forEach(f => {
     //         console.log(f)
     //     })
     //     console.log('-------')
     // })
-    stack.forEach(ele=>{
-        console.log(ele)
+    stacks.forEach(stack => {
+        stack.map(ele => ({
+            head: ele.head(),
+            width: ele.width,
+            span: ele.span
+        })).reduce((prev, next) => {
+            return prev.concat(next)
+        }, []).forEach(e =>
+            console.log(e)
+            )
+        console.log('----------')
     })
 }
 export class TheadPak extends React.Component {
@@ -156,7 +173,7 @@ export class TheadPak extends React.Component {
 }
 export class PropBar extends React.Component {
     render() {
-        let root = new TableTrie(['A'], 1)
+        let root = new TableTrie(['A'], 0)
         TableTrie.sFindSert(root, ['A'], 'B');
         TableTrie.sFindSert(root, ['A'], 'C');
         TableTrie.sFindSert(root, ['A'], 'D');
