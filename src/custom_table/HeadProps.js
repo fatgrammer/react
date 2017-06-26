@@ -102,12 +102,15 @@ export class TableTrie {
                 }
             } while (stack.length)
         } while (stack.length)
+        // console.log('real data is ', data)
         return data
     }
     mapData(heads){
         return heads.map(ele=>{
             return {
-                head : ele.head()
+                head : ele.head(),
+                prefix: ele.headPrefix,
+                height: ele.height
             }
         })
 
@@ -122,7 +125,6 @@ export class TableTrie {
         return retStack(stacks)
     }
     static traverseBase(node, level, stack) {
-        debugger
         if (!node) {
             return
         }
@@ -172,6 +174,7 @@ export class TableTrie {
         node.width = calcWidth(node)
 
         this.width = calcWidth(this)
+        return this;
     }
 }
 function retStack(stacks = []) {

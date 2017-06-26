@@ -6,6 +6,7 @@ import { store, getDispatcher } from '../custom_table/TableApp'
 import PropTypes from 'prop-types'
 let barId = 0;
 let fooId = 0;
+
 const cellPair = (state, action) => {
     const idx = action.id
     switch (action.type) {
@@ -140,20 +141,41 @@ const theadPak = (state = [], action) => {
     switch (action.type) {
         case 'ADD':
             return [...state, {
-                id: action.id,
-                trie: new TableTrie(["placeHolder"], 0)
+                id: state.length,
+                trie: new TableTrie(["placeHolder"+state.length], 0),
+                shownProp: false
             }];
-        case 'ADD_CHILD':
-            return state.map(ele => {
-                if (ele.id === action.id) {
-                    ele.trie.insert(action.curHeadPrefix, action.headName)
-                    return ele
-                } else {
-                    return ele;
+        case 'INSERT':
+            return [...state.slice(0, action.id),
+
+            {
+                ...state[action.id],
+                trie: state[action.id].trie.sFindSert(action.prefix, 'newSlot')
+            },
+            ...state.slice(action.id + 1)
+            ]
+        case 'POP_HEAD':
+            return state.map(t => {
+                if (t.id !== action.id) {
+                    return {
+                        ...t,
+                        shownProp: false
+                    }
+                }
+                return {
+                    ...t,
+                    shownProp: true
                 }
             })
         default:
             return state
+    }
+}
+const popBox = (state = [], action) => {
+    switch (action.type) {
+        default:
+            return state;
+
     }
 }
 export const validation = (state = [], action) => {
@@ -169,9 +191,9 @@ export const visibilityFilter = (state = [], action) => {
 }
 
 export const cellPairApp = combineReducers({
-    cellPairs,
-    visibilityFilter,
-    headProps,
+    // cellPairs,
+    // visibilityFilter,
+    // headProps,
     theadPak
 })
 

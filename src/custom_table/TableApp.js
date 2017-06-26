@@ -7,6 +7,8 @@ import { connect } from 'react-redux'
 import { HeadProps } from './HeadProps'
 import { PropTypes } from 'prop-types'
 import EdiTable from '../EdiTable'
+import '../global.css'
+import { CSSTransitionGroup } from 'react-transition-group'
 export let CellId = 0;
 export let store = createStore(cellPairApp)
 
@@ -55,9 +57,24 @@ export const getDispatcher = (level, id, barId) => {
             return {}
     }
 }
+export const actions = (abbr, data) => {
+    switch (abbr) {
+        case 'INS':
+            return () => store.dispatch({
+                ...data,
+                type: 'INSERT'
+            })
+        case 'POP':
+            return () => store.dispatch({
+                type: 'POP_HEAD',
+                ...data
+            })
+        default:
+            return {}
+    }
+}
 class Button extends React.Component {
     render() {
-
         return (
             <button onClick={this.props.onClick}>
                 {this.props.value}
@@ -101,15 +118,66 @@ class ConfigScope extends React.Component {
     }
 }
 const NewScope = (metaData) => {
-    const ch = calcHorHead(metaData.metaData)
-    console.log('headData', ch)
-    console.log('headLength', depthHead(ch[0]))
+    const hb = headBlock(metaData.metaData)
+    // const ch = calcHorHead(metaData.metaData)
+    // console.log('headData', ch)
+    // console.log('headLength', depthHead(ch[0]))
+
     return (
         <EdiTable
-            thead={ch}
-            bodyLength={cellNum(ch[0])}
+            //           hhead={ch}
+            //           bodyLength={cellNum(ch[0])}
+            vhead={hb}
         />
     )
+}
+let localIdx = 0
+class PopScope extends React.Component {
+    render() {
+        const hb = headBlock(this.props.metaData)
+        return (
+
+            <CSSTransitionGroup
+                transitionName="example"
+                transitionEnterTimeout={300}
+                transitionLeaveTimeout={300}
+                component='ul'
+            >
+
+                {hb.filter(headPak => {
+                    return headPak.shownProp;
+                }).map(headPak => {
+                    return headPak.data.map(heads => {
+                        return heads.map(head => {
+                            return <Li>{head.prefix}{head.head}</Li>
+                        })
+                    })
+                })
+                }
+            </CSSTransitionGroup>
+
+
+        )
+    }
+}
+class Li extends React.Component {
+    render() {
+        return (
+            <li>{this.props.children}</li>
+        )
+    }
+}
+const headBlock = (metaData) => {
+    return metaData.map(ele => {
+        return {
+            data: ele.trie.inOrderData(),
+            shownProp: ele.shownProp
+        }
+    })
+    // let tmpData=[]
+    // for (let i = 0; i < metaData.length; ++i) {
+    //     return metaData[i].trie.inOrderData()
+    // }
 }
 const depthHead = (headData = []) => {
     console.log('hdata ', headData)
@@ -133,7 +201,7 @@ const calcHorHead = (metaData) => {
     console.log('trial ', metaData)
     return metaData.map(ele => {
         {/*console.log('head is ', ele.trie.traverse())*/ }
-        return ele.trie.traverse() 
+        return ele.trie.traverse()
     }).reduce((prev, next) => {
         let tmp = []
         for (let i = 0; i < 3; ++i) {
@@ -144,23 +212,18 @@ const calcHorHead = (metaData) => {
         return tmp
     }, [])
 }
-const calcVerHead = (metaData) =>{
-    return metaData.map(ele =>{
-        return ele.trie.traverse()
-    }).reduce((prev, next)=>{
 
-    })
-}
 let newId = 0
 const TableApp = ({ cells }, { store }) => {
     const state = store.getState()
     return (
         <div className="container">
             <Button onClick={getDispatcher('ADD', newId++)} value='newAdd' />
-            <Button onClick={getDispatcher('PAIR', CellId++)} value='add' />
-            <TableScope cells={state.cellPairs} />
-            <ConfigScope POPs={store.getState().headProps} />
+            {/*<Button onClick={getDispatcher('PAIR', CellId++)} value='add' />*/}
+            {/*<TableScope cells={state.cellPairs} />*/}
+            {/*<ConfigScope POPs={store.getState().headProps} />*/}
             <NewScope metaData={store.getState().theadPak} />
+            <PopScope metaData={store.getState().theadPak} />
             <button>save</button>
         </div>
     )

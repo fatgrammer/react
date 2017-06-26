@@ -24,9 +24,10 @@ class EdiTable extends Component {
 
     render() {
         return (
-            <Table cstriped bordered condensed hover>
+            <Table  bordered condensed hover>
                 {/*<RenHead content={this.props.thead} />*/}
-                <TheadRen content={this.props.thead} />
+                <TheadRen vhead={this.props.vhead} />
+                <TheadRen hhead={this.props.hhead} />
                 <TbodyRen length={this.props.bodyLength} />
                 {/*<Tbody content={this.state.tbody} />*/}
             </Table>
