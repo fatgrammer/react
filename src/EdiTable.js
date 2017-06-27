@@ -27,7 +27,7 @@ class EdiTable extends Component {
             <Table  bordered condensed hover>
                 {/*<RenHead content={this.props.thead} />*/}
                 <TheadRen vhead={this.props.vhead} />
-                <TheadRen hhead={this.props.hhead} />
+                {/*<TheadRen hhead={this.props.hhead} />*/}
                 <TbodyRen length={this.props.bodyLength} />
                 {/*<Tbody content={this.state.tbody} />*/}
             </Table>

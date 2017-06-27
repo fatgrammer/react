@@ -142,7 +142,7 @@ const theadPak = (state = [], action) => {
         case 'ADD':
             return [...state, {
                 id: state.length,
-                trie: new TableTrie(["placeHolder"+state.length], 0),
+                trie: new TableTrie(["th" + state.length], 0),
                 shownProp: false
             }];
         case 'INSERT':
@@ -167,6 +167,16 @@ const theadPak = (state = [], action) => {
                     shownProp: true
                 }
             })
+        case 'SAVE_HEAD':
+            console.log('act ', action)
+  
+            return [...state.slice(0, action.id),
+            {
+                ...state[action.id],
+                trie: state[action.id].trie.sFindSet(action.prefix, action.value)
+            },
+            ...state.slice(action.id + 1)
+            ]
         default:
             return state
     }

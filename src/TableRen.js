@@ -6,7 +6,7 @@ import { actions } from './custom_table/TableApp'
 
 import { CSSTransitionGroup } from 'react-transition-group'
 import './global.css'
-export let globalBarKey = 0
+export let globalHeadId = 0
 export class TheadRen extends Component {
     constructor(props) {
         super(props);
@@ -33,22 +33,22 @@ export class TheadRen extends Component {
     }
     renderHeadPak(headPakList = []) {
         let gIdx = -1;
+        let LocalBarKey = 0;
         return headPakList.map(headPak => {
             gIdx += 1;
             return headPak.data.map(heads => {
                 return <tr>{heads.map(head => {
-                    return <Th key={globalBarKey++} id={gIdx} prefix={head.prefix}
-                        //          onHeadClick={
-                        //            actions('INS', {
-                        //              id: gIdx,
-                        //            prefix: head.prefix
-                        //      })}
+                    return <Th key={LocalBarKey++} id={gIdx} prefix={head.prefix}
                         onHeadClick={
                             actions('POP', {
-                                id: gIdx
+                                id: globalHeadId
                             })
                         }
-                        rowSpan={head.colSpan} colSpan={head.rowSpan}>{head.head}</Th>
+                        rowSpan={head.colSpan} colSpan={head.rowSpan}>
+
+                        seq:{head.head} val:{head.value}
+
+                    </Th>
                 })
                 }<td>hazard</td></tr >
             })
@@ -56,9 +56,16 @@ export class TheadRen extends Component {
     }
     render() {
         return (
-            <thead>
+            <CSSTransitionGroup
+                transitionName='example'
+                transitionEnterTimeout={500}
+                transitionLeaveTimeout={300}
+                component='thead'
+            >
+
                 {this.renderHorizontalThead(this.props.hhead)}{this.renderHeadPak(this.props.vhead)}
-            </thead>
+
+            </CSSTransitionGroup>
         )
     }
 }

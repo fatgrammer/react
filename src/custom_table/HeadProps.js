@@ -19,6 +19,7 @@ export class TableTrie {
         this.height = height
         this.width = 1;
         this.index = 0;
+        this.value = '';
     }
 
     nextChild() {
@@ -110,7 +111,8 @@ export class TableTrie {
             return {
                 head : ele.head(),
                 prefix: ele.headPrefix,
-                height: ele.height
+                height: ele.height,
+                value: ele.value
             }
         })
 
@@ -172,9 +174,18 @@ export class TableTrie {
         // node.height -= 1
         node.children.push(new TableTrie(des.concat(dir), node.height + 1))
         node.width = calcWidth(node)
-
         this.width = calcWidth(this)
         return this;
+    }
+    sFindSet(des, val) {
+        let node = this
+        des.slice(1).forEach(d => {
+            node = node.children.filter(b => {
+                return b.head() === d
+            })[0]
+        })
+        node.value = val;
+        return this
     }
 }
 function retStack(stacks = []) {
