@@ -41,7 +41,7 @@ export class TheadRen extends Component {
                     return <Th key={LocalBarKey++} id={gIdx} prefix={head.prefix}
                         onHeadClick={
                             actions('POP', {
-                                id: globalHeadId
+                                id: gIdx
                             })
                         }
                         rowSpan={head.colSpan} colSpan={head.rowSpan}>

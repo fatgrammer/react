@@ -159,6 +159,7 @@ class PopScope extends React.Component {
                                 })} />}
                             value={this.state.value || head.value}
                             onValueChange={this.onValueChange}
+                            placeholder={head.head}
                         >
                             {Array(head.height + 2).join('--')}</Li>
                     })
@@ -179,17 +180,18 @@ class PopScope extends React.Component {
     }
 }
 class Li extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.handleChange=this.handleChange.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
-    handleChange(event){
+    handleChange(event) {
         this.props.onValueChange(event.target.value)
     }
     render() {
         return (
-            <li>{this.props.children}
-                <input placeholder='headValue' value={this.props.value} onChange={this.handleChange}/>
+            <li>
+                {this.props.children}
+                <input placeholder={this.props.placeholder} value={this.props.value} onChange={this.handleChange} />
                 {this.props.button}
             </li>
         )
