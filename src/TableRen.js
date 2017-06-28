@@ -44,10 +44,8 @@ export class TheadRen extends Component {
                                 id: gIdx
                             })
                         }
-                        rowSpan={head.colSpan} colSpan={head.rowSpan}>
-
+                        rowSpan={head.width} colSpan={head.depth}>
                         seq:{head.head} val:{head.value}
-
                     </Th>
                 })
                 }<td>hazard</td></tr >

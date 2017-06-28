@@ -143,14 +143,18 @@ const theadPak = (state = [], action) => {
             return [...state, {
                 id: state.length,
                 trie: new TableTrie(["th" + state.length], 0),
-                shownProp: false
+                shownProp: false,
+                children: 0
             }];
         case 'INSERT':
             return [...state.slice(0, action.id),
 
             {
                 ...state[action.id],
-                trie: state[action.id].trie.sFindSert(action.prefix, 'newSlot')
+                trie: state[action.id].trie.sFindSert(
+                    action.prefix,
+                    action.head+ 'th' + state[action.id].trie.sFindIdx(action.prefix)),
+                children: state[action.id].children + 1
             },
             ...state.slice(action.id + 1)
             ]
@@ -169,7 +173,7 @@ const theadPak = (state = [], action) => {
             })
         case 'SAVE_HEAD':
             console.log('act ', action)
-  
+
             return [...state.slice(0, action.id),
             {
                 ...state[action.id],

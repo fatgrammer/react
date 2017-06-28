@@ -77,6 +77,12 @@ export const actions = (abbr, data) => {
                 type: 'SAVE_HEAD',
                 ...data
             })
+        case 'RES':
+            return () => {
+                store.dispatch({
+                    type: 'RESULT'
+                })
+            }
         default:
             return {}
     }
@@ -142,6 +148,11 @@ class PopScope extends React.Component {
             value
         })
     }
+    componentDidMount() {
+        this.setState({
+            value: ''
+        })
+    }
     render() {
         const hb = headBlock(this.props.metaData)
         const popContent =
@@ -149,28 +160,36 @@ class PopScope extends React.Component {
                 return headPak.shownProp;
             }).map(headPak => {
                 return headPak.data.map(heads => {
+                    let lidx = 0;
                     return heads.map(head => {
                         return <Li
-                            button={<Button value='save'
-                                onClick={actions('STH', {
-                                    prefix: head.prefix,
-                                    value: head.value,
-                                    id: headPak.id
-                                })} />}
-                            value={this.state.value || head.value}
+                            key={head.head}
+                            prefix={head.prefix}
+                            actionId={headPak.id}
+                            addButton={head.height < 2 ? <Button value='add'
+                                onClick={
+                                    actions('INS', {
+                                        prefix: head.prefix,
+                                        id: headPak.id,
+                                        head: head.head
+                                    })
+                                }
+                            /> : <span></span>}
+                            value={this.state.value}
                             onValueChange={this.onValueChange}
-                            placeholder={head.head}
+                            headValue={head.value}
                         >
-                            {Array(head.height + 2).join('--')}</Li>
+                            {head.head + Array(head.height + 2).join('--')}</Li>
                     })
                 })
             });
+
         return (
             <div className='popHead'>
                 <CSSTransitionGroup
-                    transitionName="background"
+                    transitionName="example"
                     transitionEnterTimeout={1000}
-                    transitionLeaveTimeout={1000}
+                    transitionLeaveTimeout={1}
                     component='ul'
                 >
                     {popContent}
@@ -180,21 +199,50 @@ class PopScope extends React.Component {
     }
 }
 class Li extends React.Component {
+    render() {
+        return (
+            <li>{this.props.head}
+                {this.props.children}
+                <Input
+                    prefix={this.props.prefix}
+                    actionId={this.props.actionId}
+                    headValue={this.props.headValue}
+                    onValueChange={this.props.onValueChange} />
+                {this.props.saveButton}
+                {this.props.addButton}
+
+            </li>
+        )
+    }
+}
+class Input extends React.Component {
     constructor(props) {
         super(props)
         this.handleChange = this.handleChange.bind(this)
+        this.state = ({
+            value: this.props.headValue
+        })
     }
     handleChange(event) {
+        this.setState({
+            value: event.target.value
+        })
         this.props.onValueChange(event.target.value)
     }
     render() {
-        return (
-            <li>
-                {this.props.children}
-                <input placeholder={this.props.placeholder} value={this.props.value} onChange={this.handleChange} />
-                {this.props.button}
-            </li>
-        )
+        return <span> <input
+            placeholder='table head'
+            value={this.state.value}
+            onChange={this.handleChange}
+
+        />
+            <Button value='save'
+                onClick={actions('STH', {
+                    prefix: this.props.prefix,
+                    value: this.state.value,
+                    id: this.props.actionId
+                })} />
+        </span>
     }
 }
 const headBlock = (metaData) => {
@@ -205,10 +253,13 @@ const headBlock = (metaData) => {
             id: ele.id
         }
     })
-    // let tmpData=[]
-    // for (let i = 0; i < metaData.length; ++i) {
-    //     return metaData[i].trie.inOrderData()
-    // }
+}
+const fullHeadBlock = (metaData) => {
+    return metaData.map(ele => {
+        return {
+            data: ele.trie.inOrderFullData(),
+        }
+    })
 }
 const depthHead = (headData = []) => {
     console.log('hdata ', headData)
@@ -243,7 +294,27 @@ const calcHorHead = (metaData) => {
         return tmp
     }, [])
 }
+class ResultScope extends React.Component {
+    render() {
+        const hb = fullHeadBlock(this.props.metaData)
+        let list = hb.map(headPak => {
+            return headPak.data.map(heads => {
+                // return heads.reduce((prev, next) => {
+                //     return prev.value || '' + '_' + next.value + '_'
+                // }, '_')
+                console.log('heads', heads)
+                return heads[heads.length- 1].value
+            }).reduce((prev, next) => {
+                return [...prev, next]
+            }, [])
+        }).reduce((prev, next) => {
+            return [...prev, next]
+        }, [])
+        console.log('list', list)
+        return <span>2</span>
 
+    }
+}
 let newId = 0
 const TableApp = ({ cells }, { store }) => {
     const state = store.getState()
@@ -255,6 +326,8 @@ const TableApp = ({ cells }, { store }) => {
                 {/*<TableScope cells={state.cellPairs} />*/}
                 {/*<ConfigScope POPs={store.getState().headProps} />*/}
                 <NewScope metaData={store.getState().theadPak} />
+                <ResultScope metaData={store.getState().theadPak} />
+                <Button value='result' onClick={actions('RES')} />
             </div>
 
             <PopScope className='flex-item' metaData={store.getState().theadPak} />

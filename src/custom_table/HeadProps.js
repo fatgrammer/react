@@ -77,6 +77,7 @@ export class TableTrie {
         } while (stack.length)
     }
     inOrderData() {
+        let maxDepth = 1;
         let node = this
         let stack = [];
         let data = []
@@ -91,11 +92,18 @@ export class TableTrie {
             do {
                 //problematic
                 // TableTrie.printStack(stack)
-                data.push(this.mapData(stack.slice(stack.length - pushCount)))
+                let frame = this.mapData(stack.slice(stack.length - pushCount), stack.length)
+                if (frame.length) {
+                    //max table colspan
+                    if (frame.length > maxDepth) {
+                        maxDepth = frame.length
+                    }
+                    data.push(frame);
+                }
                 // data.push(stack)
                 pushCount = 0
                 stack.pop();
-               let top = stack[stack.length - 1]
+                let top = stack[stack.length - 1]
                 if (top && top.nextChild() !== null) {
                     node = top.nextChild();
                     top.index += 1
@@ -103,19 +111,81 @@ export class TableTrie {
                 }
             } while (stack.length)
         } while (stack.length)
-        // console.log('real data is ', data)
+        data = this.boxHeight(data, maxDepth)
         return data
     }
-    mapData(heads){
-        return heads.map(ele=>{
+    inOrderFullData() {
+        let maxDepth = 1;
+        let node = this
+        let stack = [];
+        let data = []
+        //the number of element which output after pop
+        let pushCount = 0;
+        do {
+            while (node) {
+                stack.push(node);
+                pushCount += 1;
+                node = node.children[0];
+            }
+            do {
+                //problematic
+                // TableTrie.printStack(stack)
+                let frame = stack.map(ele => {
+                    return {
+                        value: ele.value
+                    }
+                })
+                if (frame.length) {
+                    //max table colspan
+                    if (frame.length > maxDepth) {
+                        maxDepth = frame.length
+                    }
+                    if (stack[stack.length - 1].children.length)
+                        data.push(frame);
+                }
+                // data.push(stack)
+                pushCount = 0
+                stack.pop();
+                let top = stack[stack.length - 1]
+                if (top && top.nextChild() !== null) {
+                    node = top.nextChild();
+                    top.index += 1
+                    break;
+                }
+            } while (stack.length)
+        } while (stack.length)
+        return data
+    }
+    boxHeight(boxStacks, maxDepth) {
+
+        return boxStacks.map(
+            boxStack => {
+                return [...boxStack.slice(0, boxStack.length - 1),
+                {
+                    ...boxStack[boxStack.length - 1],
+                    depth: maxDepth - boxStack.length - boxStack[boxStack.length - 1].depth + 2
+                },
+                ...boxStack.slice(boxStack.length)
+                ]
+            }
+        )
+
+    }
+    mapData(heads, stackLength) {
+        const list = heads.map(ele => {
             return {
-                head : ele.head(),
+                head: ele.head(),
                 prefix: ele.headPrefix,
                 height: ele.height,
+                depth: 1,
+                width: ele.width,
                 value: ele.value
             }
         })
-
+        if (list.length) {
+            list[list.length - 1].depth = stackLength;
+        }
+        return list
     }
     traverse() {
         let stacks = [3]
@@ -186,6 +256,15 @@ export class TableTrie {
         })
         node.value = val;
         return this
+    }
+    sFindIdx(des) {
+        let node = this
+        des.slice(1).forEach(d => {
+            node = node.children.filter(b => {
+                return b.head() === d
+            })[0]
+        })
+        return node.children.length;
     }
 }
 function retStack(stacks = []) {
