@@ -4,6 +4,7 @@ import { combineReducers } from 'redux'
 import { TableTrie, HeadProps, PropBar } from '../custom_table/HeadProps'
 import { store, getDispatcher } from '../custom_table/TableApp'
 import PropTypes from 'prop-types'
+import $ from 'jquery'
 let barId = 0;
 let fooId = 0;
 
@@ -153,7 +154,7 @@ const theadPak = (state = [], action) => {
                 ...state[action.id],
                 trie: state[action.id].trie.sFindSert(
                     action.prefix,
-                    action.head+ 'th' + state[action.id].trie.sFindIdx(action.prefix)),
+                    action.head + 'th' + state[action.id].trie.sFindIdx(action.prefix)),
                 children: state[action.id].children + 1
             },
             ...state.slice(action.id + 1)
@@ -185,6 +186,42 @@ const theadPak = (state = [], action) => {
             return state
     }
 }
+
+const ruleTemplate = {
+    allowNull: false,
+    isInteger: false,
+    isDecimal: false,
+    mainKey: false
+
+}
+const dataRule = (state = [], action) => {
+    switch (action.type) {
+        case 'POP_RULE':
+            // state.filter(dataPak => dataPak.id === action.id) || state.push({
+
+            //     id: action.id,
+            //     rule: ruleTemplate
+            // })
+            return [...state, {
+                id: action.id,
+                rule: ruleTemplate
+            }]
+
+        default:
+            return state
+    }
+}
+const dataAction = (state = [], action) => {
+    switch (action.type) {
+        case 'RESULT':
+            $.post(action.url, action.data, function (response) {
+                alert(response)
+            }, 'json');
+            return state
+        default:
+            return state
+    }
+}
 const popBox = (state = [], action) => {
     switch (action.type) {
         default:
@@ -208,7 +245,9 @@ export const cellPairApp = combineReducers({
     // cellPairs,
     // visibilityFilter,
     // headProps,
-    theadPak
+    theadPak,
+    dataAction,
+    dataRule
 })
 
 const toggleCell = () => { }

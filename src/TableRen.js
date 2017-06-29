@@ -48,7 +48,13 @@ export class TheadRen extends Component {
                         seq:{head.head} val:{head.value}
                     </Th>
                 })
-                }<td>hazard</td></tr >
+                }<Td onDataClick={
+                    actions('RULE', {
+                        id: heads[heads.length - 1].value,
+                    })
+                }
+
+                >hazard</Td></tr >
             })
         })
     }
@@ -71,6 +77,12 @@ export class TheadRen extends Component {
 export class Th extends React.Component {
     render() {
         return <th onClick={this.props.onHeadClick} rowSpan={this.props.rowSpan} colSpan={this.props.colSpan} > {this.props.children}</th>
+    }
+}
+export class Td extends React.Component {
+    
+    render() {
+        return <td onClick={this.props.onDataClick} >{this.props.children}</td>
     }
 }
 export class TbodyRen extends Component {

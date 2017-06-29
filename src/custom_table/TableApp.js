@@ -10,6 +10,7 @@ import EdiTable from '../EdiTable'
 import '../global.css'
 import { CSSTransitionGroup } from 'react-transition-group'
 
+import { Table } from 'react-bootstrap/lib';
 import { Col, Row } from 'react-bootstrap/lib';
 
 export let CellId = 0;
@@ -80,7 +81,15 @@ export const actions = (abbr, data) => {
         case 'RES':
             return () => {
                 store.dispatch({
-                    type: 'RESULT'
+                    type: 'RESULT',
+                    ...data
+                })
+            }
+        case 'RULE':
+            return () => {
+                store.dispatch({
+                    type: 'POP_RULE',
+                    ...data
                 })
             }
         default:
@@ -203,7 +212,7 @@ class Li extends React.Component {
         return (
             <li>{this.props.head}
                 {this.props.children}
-                <Input
+                <InputHead
                     prefix={this.props.prefix}
                     actionId={this.props.actionId}
                     headValue={this.props.headValue}
@@ -215,7 +224,7 @@ class Li extends React.Component {
         )
     }
 }
-class Input extends React.Component {
+class InputHead extends React.Component {
     constructor(props) {
         super(props)
         this.handleChange = this.handleChange.bind(this)
@@ -245,14 +254,32 @@ class Input extends React.Component {
         </span>
     }
 }
-const headBlock = (metaData) => {
+const headBlock = (metaData = []) => {
+    const maxDepth = metaData.map(headPak => headPak.trie.maxDepth).reduce((prev, next) => {
+        return prev >= next ? prev : next
+    }, {})
     return metaData.map(ele => {
         return {
-            data: ele.trie.inOrderData(),
+            data: boxHeight(ele.trie.inOrderData(), maxDepth),
             shownProp: ele.shownProp,
             id: ele.id
         }
     })
+}
+const boxHeight = (boxStacks, maxDepth) => {
+    return boxStacks.map(
+        boxStack => {
+            const rDepth = maxDepth - boxStack[boxStack.length - 1].depth + 1
+            return [...boxStack.slice(0, boxStack.length - 1),
+            {
+                ...boxStack[boxStack.length - 1],
+                depth: rDepth //> 1 ? rDepth : 1
+            },
+            ...boxStack.slice(boxStack.length)
+            ]
+        }
+    )
+
 }
 const fullHeadBlock = (metaData) => {
     return metaData.map(ele => {
@@ -299,20 +326,47 @@ class ResultScope extends React.Component {
         const hb = fullHeadBlock(this.props.metaData)
         let list = hb.map(headPak => {
             return headPak.data.map(heads => {
-                // return heads.reduce((prev, next) => {
-                //     return prev.value || '' + '_' + next.value + '_'
-                // }, '_')
-                console.log('heads', heads)
-                return heads[heads.length- 1].value
-            }).reduce((prev, next) => {
-                return [...prev, next]
-            }, [])
+                return heads.map(head => head.value).reduce((prev, next) => {
+                    return prev + '_' + next
+                })
+            })
         }).reduce((prev, next) => {
-            return [...prev, next]
+            return [...prev, ...next]
         }, [])
-        console.log('list', list)
-        return <span>2</span>
+        return <div>
+            <Button value='result' onClick={actions('RES', {
+                url: 'http://localhost:20080/testData',
+                data: { data: JSON.stringify(list) }
+            })} /><br />
+            {JSON.stringify(list)}</div>
 
+    }
+}
+
+class RuleScope extends React.Component {
+    render() {
+        console.log('meta', this.props.metaData[0])
+        return <div>
+            <Table bordered>
+                <thead>
+                    {this.props.metaData.map(
+                        dataPak => {
+                            return dataPak.rule
+                        }
+                    ).map(rule => {
+                        return Object.entries(rule).map(ele => {
+                            return <tr>
+                                <td>{ele[0]}</td>
+                                <td>
+                                    <input type='radio' name={ele[0]} />true
+                                    <input name={ele[0]} type='radio' />false
+                                </td>
+                            </tr>
+                        })
+                    })}
+                </thead>
+            </Table>
+        </div>
     }
 }
 let newId = 0
@@ -327,7 +381,7 @@ const TableApp = ({ cells }, { store }) => {
                 {/*<ConfigScope POPs={store.getState().headProps} />*/}
                 <NewScope metaData={store.getState().theadPak} />
                 <ResultScope metaData={store.getState().theadPak} />
-                <Button value='result' onClick={actions('RES')} />
+                <RuleScope metaData={store.getState().dataRule} />
             </div>
 
             <PopScope className='flex-item' metaData={store.getState().theadPak} />

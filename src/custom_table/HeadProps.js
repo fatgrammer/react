@@ -20,6 +20,7 @@ export class TableTrie {
         this.width = 1;
         this.index = 0;
         this.value = '';
+        this.maxDepth = 1;
     }
 
     nextChild() {
@@ -77,7 +78,6 @@ export class TableTrie {
         } while (stack.length)
     }
     inOrderData() {
-        let maxDepth = 1;
         let node = this
         let stack = [];
         let data = []
@@ -95,8 +95,8 @@ export class TableTrie {
                 let frame = this.mapData(stack.slice(stack.length - pushCount), stack.length)
                 if (frame.length) {
                     //max table colspan
-                    if (frame.length > maxDepth) {
-                        maxDepth = frame.length
+                    if (frame.length > this.maxDepth) {
+                        this.maxDepth = frame.length
                     }
                     data.push(frame);
                 }
@@ -111,7 +111,7 @@ export class TableTrie {
                 }
             } while (stack.length)
         } while (stack.length)
-        data = this.boxHeight(data, maxDepth)
+        // data = this.boxHeight(data, this.maxDepth)
         return data
     }
     inOrderFullData() {
@@ -140,8 +140,9 @@ export class TableTrie {
                     if (frame.length > maxDepth) {
                         maxDepth = frame.length
                     }
-                    if (stack[stack.length - 1].children.length)
+                    if (!stack[stack.length - 1].children.length) {
                         data.push(frame);
+                    }
                 }
                 // data.push(stack)
                 pushCount = 0
