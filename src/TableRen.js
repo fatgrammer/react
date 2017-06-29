@@ -60,16 +60,16 @@ export class TheadRen extends Component {
     }
     render() {
         return (
-            <CSSTransitionGroup
-                transitionName='example'
-                transitionEnterTimeout={500}
-                transitionLeaveTimeout={300}
-                component='thead'
-            >
-
+            // <CSSTransitionGroup
+            //     transitionName='example'
+            //     transitionEnterTimeout={500}
+            //     transitionLeaveTimeout={300}
+            //     component='thead'
+            // >
+            <thead>
                 {this.renderHorizontalThead(this.props.hhead)}{this.renderHeadPak(this.props.vhead)}
-
-            </CSSTransitionGroup>
+            </thead>
+            // </CSSTransitionGroup>
         )
     }
 }
@@ -80,7 +80,7 @@ export class Th extends React.Component {
     }
 }
 export class Td extends React.Component {
-    
+
     render() {
         return <td onClick={this.props.onDataClick} >{this.props.children}</td>
     }

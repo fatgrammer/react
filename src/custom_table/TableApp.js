@@ -99,7 +99,7 @@ export const actions = (abbr, data) => {
 class Button extends React.Component {
     render() {
         return (
-            <button onClick={this.props.onClick}>
+            <button id={this.props.id} onClick={this.props.onClick}>
                 {this.props.value}
             </button>
         )
@@ -195,15 +195,10 @@ class PopScope extends React.Component {
 
         return (
             <div className='popHead'>
-                <CSSTransitionGroup
-                    transitionName="example"
-                    transitionEnterTimeout={1000}
-                    transitionLeaveTimeout={1}
-                    component='ul'
-                >
+                <ul>
                     {popContent}
-                </CSSTransitionGroup>
-            </div>
+                    </ul>
+        </div>
         )
     }
 }
@@ -373,18 +368,21 @@ let newId = 0
 const TableApp = ({ cells }, { store }) => {
     const state = store.getState()
     return (
-        <div className="flex-container">
-            <div className='flex-item' >
-                <Button onClick={getDispatcher('ADD', newId++)} value='newAdd' />
+        <div >
+            <div  >
+                <div id='uname'>中山大学</div>
+                <hr/>
+                <Button onClick={getDispatcher('ADD', newId++)} id='addButton' value='新增单元' />
                 {/*<Button onClick={getDispatcher('PAIR', CellId++)} value='add' />*/}
                 {/*<TableScope cells={state.cellPairs} />*/}
                 {/*<ConfigScope POPs={store.getState().headProps} />*/}
+                <br/>
                 <NewScope metaData={store.getState().theadPak} />
                 <ResultScope metaData={store.getState().theadPak} />
                 <RuleScope metaData={store.getState().dataRule} />
             </div>
 
-            <PopScope className='flex-item' metaData={store.getState().theadPak} />
+            <PopScope  metaData={store.getState().theadPak} />
         </div>
     )
 }
