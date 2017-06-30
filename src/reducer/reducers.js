@@ -182,6 +182,16 @@ const theadPak = (state = [], action) => {
             },
             ...state.slice(action.id + 1)
             ]
+        //delete whole subtree
+        case 'DELETE_BAR':
+        console.log(action.prefix)
+            return [...state.slice(0, action.id),
+            {
+                ...state[action.id],
+                trie: state[action.id].trie.removeSubtree(action.prefix)
+            },
+            ...state.slice(action.id + 1)
+            ]
         default:
             return state
     }
@@ -222,13 +232,18 @@ const dataAction = (state = [], action) => {
             return state
     }
 }
-const popBox = (state = [], action) => {
+const popBox = (state = false, action) => {
     switch (action.type) {
+        case 'POP_HEAD':
+            return true;
+        case 'CLOSE_POPBAR':
+            return false;
         default:
             return state;
 
     }
 }
+
 export const validation = (state = [], action) => {
     return state;
 }
@@ -247,7 +262,8 @@ export const cellPairApp = combineReducers({
     // headProps,
     theadPak,
     dataAction,
-    dataRule
+    dataRule,
+    popBox
 })
 
 const toggleCell = () => { }

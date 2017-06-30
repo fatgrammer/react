@@ -73,6 +73,11 @@ export const actions = (abbr, data) => {
                 type: 'POP_HEAD',
                 ...data
             })
+        case 'SIDE':
+            return () => store.dispatch({
+                type: 'SHOW_SIDEBAR',
+                ...data
+            })
         case 'STH':
             return () => store.dispatch({
                 type: 'SAVE_HEAD',
@@ -92,6 +97,19 @@ export const actions = (abbr, data) => {
                     ...data
                 })
             }
+        case 'CLOSE':
+            return () => {
+                store.dispatch({
+                    type: 'CLOSE_POPBAR'
+                })
+            }
+        case 'DEL':
+            return () => {
+                store.dispatch({
+                    type: 'DELETE_BAR',
+                    ...data
+                })
+            }
         default:
             return {}
     }
@@ -99,9 +117,9 @@ export const actions = (abbr, data) => {
 class Button extends React.Component {
     render() {
         return (
-            <span id={this.props.id} onClick={this.props.onClick}>
-                {this.props.value}
-            </span>
+            <div id={this.props.id} onClick={this.props.onClick}>
+                {this.props.glyphicon}{this.props.value}
+            </div>
         )
     }
 }
@@ -175,7 +193,7 @@ class PopScope extends React.Component {
                             key={head.head}
                             prefix={head.prefix}
                             actionId={headPak.id}
-                            addButton={head.height < 2 ? <Button id='nextLevel' value='add'
+                            addButton={head.height < 2 ? <span><Button id='nextLevel' glyphicon={<div id='cross' ></div>} value='增加下一级单元'
                                 onClick={
                                     actions('INS', {
                                         prefix: head.prefix,
@@ -183,26 +201,44 @@ class PopScope extends React.Component {
                                         head: head.head
                                     })
                                 }
-                            /> : <span></span>}
+                            /></span> : null}
+                            delButton={head.height > 0 ?
+                                <Button id='delButton' value='删除' onClick={
+                                    actions('DEL', {
+                                        id: headPak.id,
+                                        prefix: head.prefix
+                                    })
+                                } /> : null
+                            }
                             value={this.state.value}
                             onValueChange={this.onValueChange}
                             headValue={head.value}
                         >
-                            {/*{head.head + Array(head.height + 2).join('--')}*/}
-                            {Array(head.height + 2).join('--')}
-                            <span className='popText'>表单元名称</span>
-                            </Li>
+                            <span style={{
+                                float: 'left'
+                            }} className='popText'>表单元名称{Array(head.height + 2).join('--')}</span>
+                        </Li>
                     })
                 })
             });
-
         return (
-            <div className='popHead' id='popHead'>
-                <span style={{ marginLeft: '40%' }} className='popText'>表单元属性</span>
-                <ul>
-                    {popContent}
-                </ul>
-            </div >
+            <CSSTransitionGroup
+                transitionName="background"
+                transitionEnterTimeout={300}
+                transitionLeaveTimeout={300}
+                component='div'
+            >
+                {this.props.display ?
+                    <div className='popHead' id='popHead'>
+                        <div onClick={actions('CLOSE')}
+                            id='closeX'>{`\u00d7`}</div>
+                        <span style={{ marginLeft: '40%' }} className='popText'>表单元属性</span>
+                        <ul>
+                            {popContent}
+                        </ul>
+                    </div > : null
+                }
+            </CSSTransitionGroup>
         )
     }
 }
@@ -218,6 +254,7 @@ class Li extends React.Component {
                     onValueChange={this.props.onValueChange} />
                 {this.props.saveButton}
                 {this.props.addButton}
+                {this.props.delButton}
 
             </li>
         )
@@ -244,13 +281,15 @@ class InputHead extends React.Component {
         this.props.onValueChange(event.target.value)
     }
     render() {
-        return <span> <input
+        return <span><input style={{
+            float: 'left'
+        }}
             placeholder='table head'
             value={this.state.value}
             onChange={this.handleChange}
 
         />
-            <Button value='save'
+            <Button id='tmpSave' value='save'
                 onClick={actions('STH', {
                     prefix: this.props.prefix,
                     value: this.state.value,
@@ -394,7 +433,7 @@ const TableApp = ({ cells }, { store }) => {
                 <RuleScope metaData={store.getState().dataRule} />
             </div>
 
-            <PopScope metaData={store.getState().theadPak} />
+            <PopScope display={store.getState().popBox} metaData={store.getState().theadPak} />
         </div>
     )
 }

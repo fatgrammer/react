@@ -157,6 +157,7 @@ export class TableTrie {
         } while (stack.length)
         return data
     }
+
     boxHeight(boxStacks, maxDepth) {
 
         return boxStacks.map(
@@ -266,6 +267,21 @@ export class TableTrie {
             })[0]
         })
         return node.children.length;
+    }
+
+    removeSubtree(prefix) {
+        let node = this
+        prefix.slice(1, prefix.length - 1).forEach(d => {
+            node = node.children.filter(b => {
+                return b.head() === d
+            })[0]
+        })
+        for (let i = 0; i < node.children.length; ++i) {
+            if (node.children[i].head() === prefix[prefix.length - 1]) {
+                node.children.splice(i, 1);
+            }
+        }
+        return this;
     }
 }
 function retStack(stacks = []) {
