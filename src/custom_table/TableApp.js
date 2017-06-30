@@ -1,17 +1,10 @@
 import React from 'react'
-import TablePanel from './TablePanel'
-import { cellPairs, cellPairApp } from '../reducer/reducers'
-import { createStore, combineReducers } from 'redux'
-import { addCellPair } from '../action/actions'
-import { connect } from 'react-redux'
-import { HeadProps } from './HeadProps'
+import {  cellPairApp } from '../reducer/reducers'
+import { createStore} from 'redux'
 import { PropTypes } from 'prop-types'
 import EdiTable from '../EdiTable'
 import '../global.css'
 import { CSSTransitionGroup } from 'react-transition-group'
-
-import { Table } from 'react-bootstrap/lib';
-import { Col, Row } from 'react-bootstrap/lib';
 
 export let CellId = 0;
 export let store = createStore(cellPairApp)
@@ -125,35 +118,8 @@ class Button extends React.Component {
 }
 
 
-class TableScope extends React.Component {
-    render() {
-        return (
-            <table className="table table-bordered">
-                <thead>
-                    {this.props.cells.map(cell => {
-                        return cell.cellPair
-                    })}
-                </thead>
-            </table>
-        )
-    }
-}
 
-const getRelPOP = (POPs) => {
-    console.log('prop  ', POPs)
-    return POPs.filter(
-        e => e.showProps
-    ).map(e => e.headProps)
-}
-class ConfigScope extends React.Component {
-    render() {
-        return (
-            <div>
-                {getRelPOP(this.props.POPs)}
-            </div>
-        )
-    }
-}
+
 class NewScope extends React.Component {
     render() {
         const hb = headBlock(this.props.metaData)
@@ -187,7 +153,6 @@ class PopScope extends React.Component {
                 return headPak.shownProp;
             }).map(headPak => {
                 return headPak.data.map(heads => {
-                    let lidx = 0;
                     return heads.map(head => {
                         return <Li
                             key={head.head}
@@ -332,39 +297,8 @@ const fullHeadBlock = (metaData) => {
         }
     })
 }
-const depthHead = (headData = []) => {
-    console.log('hdata ', headData)
-    return headData.map(e => {
-        return e ? e.rowSpan : 0
-    }).reduce((prev, next) => {
-        console.log('p, ', prev, 'n ', next)
-        return prev + next
-    }, 0)
-}
-const cellNum = (headData = []) => {
-    return headData.map(e => {
-        return e ? e.colSpan : 0
-    }).reduce((prev, next) => {
-        console.log('p, ', prev, 'n ', next)
-        return prev + next
-    }, 0)
 
-}
-const calcHorHead = (metaData) => {
-    console.log('trial ', metaData)
-    return metaData.map(ele => {
-        {/*console.log('head is ', ele.trie.traverse())*/ }
-        return ele.trie.traverse()
-    }).reduce((prev, next) => {
-        let tmp = []
-        for (let i = 0; i < 3; ++i) {
-            // console.log('loc ', prev)
-            let prevTemp = prev[i] || []
-            tmp[i] = prevTemp.concat(next[i]);
-        }
-        return tmp
-    }, [])
-}
+
 class ResultScope extends React.Component {
     render() {
         const hb = fullHeadBlock(this.props.metaData)
@@ -391,7 +325,7 @@ class ResultScope extends React.Component {
 class RuleScope extends React.Component {
     render() {
         return <div>
-            <Table bordered>
+            <table>
                 <thead>
                     {this.props.metaData.map(
                         dataPak => {
@@ -409,13 +343,12 @@ class RuleScope extends React.Component {
                         })
                     })}
                 </thead>
-            </Table>
+            </table>
         </div>
     }
 }
 let newId = 0
 const TableApp = ({ cells }, { store }) => {
-    const state = store.getState()
     return (
         <div >
             <div style={{

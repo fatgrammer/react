@@ -1,17 +1,5 @@
 import React from 'react'
-import { store } from './TableApp'
-import PropTypes from 'prop-types'
 
-function* childMaker(children) {
-    var i = 0;
-    console.log('yield i ', i)
-    return {
-        next: () =>
-            i < children.length ?
-                { value: children[i++], done: false } :
-                { done: true }
-    }
-}
 export class TableTrie {
     constructor(head, height) {
         this.headPrefix = head
@@ -50,9 +38,9 @@ export class TableTrie {
             TableTrie.stack.pop();
             return
         } else {
-            root.children.map(ch => {
-                TableTrie.prefixTraverse(ch);
-            })
+            root.children.map(ch =>
+                TableTrie.prefixTraverse(ch)
+            )
         }
         TableTrie.stack.pop()
     }
@@ -120,11 +108,9 @@ export class TableTrie {
         let stack = [];
         let data = []
         //the number of element which output after pop
-        let pushCount = 0;
         do {
             while (node) {
                 stack.push(node);
-                pushCount += 1;
                 node = node.children[0];
             }
             do {
@@ -145,7 +131,6 @@ export class TableTrie {
                     }
                 }
                 // data.push(stack)
-                pushCount = 0
                 stack.pop();
                 let top = stack[stack.length - 1]
                 if (top && top.nextChild() !== null) {
@@ -321,49 +306,4 @@ function calcWidth(node) {
     })
 }
 
-export class TheadPak extends React.Component {
-    render() {
-        return (
-            <div>
-                {this.props.trie}
-            </div>
-        )
-    }
-}
-export class PropBar extends React.Component {
-    render() {
-        let root = new TableTrie(['A'], 0)
-        root.sFindSert(['A'], 'B');
-        root.sFindSert(['A'], 'C');
-        root.sFindSert(['A'], 'D');
-        root.sFindSert(['A', 'C'], 'E');
-        root.sFindSert(['A', 'C'], 'F');
-        root.sFindSert(['A', 'D'], 'E');
-        root.sFindSert(['A', 'D'], 'F');
-        root.sFindSert(['A'], 'E');
-        TableTrie.prefixTraverse(root);
-        root.traverse()
 
-        let display = {}
-        if (this.props.level === '__3rd') {
-            display = {
-                display: 'none',
-            }
-        }
-        return (
-            <div>
-                {this.props.level}<input placeholder='Head Name' />
-                <button style={display} onClick={this.props.onBarClick} >Add</button>
-                <button onClick={this.props.deleteAction}>Del</button>
-            </div>
-        )
-    }
-}
-export const HeadProps = ({ bars }) => {
-    return (
-        <div >
-            <h1>Head props</h1>
-            {bars}
-        </div>
-    )
-}
