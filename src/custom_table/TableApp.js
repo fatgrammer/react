@@ -99,9 +99,9 @@ export const actions = (abbr, data) => {
 class Button extends React.Component {
     render() {
         return (
-            <button id={this.props.id} onClick={this.props.onClick}>
+            <span id={this.props.id} onClick={this.props.onClick}>
                 {this.props.value}
-            </button>
+            </span>
         )
     }
 }
@@ -175,7 +175,7 @@ class PopScope extends React.Component {
                             key={head.head}
                             prefix={head.prefix}
                             actionId={headPak.id}
-                            addButton={head.height < 2 ? <Button value='add'
+                            addButton={head.height < 2 ? <Button id='nextLevel' value='add'
                                 onClick={
                                     actions('INS', {
                                         prefix: head.prefix,
@@ -188,17 +188,21 @@ class PopScope extends React.Component {
                             onValueChange={this.onValueChange}
                             headValue={head.value}
                         >
-                            {head.head + Array(head.height + 2).join('--')}</Li>
+                            {/*{head.head + Array(head.height + 2).join('--')}*/}
+                            {Array(head.height + 2).join('--')}
+                            <span className='popText'>表单元名称</span>
+                            </Li>
                     })
                 })
             });
 
         return (
-            <div className='popHead'>
+            <div className='popHead' id='popHead'>
+                <span style={{ marginLeft: '40%' }} className='popText'>表单元属性</span>
                 <ul>
                     {popContent}
-                    </ul>
-        </div>
+                </ul>
+            </div >
         )
     }
 }
@@ -329,7 +333,8 @@ class ResultScope extends React.Component {
             return [...prev, ...next]
         }, [])
         return <div>
-            <Button value='result' onClick={actions('RES', {
+            <hr />
+            <Button id='result' value='完成' onClick={actions('RES', {
                 url: 'http://localhost:20080/testData',
                 data: { data: JSON.stringify(list) }
             })} /><br />
@@ -340,7 +345,6 @@ class ResultScope extends React.Component {
 
 class RuleScope extends React.Component {
     render() {
-        console.log('meta', this.props.metaData[0])
         return <div>
             <Table bordered>
                 <thead>
@@ -369,20 +373,22 @@ const TableApp = ({ cells }, { store }) => {
     const state = store.getState()
     return (
         <div >
-            <div  >
-                <div id='uname'>中山大学</div>
-                <hr/>
+            <div style={{
+                marginLeft: '1em'
+            }} >
+                <div id='uname'>肥刘大学</div>
+                <hr />
                 <Button onClick={getDispatcher('ADD', newId++)} id='addButton' value='新增单元' />
                 {/*<Button onClick={getDispatcher('PAIR', CellId++)} value='add' />*/}
                 {/*<TableScope cells={state.cellPairs} />*/}
                 {/*<ConfigScope POPs={store.getState().headProps} />*/}
-                <br/>
+                <br /><br /><br />
                 <NewScope metaData={store.getState().theadPak} />
                 <ResultScope metaData={store.getState().theadPak} />
                 <RuleScope metaData={store.getState().dataRule} />
             </div>
 
-            <PopScope  metaData={store.getState().theadPak} />
+            <PopScope metaData={store.getState().theadPak} />
         </div>
     )
 }
