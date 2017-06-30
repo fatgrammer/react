@@ -272,6 +272,12 @@ class InputHead extends React.Component {
         this.setState({
             value: event.target.value
         })
+        store.dispatch({
+                type: 'SAVE_HEAD',
+                prefix: this.props.prefix,
+                value: this.state.value,
+                id: this.props.actionId
+        })
         this.props.onValueChange(event.target.value)
     }
     render() {
