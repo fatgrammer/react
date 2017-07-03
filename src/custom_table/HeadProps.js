@@ -117,7 +117,8 @@ export class TableTrie {
                 // TableTrie.printStack(stack)
                 let frame = stack.map(ele => {
                     return {
-                        value: ele.value
+                        value: ele.value,
+                        head: ele.head()
                     }
                 })
                 if (frame.length) {
@@ -141,9 +142,7 @@ export class TableTrie {
         } while (stack.length)
         return data
     }
-
     boxHeight(boxStacks, maxDepth) {
-
         return boxStacks.map(
             boxStack => {
                 return [...boxStack.slice(0, boxStack.length - 1),
@@ -155,7 +154,6 @@ export class TableTrie {
                 ]
             }
         )
-
     }
     mapData(heads, stackLength) {
         const list = heads.map(ele => {
@@ -201,7 +199,6 @@ export class TableTrie {
             }
         }
     }
-
     static findAndInsert(root, des, dir) {
         if (root.head() === des) {
             root.children.push(new TableTrie(dir, root.height - 1))
@@ -303,7 +300,7 @@ export class TableTrie {
             }
             node = node.children[node.children.length - 1]
         })
-         this.width = calcWidth(this)
+        this.width = calcWidth(this)
     }
 }
 function retStack(stacks = []) {
@@ -340,6 +337,6 @@ function calcWidth(node) {
     return node.children.map(ch => ch.width).reduce((prev, next) => {
         // const pWidth = prev || 1
         return prev + next
-    },0)
+    }, 0)
 }
 
