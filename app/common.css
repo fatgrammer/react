@@ -1,4 +1,9 @@
-body{color: #333333; font-size: 13px;-webkit-text-size-adjust:100%;background-color: #f5f5f5;} 
+
+body{
+    color: #333333; 
+    font-size: 13px;
+    background-color: #f5f5f5;
+} 
 div{background-color: white}
 a{color:#2d374b;text-decoration:none} 
 a:hover{color:#cd0200;text-decoration:none} 

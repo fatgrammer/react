@@ -3,7 +3,7 @@ import { actions } from './custom_table/TableApp'
 
 // import PropTypes from 'prop-types'
 // import { CSSTransitionGroup } from 'react-transition-group'
-import './global.css'
+// import './global.css'
 export let globalHeadId = 0
 export class TheadRen extends Component {
     constructor(props) {
