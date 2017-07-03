@@ -3,64 +3,30 @@ import { cellPairApp } from '../reducer/reducers'
 import { createStore } from 'redux'
 import { PropTypes } from 'prop-types'
 import EdiTable from '../EdiTable'
-import '../global.css'
+// import '../global.css'
 import { CSSTransitionGroup } from 'react-transition-group'
 
 export let CellId = 0;
 export let store = createStore(cellPairApp)
 
+const atod = (type, data)=>()=>store.dispatch({
+        type,
+        ...data
+    })
 
-export const getDispatcher = (level, id, barId) => {
-    switch (level) {
+
+export const actions = (abbr, data) => {
+    switch (abbr) {
         case 'ADD':
             return () => store.dispatch({
                 type: 'ADD',
-                id
+                ...data
             })
-        case 'INS':
-            return () => store.dispatch({
-                type: 'INSERT',
-                id
-            })
-        case 'PAIR':
-            return () => store.dispatch({
-                type: 'ADD_CELLPAIR',
-                id
-            })
-        case 'FIRST':
-            return () => store.dispatch({
-                type: 'ADD_SECOND',
-                id,
-                barId
-            })
-        case 'SECOND':
-            return () => store.dispatch({
-                type: 'ADD_THIRD',
-                id,
-                barId
-            })
-        case 'POP':
-            return () => store.dispatch({
-                type: 'POP_STRUCTURE',
-                id
-            })
-        case 'DEL_BAR':
-            return () => store.dispatch({
-                type: 'DELETE_BAR',
-                id,
-                barId
-            })
-        default:
-            return {}
-    }
-}
-export const actions = (abbr, data) => {
-    switch (abbr) {
         case 'INS':
             return () => {
                 store.dispatch({
-                    ...data,
-                    type: 'INSERT'
+                    type: 'INSERT',
+                    ...data
                 })
             }
         case 'POP':
@@ -306,9 +272,11 @@ class ResultScope extends React.Component {
 
             return headPak.data.map(heads => {
                 console.log('heads ', heads)
-                return {[heads.map(head => head.value).reduce((prev, next) => {
-                    return prev + '_' + next
-                })]:heads[heads.length - 1].head}
+                return {
+                    [heads.map(head => head.value).reduce((prev, next) => {
+                        return prev + '_' + next
+                    })]: heads[heads.length - 1].head
+                }
             })
 
         }).reduce((prev, next) => {
@@ -359,7 +327,7 @@ const TableApp = ({ cells }, { store }) => {
             }} >
                 <div id='uname'>肥刘研究院</div>
                 <hr />
-                <Button onClick={getDispatcher('ADD', newId++)} id='addButton' value='新增单元' />
+                <Button onClick={atod('ADD', { id: newId++ })} id='addButton' value='新增单元' />
                 <br /><br /><br />
                 <NewScope metaData={store.getState().theadPaks} />
                 <ResultScope metaData={store.getState().theadPaks} />

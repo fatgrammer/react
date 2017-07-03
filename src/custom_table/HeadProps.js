@@ -29,7 +29,7 @@ export class TableTrie {
     head() {
         return this.headPrefix[this.headPrefix.length - 1]
     }
-    static stack = []
+    static stack 
     static prefixTraverse(root) {
         TableTrie.stack.push({ head: root.headPrefix, height: root.height, width: root.width });
         if (root.children.length === 0) {

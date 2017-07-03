@@ -3,10 +3,10 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import TableApp from './custom_table/TableApp'
 import { store } from './custom_table/TableApp'
-import './common.css'
+// import './common.css'
 const ren = () => {
     ReactDOM.render(
-        <Provider store={store} state={store.getState()} cells={store.getState().cellPairs}>
+        <Provider store={store} >
             <TableApp  />
         </Provider>,
         document.getElementById("root"))
