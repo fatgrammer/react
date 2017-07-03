@@ -1,16 +1,15 @@
 import React from 'react'
 
 export class TableTrie {
-    constructor(head, height) {
+    constructor(head, height, value = '') {
         this.headPrefix = head
         this.children = []
         this.height = height
         this.width = 1;
         this.index = 0;
-        this.value = '';
+        this.value = value;
         this.maxDepth = 1;
     }
-
     nextChild() {
         if (this.index + 1 < this.children.length) {
             return this.children[this.index + 1]
@@ -87,8 +86,6 @@ export class TableTrie {
                 }
                 if (stack.length > this.maxDepth) {
                     this.maxDepth = stack.length
-                    console.log('max height', this.maxDepth)
-
                 }
                 // data.push(stack)
                 pushCount = 0
@@ -265,10 +262,48 @@ export class TableTrie {
         })
         for (let i = 0; i < node.children.length; ++i) {
             if (node.children[i].head() === prefix[prefix.length - 1]) {
+                //not prefect
+                this.reduceWidth(prefix, node.children[i].width)
                 node.children.splice(i, 1);
             }
         }
         return this;
+    }
+    //call by remove node, only affect 3 level structure
+    reduceWidth(prefix, dWidth) {
+        let node = this
+        prefix.slice(1, prefix.length - 1).forEach(d => {
+            node = node.children.filter(b => {
+                return b.head() === d
+            })[0]
+            if (node !== this) {
+                if (node.children.length === 1) {
+                    node.width = 1
+                    this.width += 1
+                } else {
+                    node.width -= dWidth
+                }
+            }
+        })
+        if (this.children === dWidth) {
+            this.width = 1
+        } else {
+            this.width -= dWidth
+        }
+    }
+    upsertPak(values) {
+        let node = this
+        values.slice(1).forEach(value => {
+            if (!node.children.includes(value)) {
+                node.children.push(
+                    new TableTrie(
+                        node.head().concat(...['th', node.children.length]),
+                        node.height + 1, value))
+                node.width = calcWidth(node)
+            }
+            node = node.children[node.children.length - 1]
+        })
+         this.width = calcWidth(this)
     }
 }
 function retStack(stacks = []) {
@@ -303,9 +338,8 @@ function printStack(stacks = []) {
 }
 function calcWidth(node) {
     return node.children.map(ch => ch.width).reduce((prev, next) => {
-        const pWidth = prev || 1
-        return pWidth + next
-    })
+        // const pWidth = prev || 1
+        return prev + next
+    },0)
 }
-
 

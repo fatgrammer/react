@@ -6,12 +6,13 @@ let gTrieId = 0;
 const theadPaks = (state = [], action) => {
     switch (action.type) {
         case 'ADD':
+            let testTrie = buildTrie([['国家', '一等奖'], ['国家', '二等奖'], ['其他']])
             const tId = "th" + gTrieId++
             return [...state, {
                 id: tId,
                 trie: new TableTrie([tId], 0),
-                shownProp: false,
-                children: 0
+                // trie: testTrie[0], 
+                shownProp: false
             }];
         case 'DELETE_PAK':
             return state.filter(t => {
@@ -138,14 +139,6 @@ const popBox = (state = false, action) => {
 export const validation = (state = [], action) => {
     return state;
 }
-export const visibilityFilter = (state = [], action) => {
-    switch (action.type) {
-        case 'SHOW':
-            return action.filter;
-        default:
-            return state;
-    }
-}
 
 export const cellPairApp = combineReducers({
     theadPaks,
@@ -153,3 +146,17 @@ export const cellPairApp = combineReducers({
     dataRule,
     popBox
 })
+
+export const buildTrie = (headPaks = []) => {
+    let data = []
+    let headPakId = 0
+    headPaks.map(headPak => {
+        data.filter(dataPak => {
+            return dataPak.value === headPak[0]
+        }).length ? null :
+            data.push(new TableTrie(['th' + headPakId++], 0, headPak[0]))
+        data[data.length - 1].upsertPak(headPak)
+    })
+    console.log('backedn ', data)
+    return data
+}

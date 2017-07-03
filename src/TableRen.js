@@ -36,7 +36,6 @@ export class TheadRen extends Component {
             gIdx += 1;
             return headPak.data.map(heads => {
                 return <tr>{heads.map(head => {
-                    console.log('haed ', head)
                     return <Th key={LocalBarKey++} id={gIdx} prefix={head.prefix}
                         onHeadClick={
                             actions('POP', {

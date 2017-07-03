@@ -326,6 +326,8 @@ class ResultScope extends React.Component {
                 url: 'http://localhost:20080/testData',
                 data: { data: JSON.stringify(list) }
             })} /><br />
+            <br /><br />
+            <hr />
             {JSON.stringify(list)}</div>
 
     }
@@ -363,7 +365,7 @@ const TableApp = ({ cells }, { store }) => {
             <div style={{
                 marginLeft: '1em'
             }} >
-                <div id='uname'>肥刘大学</div>
+                <div id='uname'>肥刘研究院</div>
                 <hr />
                 <Button onClick={getDispatcher('ADD', newId++)} id='addButton' value='新增单元' />
                 <br /><br /><br />
