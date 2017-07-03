@@ -119,9 +119,6 @@ class Button extends React.Component {
     }
 }
 
-
-
-
 class NewScope extends React.Component {
     render() {
         headBlock(this.props.metaData)
@@ -228,7 +225,6 @@ class Li extends React.Component {
                 {this.props.saveButton}
                 {this.props.addButton}
                 {this.props.delButton}
-
             </li>
         )
     }
@@ -260,7 +256,6 @@ class InputHead extends React.Component {
             placeholder='table head'
             value={this.state.value}
             onChange={this.handleChange}
-
         />
             {/*<Button id='tmpSave' value='save'
                 onClick={actions('STH', {
@@ -275,7 +270,6 @@ const headBlock = (metaData = []) => {
     const maxDepth = metaData.map(headPak => headPak.trie.maxDepth).reduce((prev, next) => {
         return prev >= next ? prev : next
     }, 0)
-    // console.log('after depth', maxDepth)
     return metaData.map(ele => {
         return {
             data: boxHeight(ele.trie.inOrderData(), maxDepth),
@@ -297,7 +291,6 @@ const boxHeight = (boxStacks, maxDepth) => {
             ]
         }
     )
-
 }
 const fullHeadBlock = (metaData) => {
     return metaData.map(ele => {
@@ -306,17 +299,18 @@ const fullHeadBlock = (metaData) => {
         }
     })
 }
-
-
 class ResultScope extends React.Component {
     render() {
         const hb = fullHeadBlock(this.props.metaData)
         let list = hb.map(headPak => {
+
             return headPak.data.map(heads => {
-                return heads.map(head => head.value).reduce((prev, next) => {
+                console.log('heads ', heads)
+                return {[heads.map(head => head.value).reduce((prev, next) => {
                     return prev + '_' + next
-                })
+                })]:heads[heads.length - 1].head}
             })
+
         }).reduce((prev, next) => {
             return [...prev, ...next]
         }, [])
@@ -329,10 +323,8 @@ class ResultScope extends React.Component {
             <br /><br />
             <hr />
             {JSON.stringify(list)}</div>
-
     }
 }
-
 class RuleScope extends React.Component {
     render() {
         return <div>
@@ -373,7 +365,6 @@ const TableApp = ({ cells }, { store }) => {
                 <ResultScope metaData={store.getState().theadPaks} />
                 <RuleScope metaData={store.getState().dataRule} />
             </div>
-
             <PopScope display={store.getState().popBox} metaData={store.getState().theadPaks} />
         </div>
     )
