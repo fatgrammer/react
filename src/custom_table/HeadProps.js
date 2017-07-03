@@ -83,10 +83,12 @@ export class TableTrie {
                 let frame = this.mapData(stack.slice(stack.length - pushCount), stack.length)
                 if (frame.length) {
                     //max table colspan
-                    if (frame.length > this.maxDepth) {
-                        this.maxDepth = frame.length
-                    }
                     data.push(frame);
+                }
+                if (stack.length > this.maxDepth) {
+                    this.maxDepth = stack.length
+                    console.log('max height', this.maxDepth)
+
                 }
                 // data.push(stack)
                 pushCount = 0

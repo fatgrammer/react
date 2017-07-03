@@ -115,11 +115,23 @@ input{
 }
 #delButton{
     margin-left: 0.2em;
-    width: 135px;
+    width: 65px;
     height: 30px;
     line-height: 30px;
     text-align: center;
     color: #e57066;
+    cursor: pointer;
+    border: 1px solid #e57066;
+    float:left
+}
+#delPakButton{
+    margin-left: 0.2em;
+    width: 65px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: #ff0024;
+    color: white;
     cursor: pointer;
     border: 1px solid #e57066;
     float:left

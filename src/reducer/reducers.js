@@ -2,66 +2,92 @@ import { combineReducers } from 'redux'
 import { TableTrie } from '../custom_table/HeadProps'
 // import PropTypes from 'prop-types'
 import $ from 'jquery'
-
-const theadPak = (state = [], action) => {
+let gTrieId = 0;
+const theadPaks = (state = [], action) => {
     switch (action.type) {
         case 'ADD':
+            const tId = "th" + gTrieId++
             return [...state, {
-                id: state.length,
-                trie: new TableTrie(["th" + state.length], 0),
+                id: tId,
+                trie: new TableTrie([tId], 0),
                 shownProp: false,
                 children: 0
             }];
+        case 'DELETE_PAK':
+            return state.filter(t => {
+                return theadPak(t, action)
+            })
         case 'INSERT':
-            return [...state.slice(0, action.id),
-
-            {
-                ...state[action.id],
-                trie: state[action.id].trie.sFindSert(
-                    action.prefix,
-                    action.head + 'th' + state[action.id].trie.sFindIdx(action.prefix)),
-                children: state[action.id].children + 1
-            },
-            ...state.slice(action.id + 1)
-            ]
+            return state.map(t => {
+                return theadPak(t, action)
+            })
         case 'POP_HEAD':
             return state.map(t => {
-                if (t.id !== action.id) {
-                    return {
-                        ...t,
-                        shownProp: false
-                    }
-                }
-                return {
-                    ...t,
-                    shownProp: true
-                }
+
+                return theadPak(t, action)
             })
         case 'SAVE_HEAD':
-            console.log('act ', action)
+            return state.map(t => {
 
-            return [...state.slice(0, action.id),
-            {
-                ...state[action.id],
-                trie: state[action.id].trie.sFindSet(action.prefix, action.value)
-            },
-            ...state.slice(action.id + 1)
-            ]
+                return theadPak(t, action)
+            })
         //delete whole subtree
         case 'DELETE_BAR':
-        console.log(action.prefix)
-            return [...state.slice(0, action.id),
-            {
-                ...state[action.id],
-                trie: state[action.id].trie.removeSubtree(action.prefix)
-            },
-            ...state.slice(action.id + 1)
-            ]
+
+            return state.map(t => {
+
+                return theadPak(t, action)
+            })
         default:
             return state
     }
 }
+const theadPak = (state, action) => {
+    switch (action.type) {
+        case 'DELETE_PAK':
+            return state.id !== action.id
+        case 'INSERT':
+            if (state.id !== action.id) {
+                return state
+            }
+            return {
+                ...state,
+                trie: state.trie.sFindSert(
+                    action.prefix,
+                    action.head + 'th' + state.trie.sFindIdx(action.prefix)),
+                children: state.children + 1
+            }
+        case 'POP_HEAD':
+            if (state.id !== action.id) {
+                return {
+                    ...state,
+                    shownProp: false
+                }
+            }
+            return {
+                ...state,
+                shownProp: true
+            }
+        case 'SAVE_HEAD':
+            if (state.id !== action.id) {
+                return state
+            }
+            return {
+                ...state,
+                trie: state.trie.sFindSet(action.prefix, action.value)
+            }
+        //delete whole subtree
+        case 'DELETE_BAR':
 
+            if (state.id !== action.id) {
+                return state
+            }
+            return {
+                ...state,
+                trie: state.trie.removeSubtree(action.prefix)
+            }
+    }
+}
 const ruleTemplate = {
     allowNull: false,
     isInteger: false,
@@ -122,7 +148,7 @@ export const visibilityFilter = (state = [], action) => {
 }
 
 export const cellPairApp = combineReducers({
-    theadPak,
+    theadPaks,
     dataAction,
     dataRule,
     popBox

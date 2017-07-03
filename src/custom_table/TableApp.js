@@ -1,6 +1,6 @@
 import React from 'react'
-import {  cellPairApp } from '../reducer/reducers'
-import { createStore} from 'redux'
+import { cellPairApp } from '../reducer/reducers'
+import { createStore } from 'redux'
 import { PropTypes } from 'prop-types'
 import EdiTable from '../EdiTable'
 import '../global.css'
@@ -57,10 +57,12 @@ export const getDispatcher = (level, id, barId) => {
 export const actions = (abbr, data) => {
     switch (abbr) {
         case 'INS':
-            return () => store.dispatch({
-                ...data,
-                type: 'INSERT'
-            })
+            return () => {
+                store.dispatch({
+                    ...data,
+                    type: 'INSERT'
+                })
+            }
         case 'POP':
             return () => store.dispatch({
                 type: 'POP_HEAD',
@@ -122,6 +124,7 @@ class Button extends React.Component {
 
 class NewScope extends React.Component {
     render() {
+        headBlock(this.props.metaData)
         const hb = headBlock(this.props.metaData)
         return (
             <EdiTable
@@ -173,7 +176,12 @@ class PopScope extends React.Component {
                                         id: headPak.id,
                                         prefix: head.prefix
                                     })
-                                } /> : null
+                                } /> : <Button id='delPakButton' value='DELPAK' onClick={
+                                    () => store.dispatch({
+                                        type: 'DELETE_PAK',
+                                        id: headPak.id
+                                    })} />
+
                             }
                             value={this.state.value}
                             onValueChange={this.onValueChange}
@@ -238,10 +246,10 @@ class InputHead extends React.Component {
             value: event.target.value
         })
         store.dispatch({
-                type: 'SAVE_HEAD',
-                prefix: this.props.prefix,
-                value: this.state.value,
-                id: this.props.actionId
+            type: 'SAVE_HEAD',
+            prefix: this.props.prefix,
+            value: event.target.value,
+            id: this.props.actionId
         })
         this.props.onValueChange(event.target.value)
     }
@@ -254,19 +262,20 @@ class InputHead extends React.Component {
             onChange={this.handleChange}
 
         />
-            <Button id='tmpSave' value='save'
+            {/*<Button id='tmpSave' value='save'
                 onClick={actions('STH', {
                     prefix: this.props.prefix,
                     value: this.state.value,
                     id: this.props.actionId
-                })} />
+                })} />*/}
         </span>
     }
 }
 const headBlock = (metaData = []) => {
     const maxDepth = metaData.map(headPak => headPak.trie.maxDepth).reduce((prev, next) => {
         return prev >= next ? prev : next
-    }, {})
+    }, 0)
+    // console.log('after depth', maxDepth)
     return metaData.map(ele => {
         return {
             data: boxHeight(ele.trie.inOrderData(), maxDepth),
@@ -293,7 +302,7 @@ const boxHeight = (boxStacks, maxDepth) => {
 const fullHeadBlock = (metaData) => {
     return metaData.map(ele => {
         return {
-            data: ele.trie.inOrderFullData(),
+            data: ele.trie.inOrderFullData()
         }
     })
 }
@@ -357,16 +366,13 @@ const TableApp = ({ cells }, { store }) => {
                 <div id='uname'>肥刘大学</div>
                 <hr />
                 <Button onClick={getDispatcher('ADD', newId++)} id='addButton' value='新增单元' />
-                {/*<Button onClick={getDispatcher('PAIR', CellId++)} value='add' />*/}
-                {/*<TableScope cells={state.cellPairs} />*/}
-                {/*<ConfigScope POPs={store.getState().headProps} />*/}
                 <br /><br /><br />
-                <NewScope metaData={store.getState().theadPak} />
-                <ResultScope metaData={store.getState().theadPak} />
+                <NewScope metaData={store.getState().theadPaks} />
+                <ResultScope metaData={store.getState().theadPaks} />
                 <RuleScope metaData={store.getState().dataRule} />
             </div>
 
-            <PopScope display={store.getState().popBox} metaData={store.getState().theadPak} />
+            <PopScope display={store.getState().popBox} metaData={store.getState().theadPaks} />
         </div>
     )
 }
