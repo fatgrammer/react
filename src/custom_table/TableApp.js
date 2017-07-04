@@ -14,8 +14,6 @@ export const atod = (type, data)=>()=>store.dispatch({
         ...data
     })
 
-
-
 class Button extends React.Component {
     render() {
         return (
