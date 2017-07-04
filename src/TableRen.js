@@ -52,19 +52,12 @@ export class TheadRen extends Component {
                         id: heads[heads.length - 1].value,
                     })
                 }
-
                 >hazard</Td></tr >
             })
         })
     }
     render() {
         return (
-            // <CSSTransitionGroup
-            //     transitionName='example'
-            //     transitionEnterTimeout={500}
-            //     transitionLeaveTimeout={300}
-            //     component='thead'
-            // >
             <thead>
                 {this.renderHorizontalThead(this.props.hhead)}{this.renderHeadPak(this.props.vhead)}
             </thead>

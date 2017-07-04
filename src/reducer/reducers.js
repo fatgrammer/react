@@ -136,15 +136,20 @@ const popBox = (state = false, action) => {
     }
 }
 
-export const validation = (state = [], action) => {
-    return state;
+const tableInfo = (state = '', action) => {
+    switch (action.type) {
+        case 'TABLE_NAME':
+            return { tableName: action.tableName };
+        default:
+            return state;
+    }
 }
-
 export const cellPairApp = combineReducers({
     theadPaks,
     dataAction,
     dataRule,
-    popBox
+    popBox,
+    tableInfo
 })
 
 export const buildTrie = (headPaks = []) => {
@@ -157,6 +162,5 @@ export const buildTrie = (headPaks = []) => {
             data.push(new TableTrie(['th' + headPakId++], 0, headPak[0]))
         data[data.length - 1].upsertPak(headPak)
     })
-    console.log('backedn ', data)
     return data
 }

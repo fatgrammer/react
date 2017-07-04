@@ -9,10 +9,10 @@ import { CSSTransitionGroup } from 'react-transition-group'
 export let CellId = 0;
 export let store = createStore(cellPairApp)
 
-export const atod = (type, data)=>()=>store.dispatch({
-        type,
-        ...data
-    })
+export const atod = (type, data) => () => store.dispatch({
+    type,
+    ...data
+})
 
 class Button extends React.Component {
     render() {
@@ -46,11 +46,6 @@ class PopScope extends React.Component {
             value
         })
     }
-    componentDidMount() {
-        this.setState({
-            value: ''
-        })
-    }
     render() {
         const hb = headBlock(this.props.metaData)
         const popContent =
@@ -79,11 +74,10 @@ class PopScope extends React.Component {
                                         prefix: head.prefix
                                     })
                                 } /> : <Button id='delPakButton' value='DELPAK' onClick={
-                                            atod('DELETE_PAK', {
-                                                id: headPak.id
-                                            })
-                                    } />
-
+                                    atod('DELETE_PAK', {
+                                        id: headPak.id
+                                    })
+                                } />
                             }
                             value={this.state.value}
                             onValueChange={this.onValueChange}
@@ -99,14 +93,14 @@ class PopScope extends React.Component {
         return (
             <CSSTransitionGroup
                 transitionName="background"
-                transitionEnterTimeout={300}
-                transitionLeaveTimeout={300}
+                transitionEnterTimeout={200}
+                transitionLeaveTimeout={200}
                 component='div'
             >
                 {this.props.display ?
                     <div className='popHead' id='popHead'>
                         <div onClick={
-                            atod('CLOSE_POPBAR', {})
+                            atod('CLOSE_POPBAR')
                         }
                             id='closeX'>{`\u00d7`}</div>
                         <span style={{ marginLeft: '40%' }} className='popText'>表单元属性</span>
@@ -164,12 +158,6 @@ class InputHead extends React.Component {
             value={this.state.value}
             onChange={this.handleChange}
         />
-            {/*<Button id='tmpSave' value='save'
-                onClick={actions('STH', {
-                    prefix: this.props.prefix,
-                    value: this.state.value,
-                    id: this.props.actionId
-                })} />*/}
         </span>
     }
 }
@@ -208,21 +196,20 @@ const fullHeadBlock = (metaData) => {
 }
 class ResultScope extends React.Component {
     render() {
-        const hb = fullHeadBlock(this.props.metaData)
-        let list = hb.map(headPak => {
-
+        const hb = fullHeadBlock(this.props.content)
+        let list = [];
+        list.push(this.props.head)
+        list.push(...hb.map(headPak => {
             return headPak.data.map(heads => {
-                console.log('heads ', heads)
                 return {
                     [heads.map(head => head.value).reduce((prev, next) => {
                         return prev + '_' + next
                     })]: heads[heads.length - 1].head
                 }
             })
-
         }).reduce((prev, next) => {
             return [...prev, ...next]
-        }, [])
+        }, []))
         return <div>
             <hr />
             <Button id='result' value='完成' onClick={
@@ -261,6 +248,27 @@ class RuleScope extends React.Component {
         </div>
     }
 }
+class TableTitle extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            name: ''
+        }
+        this.handleChange = this.handleChange.bind(this)
+    }
+    handleChange(event) {
+        this.setState({
+            name: event.target.value
+        });
+        store.dispatch({
+            type: 'TABLE_NAME',
+            tableName: event.target.value
+        })
+    }
+    render() {
+        return <input value={this.state.name} onChange={this.handleChange} />
+    }
+}
 let newId = 0
 const TableApp = ({ cells }, { store }) => {
     return (
@@ -270,10 +278,12 @@ const TableApp = ({ cells }, { store }) => {
             }} >
                 <div id='uname'>肥刘研究院</div>
                 <hr />
+                TableName: <TableTitle name={store.getState().tableInfo} />
+                <hr />
                 <Button onClick={atod('ADD', { id: newId++ })} id='addButton' value='新增单元' />
                 <br /><br /><br />
                 <NewScope metaData={store.getState().theadPaks} />
-                <ResultScope metaData={store.getState().theadPaks} />
+                <ResultScope content={store.getState().theadPaks} head={store.getState().tableInfo} />
                 <RuleScope metaData={store.getState().dataRule} />
             </div>
             <PopScope display={store.getState().popBox} metaData={store.getState().theadPaks} />
