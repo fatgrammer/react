@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { actions } from './custom_table/TableApp'
+import { actions } from './custom_table/TableApp';
+import { atod } from './custom_table/TableApp';
 
 // import PropTypes from 'prop-types'
 // import { CSSTransitionGroup } from 'react-transition-group'
@@ -38,7 +39,7 @@ export class TheadRen extends Component {
                 return <tr>{heads.map(head => {
                     return <Th key={LocalBarKey++} id={gIdx} prefix={head.prefix}
                         onHeadClick={
-                            actions('POP', {
+                            atod('POP_HEAD', {
                                 id: headPak.id
                             })
                         }
@@ -47,7 +48,7 @@ export class TheadRen extends Component {
                     </Th>
                 })
                 }<Td onDataClick={
-                    actions('RULE', {
+                    atod('POP_RULE', {
                         id: heads[heads.length - 1].value,
                     })
                 }

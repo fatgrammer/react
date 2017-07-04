@@ -9,7 +9,7 @@ import { CSSTransitionGroup } from 'react-transition-group'
 export let CellId = 0;
 export let store = createStore(cellPairApp)
 
-const atod = (type, data)=>()=>store.dispatch({
+export const atod = (type, data)=>()=>store.dispatch({
         type,
         ...data
     })
@@ -126,7 +126,7 @@ class PopScope extends React.Component {
                             actionId={headPak.id}
                             addButton={head.height < 2 ? <span><Button id='nextLevel' glyphicon={<div id='cross' ></div>} value='增加下一级单元'
                                 onClick={
-                                    actions('INS', {
+                                    atod('INSERT', {
                                         prefix: head.prefix,
                                         id: headPak.id,
                                         head: head.head
@@ -135,15 +135,15 @@ class PopScope extends React.Component {
                             /></span> : null}
                             delButton={head.height > 0 ?
                                 <Button id='delButton' value='删除' onClick={
-                                    actions('DEL', {
+                                    atod('DELETE_BAR', {
                                         id: headPak.id,
                                         prefix: head.prefix
                                     })
                                 } /> : <Button id='delPakButton' value='DELPAK' onClick={
-                                    () => store.dispatch({
-                                        type: 'DELETE_PAK',
-                                        id: headPak.id
-                                    })} />
+                                            atod('DELETE_PAK', {
+                                                id: headPak.id
+                                            })
+                                    } />
 
                             }
                             value={this.state.value}
@@ -166,7 +166,9 @@ class PopScope extends React.Component {
             >
                 {this.props.display ?
                     <div className='popHead' id='popHead'>
-                        <div onClick={actions('CLOSE')}
+                        <div onClick={
+                            atod('CLOSE_POPBAR', {})
+                        }
                             id='closeX'>{`\u00d7`}</div>
                         <span style={{ marginLeft: '40%' }} className='popText'>表单元属性</span>
                         <ul>
@@ -284,10 +286,12 @@ class ResultScope extends React.Component {
         }, [])
         return <div>
             <hr />
-            <Button id='result' value='完成' onClick={actions('RES', {
-                url: 'http://localhost:20080/testData',
-                data: { data: JSON.stringify(list) }
-            })} /><br />
+            <Button id='result' value='完成' onClick={
+                atod('RESULT', {
+                    url: 'http://localhost:20080/testData',
+                    data: { data: JSON.stringify(list) }
+                })
+            } /><br />
             <br /><br />
             <hr />
             {JSON.stringify(list)}</div>
