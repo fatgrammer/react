@@ -15,66 +15,7 @@ export const atod = (type, data)=>()=>store.dispatch({
     })
 
 
-export const actions = (abbr, data) => {
-    switch (abbr) {
-        case 'ADD':
-            return () => store.dispatch({
-                type: 'ADD',
-                ...data
-            })
-        case 'INS':
-            return () => {
-                store.dispatch({
-                    type: 'INSERT',
-                    ...data
-                })
-            }
-        case 'POP':
-            return () => store.dispatch({
-                type: 'POP_HEAD',
-                ...data
-            })
-        case 'SIDE':
-            return () => store.dispatch({
-                type: 'SHOW_SIDEBAR',
-                ...data
-            })
-        case 'STH':
-            return () => store.dispatch({
-                type: 'SAVE_HEAD',
-                ...data
-            })
-        case 'RES':
-            return () => {
-                store.dispatch({
-                    type: 'RESULT',
-                    ...data
-                })
-            }
-        case 'RULE':
-            return () => {
-                store.dispatch({
-                    type: 'POP_RULE',
-                    ...data
-                })
-            }
-        case 'CLOSE':
-            return () => {
-                store.dispatch({
-                    type: 'CLOSE_POPBAR'
-                })
-            }
-        case 'DEL':
-            return () => {
-                store.dispatch({
-                    type: 'DELETE_BAR',
-                    ...data
-                })
-            }
-        default:
-            return {}
-    }
-}
+
 class Button extends React.Component {
     render() {
         return (
