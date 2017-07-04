@@ -1,13 +1,24 @@
 import { combineReducers } from 'redux'
 import { TableTrie } from '../custom_table/HeadProps'
 // import PropTypes from 'prop-types'
+import { store } from '../custom_table/TableApp'
 import $ from 'jquery'
 let gTrieId = 0;
 const theadPaks = (state = [], action) => {
     switch (action.type) {
+        case 'BUILD':
+            console.log(action)
+            let lcid = 0
+            return consTrie(action.data).map(ele => {
+                return {
+                    id: ele.id,
+                    trie: ele.data,
+                    shownProp: false
+                }
+            })
         case 'ADD':
-            let testTrie = buildTrie([['国家', '一等奖'], ['国家', '二等奖'], ['其他']])
-            const tId = "th" + gTrieId++
+            // let testTrie = buildTrie([['国家', '一等奖'], ['国家', '二等奖'], ['其他']])
+            const tId = '\uff04' + gTrieId++
             return [...state, {
                 id: tId,
                 trie: new TableTrie([tId], 0),
@@ -55,8 +66,7 @@ const theadPak = (state, action) => {
                 ...state,
                 trie: state.trie.sFindSert(
                     action.prefix,
-                    action.head + 'th' + state.trie.sFindIdx(action.prefix)),
-                children: state.children + 1
+                    action.head + '\uff04' + state.trie.sFindIdx(action.prefix)),
             }
         case 'POP_HEAD':
             if (state.id !== action.id) {
@@ -89,13 +99,18 @@ const theadPak = (state, action) => {
             }
     }
 }
-const ruleTemplate = {
+
+const ruleTemp = [{
     allowNull: false,
     isInteger: false,
     isDecimal: false,
-    mainKey: false
-
-}
+    mainKey: false,
+    lock: false
+}, {
+    dateFormat: ''
+}, {
+    reference: []
+}]
 const dataRule = (state = [], action) => {
     switch (action.type) {
         case 'POP_RULE':
@@ -106,7 +121,9 @@ const dataRule = (state = [], action) => {
             // })
             return [...state, {
                 id: action.id,
-                rule: ruleTemplate
+                radio: ruleTemp[0],
+                input: ruleTemp[1],
+                select: ruleTemp[2]
             }]
 
         default:
@@ -119,6 +136,14 @@ const dataAction = (state = [], action) => {
             $.post(action.url, action.data, function (response) {
                 alert(response)
             }, 'json');
+            return state
+        case 'TABLE_HEADS':
+            $.getJSON(action.url + action.tableName.tableName, (res) => {
+                store.dispatch({
+                    type: 'BUILD',
+                    data: splitHead(res)
+                })
+            })
             return state
         default:
             return state
@@ -151,7 +176,34 @@ export const cellPairApp = combineReducers({
     popBox,
     tableInfo
 })
+export const splitHead = (data) => {
+    let dp = Object.entries(data).map(ele => {
+        return { [ele[0]]: ele[1].split('_') }
+    })
+    return dp
+    // return Object.values(data).map(ele => {
+    //     return ele.split('_')
+    // })
+}
+export const consTrie = (headPaks = []) => {
+    let data = []
+    let headPakId = 0
+    headPaks.map(headPak => {
 
+        const entry = Object.entries(headPak)[0]
+        const key = entry[0]
+        const value = entry[1]
+        data.filter(dataPak => {
+            return dataPak.value === value[0]
+        }).length ? null :
+            data.push({
+                id: key,
+                data: new TableTrie([key], 0, value[0])
+            })
+        data[data.length - 1].data.upsertPak(value, key)
+    })
+    return data
+}
 export const buildTrie = (headPaks = []) => {
     let data = []
     let headPakId = 0
@@ -159,7 +211,7 @@ export const buildTrie = (headPaks = []) => {
         data.filter(dataPak => {
             return dataPak.value === headPak[0]
         }).length ? null :
-            data.push(new TableTrie(['th' + headPakId++], 0, headPak[0]))
+            data.push(new TableTrie(['\uff04' + headPakId++], 0, headPak[0]))
         data[data.length - 1].upsertPak(headPak)
     })
     return data

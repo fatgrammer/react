@@ -4,6 +4,7 @@ export class TableTrie {
     constructor(head, height, value = '') {
         this.headPrefix = head
         this.children = []
+        this.childNum = 0;
         this.height = height
         this.width = 1;
         this.index = 0;
@@ -29,7 +30,7 @@ export class TableTrie {
     head() {
         return this.headPrefix[this.headPrefix.length - 1]
     }
-    static stack 
+    static stack
     static prefixTraverse(root) {
         TableTrie.stack.push({ head: root.headPrefix, height: root.height, width: root.width });
         if (root.children.length === 0) {
@@ -163,7 +164,8 @@ export class TableTrie {
                 height: ele.height,
                 depth: 1,
                 width: ele.width,
-                value: ele.value
+                value: ele.value,
+                childNum: ele.childNum
             }
         })
         if (list.length) {
@@ -219,11 +221,14 @@ export class TableTrie {
     }
     sFindSert(des, dir) {
         let node = this
+
         des.slice(1).forEach(d => {
             node = node.children.filter(b => {
                 return b.head() === d
             })[0]
         })
+
+        node.childNum += 1;
         // node.height -= 1
         node.children.push(new TableTrie(des.concat(dir), node.height + 1))
         node.width = calcWidth(node)
@@ -247,7 +252,7 @@ export class TableTrie {
                 return b.head() === d
             })[0]
         })
-        return node.children.length;
+        return node.childNum;
     }
 
     removeSubtree(prefix) {
@@ -266,7 +271,7 @@ export class TableTrie {
         }
         return this;
     }
-    //call by remove node, only affect 3 level structure
+    //!call by remove node, only affect 3 level structure
     reduceWidth(prefix, dWidth) {
         let node = this
         prefix.slice(1, prefix.length - 1).forEach(d => {
@@ -288,18 +293,26 @@ export class TableTrie {
             this.width -= dWidth
         }
     }
-    upsertPak(values) {
+    //! need optimize
+    upsertPak(values, head) {
         let node = this
+        const heads = head.split('\uff04').slice(1)
+        this.headPrefix[this.headPrefix.length - 1] = '\uff04' + heads.shift()
         values.slice(1).forEach(value => {
             if (!node.children.includes(value)) {
+                if (heads[0] > node.childNum) {
+                    node.childNum = Number.parseInt(heads[0]) + 1
+                } else {
+                    node.childNum = Number.parseInt(node.childNum) + 1
+                }
                 node.children.push(
                     new TableTrie(
-                        node.head().concat(...['th', node.children.length]),
+                        [...node.headPrefix, node.head().concat('\uff04' + heads.shift())],
                         node.height + 1, value))
                 node.width = calcWidth(node)
             }
-            node = node.children[node.children.length - 1]
         })
+        node = node.children[node.children.length - 1]
         this.width = calcWidth(this)
     }
 }

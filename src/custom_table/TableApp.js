@@ -197,52 +197,89 @@ const fullHeadBlock = (metaData) => {
 class ResultScope extends React.Component {
     render() {
         const hb = fullHeadBlock(this.props.content)
-        let list = [];
-        list.push(this.props.head)
-        list.push(...hb.map(headPak => {
-            return headPak.data.map(heads => {
-                return {
-                    [heads.map(head => head.value).reduce((prev, next) => {
-                        return prev + '_' + next
-                    })]: heads[heads.length - 1].head
-                }
-            })
-        }).reduce((prev, next) => {
-            return [...prev, ...next]
-        }, []))
+        let list = {};
+        list = {
+            ...this.props.head,
+            ...list
+        }
+        list = {
+            ...list,
+            ...hb.map(headPak => {
+                return headPak.data.map(heads => {
+                    return {
+                        [heads[heads.length - 1].head]:
+                        heads.map(head => head.value).reduce((prev, next) => {
+                            return prev + '_' + next
+                        })
+                    }
+                })
+            }).reduce((prev, next) => {
+                return [...prev, ...next]
+            }, []).reduce((prev, next) => {
+                return { ...prev, ...next }
+            }, {})
+        }
         return <div>
             <hr />
             <Button id='result' value='完成' onClick={
                 atod('RESULT', {
-                    url: 'http://localhost:20080/testData',
+                    url: 'http://localhost:20080/customTable',
                     data: { data: JSON.stringify(list) }
                 })
             } /><br />
             <br /><br />
             <hr />
-            {JSON.stringify(list)}</div>
+            {JSON.stringify(list)}
+
+            <Button id='test' value='test' onClick={
+                atod('TABLE_HEADS', {
+                    url: 'http://localhost:20080/tableTemp/',
+                    tableName: this.props.head
+                })
+            }
+            />
+        </div>
+
     }
 }
 class RuleScope extends React.Component {
     render() {
+        const data = this.props.metaData
+        const radio = data.map(dataPak => dataPak.radio)
+        const input = data.map(dataPak => dataPak.input)
+        const select = data.map(dataPak => dataPak.select)
         return <div>
             <table>
                 <thead>
-                    {this.props.metaData.map(
-                        dataPak => {
-                            return dataPak.rule
-                        }
-                    ).map(rule => {
+                    {radio.map(rule => {
                         return Object.entries(rule).map(ele => {
                             return <tr>
                                 <td>{ele[0]}</td>
                                 <td>
-                                    <input type='radio' name={ele[0]} />true
+                                    <input name={ele[0]} type='radio' />true
                                     <input name={ele[0]} type='radio' />false
                                 </td>
                             </tr>
                         })
                     })}
+                    {
+                        input.map(rule => {
+                            return Object.entries(rule).map(ele => {
+                                return <tr>
+                                    <td>{ele[0]}</td><td><input style={{ width: '100%' }} /></td>
+                                </tr>
+                            })
+                        })
+                    }
+                    <tr>
+                        <td>reference</td>
+                        {
+                            <td><select> {
+                                select.reference.map(item => {
+                                    return <option>item</option>
+                                })}
+                            </select></td>
+                        }</tr>
                 </thead>
             </table>
         </div>
@@ -278,7 +315,7 @@ const TableApp = ({ cells }, { store }) => {
             }} >
                 <div id='uname'>肥刘研究院</div>
                 <hr />
-                TableName: <TableTitle name={store.getState().tableInfo} />
+                <code>TableName: </code><TableTitle name={store.getState().tableInfo} />
                 <hr />
                 <Button onClick={atod('ADD', { id: newId++ })} id='addButton' value='新增单元' />
                 <br /><br /><br />
