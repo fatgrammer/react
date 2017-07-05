@@ -7,9 +7,9 @@ let gTrieId = 0;
 const theadPaks = (state = [], action) => {
     switch (action.type) {
         case 'BUILD':
-            console.log(action)
-            let lcid = 0
-            return consTrie(action.data).map(ele => {
+            const pData = consTrie(action.data)
+            gTrieId = pData.length
+            return pData.map(ele => {
                 return {
                     id: ele.id,
                     trie: ele.data,
@@ -108,46 +108,117 @@ const ruleTemp = [{
     lock: false
 }, {
     dateFormat: ''
-}, {
-    reference: []
-}]
+},
+['placeHolder']
+]
 const dataRule = (state = [], action) => {
-    switch (action.type) {
-        case 'POP_RULE':
-            // state.filter(dataPak => dataPak.id === action.id) || state.push({
 
-            //     id: action.id,
-            //     rule: ruleTemplate
-            // })
-            return [...state, {
-                id: action.id,
+    switch (action.type) {
+        case 'ADD_OPTION':
+            return state.map(t => {
+                if (t.fieldId !== action.fieldId) {
+                    return t
+                }
+                console.log('t', [...t.select, action.value])
+                return {
+                    ...t,
+                    select: [...t.select, action.value]
+                }
+
+            })
+
+        case 'POP_RULE':
+            const ts = state.filter(t => {
+                return t.fieldId === action.fieldId
+            }).length ? state : [...state,
+            // Object.assign({}, ruleTemp)
+            {
+                fieldId: action.fieldId,
+                name: action.name,
                 radio: ruleTemp[0],
                 input: ruleTemp[1],
-                select: ruleTemp[2]
-            }]
-
+                select: ruleTemp[2],
+                shown: true
+            }
+                ]
+            return ts.map(t => {
+                if (t.fieldId !== action.fieldId) {
+                    return { ...t, shown: false }
+                }
+                console.log('select ', t.select)
+                return {
+                    ...t,
+                    name: action.name,
+                    shown: true
+                }
+            })
+        case 'IMPORT_RULE':
+            return action.data.length ? action.data : []
         default:
             return state
     }
 }
 const dataAction = (state = [], action) => {
     switch (action.type) {
+        case 'SAVE_RULE':
+            console.log('sruke ', compress(action.data))
+            return state;
+        case 'FETCH_RULE':
+            $.getJSON(action.url + action.tableName, (res) => {
+                console.log('ssss', spread(res))
+                store.dispatch({
+                    type: 'IMPORT_RULE',
+                    data: spread(res)
+                })
+
+            })
+            return state
         case 'RESULT':
             $.post(action.url, action.data, function (response) {
                 alert(response)
             }, 'json');
             return state
         case 'TABLE_HEADS':
-            $.getJSON(action.url + action.tableName.tableName, (res) => {
+            $.getJSON(action.url + action.tableName, (res) => {
                 store.dispatch({
                     type: 'BUILD',
                     data: splitHead(res)
+                })
+                store.dispatch({
+                    type:'FETCH_RULE', 
+                    url:'http://192.168.1.42:20080/tableRule/',
+                    tableName:action.tableName
                 })
             })
             return state
         default:
             return state
     }
+}
+function compress(data = []) {
+    return data.map(ele => {
+        return {
+            [ele.fieldId]:
+            ele.select
+        }
+    }).reduce((prev, next) => {
+        return [...prev, next]
+    }, [])
+
+}
+function spread(data = {}) {
+    console.log('spread', data.reference)
+    let res = []
+    return data.reference.map(ele => {
+        return {
+            fieldId: Object.keys(ele)[0],
+            name: Object.values(ele)[0][0],
+            radio: ruleTemp[0],
+            input: ruleTemp[1],
+            select: Object.values(ele)[0][1],
+            shown: false
+        }
+    })
 }
 const popBox = (state = false, action) => {
     switch (action.type) {
@@ -189,12 +260,11 @@ export const consTrie = (headPaks = []) => {
     let data = []
     let headPakId = 0
     headPaks.map(headPak => {
-
         const entry = Object.entries(headPak)[0]
         const key = entry[0]
         const value = entry[1]
         data.filter(dataPak => {
-            return dataPak.value === value[0]
+            return dataPak.data.value === value[0]
         }).length ? null :
             data.push({
                 id: key,

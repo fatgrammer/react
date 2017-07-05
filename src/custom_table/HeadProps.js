@@ -299,22 +299,30 @@ export class TableTrie {
         const heads = head.split('\uff04').slice(1)
         this.headPrefix[this.headPrefix.length - 1] = '\uff04' + heads.shift()
         values.slice(1).forEach(value => {
-            if (!node.children.includes(value)) {
-                if (heads[0] > node.childNum) {
+            if (!existInChildren(node, value)) {
+                console.log('node?', node.value , 'val?', value)
+                heads[0] > node.childNum ?
                     node.childNum = Number.parseInt(heads[0]) + 1
-                } else {
+                    :
                     node.childNum = Number.parseInt(node.childNum) + 1
-                }
                 node.children.push(
                     new TableTrie(
                         [...node.headPrefix, node.head().concat('\uff04' + heads.shift())],
                         node.height + 1, value))
                 node.width = calcWidth(node)
-            }
+            }   
         })
         node = node.children[node.children.length - 1]
         this.width = calcWidth(this)
     }
+}
+
+function existInChildren(node, value) {
+    // console.log('in', node.value)
+    return node.children.filter(t => {
+        console.log('t',t.value, 'vale', value)
+        return t.value === value
+    }).length
 }
 function retStack(stacks = []) {
     return stacks.map(stack =>

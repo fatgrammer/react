@@ -223,7 +223,7 @@ class ResultScope extends React.Component {
             <hr />
             <Button id='result' value='完成' onClick={
                 atod('RESULT', {
-                    url: 'http://localhost:20080/customTable',
+                    url: 'http://192.168.1.249:20080/customTable',
                     data: { data: JSON.stringify(list) }
                 })
             } /><br />
@@ -233,8 +233,8 @@ class ResultScope extends React.Component {
 
             <Button id='test' value='test' onClick={
                 atod('TABLE_HEADS', {
-                    url: 'http://localhost:20080/tableTemp/',
-                    tableName: this.props.head
+                    url: 'http://192.168.1.249:20080/tableTemp/',
+                    tableName: this.props.head.tableName
                 })
             }
             />
@@ -244,11 +244,17 @@ class ResultScope extends React.Component {
 }
 class RuleScope extends React.Component {
     render() {
-        const data = this.props.metaData
+        const data = this.props.metaData.filter(t => t.shown)
+        const key = data[0] ? data[0].fieldId : ''
+        const name = data[0] ? data[0].name : '';
         const radio = data.map(dataPak => dataPak.radio)
         const input = data.map(dataPak => dataPak.input)
         const select = data.map(dataPak => dataPak.select)
-        return <div>
+        const refer = select.length ? select[0] : []
+        console.log('refer ', select)
+
+        return <div key={key}>
+            <h1>{name}-{key}</h1>
             <table>
                 <thead>
                     {radio.map(rule => {
@@ -271,17 +277,66 @@ class RuleScope extends React.Component {
                             })
                         })
                     }
-                    <tr>
+                    {refer.length ? <tr key={0} >
                         <td>reference</td>
-                        {
-                            <td><select> {
-                                select.reference.map(item => {
-                                    return <option>item</option>
-                                })}
-                            </select></td>
-                        }</tr>
+                        <td><select id='refBox' style={{ float: 'left' }}>
+                            {refer.map(item => {
+                                console.log('item', item)
+                                return <option key={item}>{item}</option>
+                            })}</select>
+                            <OptionConf fieldId={key} />
+                        </td>
+                    </tr> : null
+                    }
                 </thead>
             </table>
+            <OptionScope options={refer} />
+            <Button onClick={atod('SAVE_RULE',{
+                data:this.props.metaData
+            })} value='save'/>
+            {/*<Button onClick={atod('FETCH_RULE',{
+                url:'http://192.168.1.42:20080/tableRule/',
+                tableName:this.props.name.tableName
+            })} value='get'/>*/}
+        </div>
+    }
+}
+class OptionConf extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            value: ''
+        }
+        this.handleChange = this.handleChange.bind(this)
+    }
+    handleChange(event) {
+        this.setState({
+            value: event.target.value
+        })
+    }
+    handleClick() {
+        return atod('ADD_OPTION', {
+            fieldId: this.props.fieldId,
+            value: this.state.value
+        })
+    }
+    render() {
+        return <span>
+            <input style={{ float: 'left' }} onChange={this.handleChange} />
+            <Button onClick={this.handleClick()} id='addOp' value="add" />
+        </span>
+    }
+}
+class OptionScope extends React.Component {
+    render() {
+        console.log('oscp',this.props.options)
+        return <div id='opScope'>
+            <span>Options</span>
+            <ul>
+                {this.props.options.map(option => {
+                  return <li key={option}>{option}</li>
+                })}
+            </ul>
         </div>
     }
 }
@@ -321,7 +376,7 @@ const TableApp = ({ cells }, { store }) => {
                 <br /><br /><br />
                 <NewScope metaData={store.getState().theadPaks} />
                 <ResultScope content={store.getState().theadPaks} head={store.getState().tableInfo} />
-                <RuleScope metaData={store.getState().dataRule} />
+                <RuleScope metaData={store.getState().dataRule} name={store.getState().tableInfo}/>
             </div>
             <PopScope display={store.getState().popBox} metaData={store.getState().theadPaks} />
         </div>

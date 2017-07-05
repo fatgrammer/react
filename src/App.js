@@ -13,7 +13,7 @@ class App extends Component {
           <h1>System</h1>
         </div>
         {/*<Fetch hUrl="flt.json" bUrl="http://localhost:20080/floatingData" />*/}
-        <Editable pHead={fetchJson("http://localhost:20080/fixedHead/3-9")} pBody={fetchJson("http://localhost:20080/floatingData")} />
+        <Editable pHead={fetchJson("http://192.168.1.249:20080/fixedHead/3-9")} pBody={fetchJson("http://192.168.1.249:20080/floatingData")} />
         <Category />
       </div>
 
