@@ -35,7 +35,27 @@ a:hover{color: #000!important;width: auto;height: 100%;}
     font-size: 16.0px;
     font-weight: 400;
 }
-
+#addOp{
+    width: 64px;
+    height: 30px;
+    float: left;
+    line-height: 30px;
+    background: #2cc3e8;
+    border-radius: 3px;
+    cursor: pointer;
+    color: #fff;
+    text-align: center;
+    font-size: 16.0px;
+    font-weight: 400;
+}
+#refBox{
+    width: 130px;
+    height: 30px;
+    float:left;
+    line-height: 30px;
+    border-radius: 3px;
+    font-size: 14.0px;
+}
 
 table, table thead, table thead tr, table thead tr td{
     border:1px solid   #2cc3e8
@@ -88,6 +108,17 @@ table thead tr td {
     box-shadow: 0px 0px 10px 1px #888;
     z-index: 5;
 
+}
+#opScope{
+
+    width: 30%;
+    height:50%;
+    background-color: #fffaee;
+    position: absolute;
+    bottom: 20px;
+    right: 20%;
+    box-shadow: 0px 0px 10px 1px #888;
+    z-index: 5;
 }
 .popText{
     color: #707070;

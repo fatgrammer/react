@@ -49,22 +49,16 @@ export class TheadRen extends Component {
                 })
                 }<Td onDataClick={
                     atod('POP_RULE', {
-                        id: heads[heads.length - 1].value,
+                        fieldId:heads[heads.length - 1].head ,
+                        name:heads[heads.length -1 ].value
                     })
                 }
-
                 >hazard</Td></tr >
             })
         })
     }
     render() {
         return (
-            // <CSSTransitionGroup
-            //     transitionName='example'
-            //     transitionEnterTimeout={500}
-            //     transitionLeaveTimeout={300}
-            //     component='thead'
-            // >
             <thead>
                 {this.renderHorizontalThead(this.props.hhead)}{this.renderHeadPak(this.props.vhead)}
             </thead>

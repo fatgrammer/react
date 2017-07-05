@@ -9,12 +9,10 @@ import { CSSTransitionGroup } from 'react-transition-group'
 export let CellId = 0;
 export let store = createStore(cellPairApp)
 
-export const atod = (type, data)=>()=>store.dispatch({
-        type,
-        ...data
-    })
-
-
+export const atod = (type, data) => () => store.dispatch({
+    type,
+    ...data
+})
 
 class Button extends React.Component {
     render() {
@@ -48,11 +46,6 @@ class PopScope extends React.Component {
             value
         })
     }
-    componentDidMount() {
-        this.setState({
-            value: ''
-        })
-    }
     render() {
         const hb = headBlock(this.props.metaData)
         const popContent =
@@ -81,11 +74,10 @@ class PopScope extends React.Component {
                                         prefix: head.prefix
                                     })
                                 } /> : <Button id='delPakButton' value='DELPAK' onClick={
-                                            atod('DELETE_PAK', {
-                                                id: headPak.id
-                                            })
-                                    } />
-
+                                    atod('DELETE_PAK', {
+                                        id: headPak.id
+                                    })
+                                } />
                             }
                             value={this.state.value}
                             onValueChange={this.onValueChange}
@@ -101,14 +93,14 @@ class PopScope extends React.Component {
         return (
             <CSSTransitionGroup
                 transitionName="background"
-                transitionEnterTimeout={300}
-                transitionLeaveTimeout={300}
+                transitionEnterTimeout={200}
+                transitionLeaveTimeout={200}
                 component='div'
             >
                 {this.props.display ?
                     <div className='popHead' id='popHead'>
                         <div onClick={
-                            atod('CLOSE_POPBAR', {})
+                            atod('CLOSE_POPBAR')
                         }
                             id='closeX'>{`\u00d7`}</div>
                         <span style={{ marginLeft: '40%' }} className='popText'>表单元属性</span>
@@ -166,12 +158,6 @@ class InputHead extends React.Component {
             value={this.state.value}
             onChange={this.handleChange}
         />
-            {/*<Button id='tmpSave' value='save'
-                onClick={actions('STH', {
-                    prefix: this.props.prefix,
-                    value: this.state.value,
-                    id: this.props.actionId
-                })} />*/}
         </span>
     }
 }
@@ -210,57 +196,166 @@ const fullHeadBlock = (metaData) => {
 }
 class ResultScope extends React.Component {
     render() {
-        const hb = fullHeadBlock(this.props.metaData)
-        let list = hb.map(headPak => {
-
-            return headPak.data.map(heads => {
-                console.log('heads ', heads)
-                return {
-                    [heads.map(head => head.value).reduce((prev, next) => {
-                        return prev + '_' + next
-                    })]: heads[heads.length - 1].head
-                }
-            })
-
-        }).reduce((prev, next) => {
-            return [...prev, ...next]
-        }, [])
+        const hb = fullHeadBlock(this.props.content)
+        let list = {};
+        list = {
+            ...this.props.head,
+            ...list
+        }
+        list = {
+            ...list,
+            ...hb.map(headPak => {
+                return headPak.data.map(heads => {
+                    return {
+                        [heads[heads.length - 1].head]:
+                        heads.map(head => head.value).reduce((prev, next) => {
+                            return prev + '_' + next
+                        })
+                    }
+                })
+            }).reduce((prev, next) => {
+                return [...prev, ...next]
+            }, []).reduce((prev, next) => {
+                return { ...prev, ...next }
+            }, {})
+        }
         return <div>
             <hr />
             <Button id='result' value='完成' onClick={
                 atod('RESULT', {
-                    url: 'http://localhost:20080/testData',
+                    url: 'http://192.168.1.249:20080/customTable',
                     data: { data: JSON.stringify(list) }
                 })
             } /><br />
             <br /><br />
             <hr />
-            {JSON.stringify(list)}</div>
+            {JSON.stringify(list)}
+
+            <Button id='test' value='test' onClick={
+                atod('TABLE_HEADS', {
+                    url: 'http://192.168.1.249:20080/tableTemp/',
+                    tableName: this.props.head.tableName
+                })
+            }
+            />
+        </div>
+
     }
 }
 class RuleScope extends React.Component {
     render() {
-        return <div>
+        const data = this.props.metaData.filter(t => t.shown)
+        const key = data[0] ? data[0].fieldId : ''
+        const name = data[0] ? data[0].name : '';
+        const radio = data.map(dataPak => dataPak.radio)
+        const input = data.map(dataPak => dataPak.input)
+        const select = data.map(dataPak => dataPak.select)
+        const refer = select.length ? select[0] : []
+
+        return <div key={key}>
+            <h1>{key}------{name}</h1>
             <table>
                 <thead>
-                    {this.props.metaData.map(
-                        dataPak => {
-                            return dataPak.rule
-                        }
-                    ).map(rule => {
+                    {radio.map(rule => {
                         return Object.entries(rule).map(ele => {
                             return <tr>
                                 <td>{ele[0]}</td>
                                 <td>
-                                    <input type='radio' name={ele[0]} />true
+                                    <input name={ele[0]} type='radio' />true
                                     <input name={ele[0]} type='radio' />false
                                 </td>
                             </tr>
                         })
                     })}
+                    {
+                        input.map(rule => {
+                            return Object.entries(rule).map(ele => {
+                                return <tr>
+                                    <td>{ele[0]}</td><td><input style={{ width: '100%' }} /></td>
+                                </tr>
+                            })
+                        })
+                    }
+                    {refer.length ? <tr key={0} >
+                        <td>reference</td>
+                        <td><select id='refBox' style={{ float: 'left' }}>
+                            {refer.map(item => {
+                                return <option key={item}>{item}</option>
+                            })}</select>
+                            <OptionConf fieldId={key} />
+                        </td>
+                    </tr> : null
+                    }
                 </thead>
             </table>
+            <OptionScope options={refer} />
+            <Button onClick={atod('SAVE_RULE',{
+                data:this.props.metaData
+            })} value='save'/>
+            {/*<Button onClick={atod('FETCH_RULE',{
+                url:'http://192.168.1.42:20080/tableRule/',
+                tableName:this.props.name.tableName
+            })} value='get'/>*/}
         </div>
+    }
+}
+class OptionConf extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            value: ''
+        }
+        this.handleChange = this.handleChange.bind(this)
+    }
+    handleChange(event) {
+        this.setState({
+            value: event.target.value
+        })
+    }
+    handleClick() {
+        return atod('ADD_OPTION', {
+            fieldId: this.props.fieldId,
+            value: this.state.value
+        })
+    }
+    render() {
+        return <span>
+            <input style={{ float: 'left' }} onChange={this.handleChange} />
+            <Button onClick={this.handleClick()} id='addOp' value="add" />
+        </span>
+    }
+}
+class OptionScope extends React.Component {
+    render() {
+        return <div id='opScope'>
+            <span>Options</span>
+            <ul>
+                {this.props.options.map(option => {
+                  return <li key={option}>{option}</li>
+                })}
+            </ul>
+        </div>
+    }
+}
+class TableTitle extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            name: ''
+        }
+        this.handleChange = this.handleChange.bind(this)
+    }
+    handleChange(event) {
+        this.setState({
+            name: event.target.value
+        });
+        store.dispatch({
+            type: 'TABLE_NAME',
+            tableName: event.target.value
+        })
+    }
+    render() {
+        return <input value={this.state.name} onChange={this.handleChange} />
     }
 }
 let newId = 0
@@ -272,11 +367,13 @@ const TableApp = ({ cells }, { store }) => {
             }} >
                 <div id='uname'>肥刘研究院</div>
                 <hr />
+                <code>TableName: </code><TableTitle name={store.getState().tableInfo} />
+                <hr />
                 <Button onClick={atod('ADD', { id: newId++ })} id='addButton' value='新增单元' />
                 <br /><br /><br />
                 <NewScope metaData={store.getState().theadPaks} />
-                <ResultScope metaData={store.getState().theadPaks} />
-                <RuleScope metaData={store.getState().dataRule} />
+                <ResultScope content={store.getState().theadPaks} head={store.getState().tableInfo} />
+                <RuleScope metaData={store.getState().dataRule} name={store.getState().tableInfo}/>
             </div>
             <PopScope display={store.getState().popBox} metaData={store.getState().theadPaks} />
         </div>
