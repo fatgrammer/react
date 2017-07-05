@@ -119,7 +119,6 @@ const dataRule = (state = [], action) => {
                 if (t.fieldId !== action.fieldId) {
                     return t
                 }
-                console.log('t', [...t.select, action.value])
                 return {
                     ...t,
                     select: [...t.select, action.value]
@@ -145,7 +144,6 @@ const dataRule = (state = [], action) => {
                 if (t.fieldId !== action.fieldId) {
                     return { ...t, shown: false }
                 }
-                console.log('select ', t.select)
                 return {
                     ...t,
                     name: action.name,
@@ -161,11 +159,10 @@ const dataRule = (state = [], action) => {
 const dataAction = (state = [], action) => {
     switch (action.type) {
         case 'SAVE_RULE':
-            console.log('sruke ', compress(action.data))
+            console.log(compress(action.data))
             return state;
         case 'FETCH_RULE':
             $.getJSON(action.url + action.tableName, (res) => {
-                console.log('ssss', spread(res))
                 store.dispatch({
                     type: 'IMPORT_RULE',
                     data: spread(res)
@@ -185,9 +182,9 @@ const dataAction = (state = [], action) => {
                     data: splitHead(res)
                 })
                 store.dispatch({
-                    type:'FETCH_RULE', 
-                    url:'http://192.168.1.42:20080/tableRule/',
-                    tableName:action.tableName
+                    type: 'FETCH_RULE',
+                    url: 'http://192.168.1.42:20080/tableRule/',
+                    tableName: action.tableName
                 })
             })
             return state
@@ -197,6 +194,15 @@ const dataAction = (state = [], action) => {
 }
 function compress(data = []) {
     return data.map(ele => {
+        return ele.select[0] === 'placeHolder' ?
+            {
+                ...ele,
+                select: ele.select.slice(1)
+            }
+            : ele
+    }).filter(ele => {
+        return ele.select.length
+    }).map(ele => {
         return {
             [ele.fieldId]:
             ele.select
@@ -207,7 +213,6 @@ function compress(data = []) {
 
 }
 function spread(data = {}) {
-    console.log('spread', data.reference)
     let res = []
     return data.reference.map(ele => {
         return {

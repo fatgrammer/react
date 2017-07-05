@@ -251,10 +251,9 @@ class RuleScope extends React.Component {
         const input = data.map(dataPak => dataPak.input)
         const select = data.map(dataPak => dataPak.select)
         const refer = select.length ? select[0] : []
-        console.log('refer ', select)
 
         return <div key={key}>
-            <h1>{name}-{key}</h1>
+            <h1>{key}------{name}</h1>
             <table>
                 <thead>
                     {radio.map(rule => {
@@ -281,7 +280,6 @@ class RuleScope extends React.Component {
                         <td>reference</td>
                         <td><select id='refBox' style={{ float: 'left' }}>
                             {refer.map(item => {
-                                console.log('item', item)
                                 return <option key={item}>{item}</option>
                             })}</select>
                             <OptionConf fieldId={key} />
@@ -329,7 +327,6 @@ class OptionConf extends React.Component {
 }
 class OptionScope extends React.Component {
     render() {
-        console.log('oscp',this.props.options)
         return <div id='opScope'>
             <span>Options</span>
             <ul>

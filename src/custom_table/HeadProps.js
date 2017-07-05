@@ -187,7 +187,6 @@ export class TableTrie {
             return
         }
         if (level === 1) {
-            // console.log(node.head())
             if (node.children.length) {
                 node.span = 1
             } else {
@@ -300,7 +299,6 @@ export class TableTrie {
         this.headPrefix[this.headPrefix.length - 1] = '\uff04' + heads.shift()
         values.slice(1).forEach(value => {
             if (!existInChildren(node, value)) {
-                console.log('node?', node.value , 'val?', value)
                 heads[0] > node.childNum ?
                     node.childNum = Number.parseInt(heads[0]) + 1
                     :
