@@ -1,7 +1,6 @@
-import { combineReducers } from 'redux'
 import { TableTrie } from '../custom_table/HeadProps'
 // import PropTypes from 'prop-types'
-import { store } from '../custom_table/TableApp'
+import { store } from '../index.js'
 import $ from 'jquery'
 let gTrieId = 0;
 const theadPaks = (state = [], action) => {
@@ -17,7 +16,7 @@ const theadPaks = (state = [], action) => {
                 }
             })
         case 'ADD':
-            // let testTrie = buildTrie([['国家', '一等奖'], ['国家', '二等奖'], ['其他']])
+            console.log(action.id)
             const tId = '\uff04' + gTrieId++
             return [...state, {
                 id: tId,
@@ -34,20 +33,17 @@ const theadPaks = (state = [], action) => {
                 return theadPak(t, action)
             })
         case 'POP_HEAD':
+            console.log('phead ', action)
             return state.map(t => {
-
                 return theadPak(t, action)
             })
         case 'SAVE_HEAD':
             return state.map(t => {
-
                 return theadPak(t, action)
             })
         //delete whole subtree
         case 'DELETE_BAR':
-
             return state.map(t => {
-
                 return theadPak(t, action)
             })
         default:
@@ -188,6 +184,9 @@ const dataAction = (state = [], action) => {
                 })
             })
             return state
+        case 'TEST':
+            alert()
+            return state
         default:
             return state
     }
@@ -245,13 +244,13 @@ const tableInfo = (state = '', action) => {
             return state;
     }
 }
-export const cellPairApp = combineReducers({
+export const reducers = {
     theadPaks,
     dataAction,
     dataRule,
     popBox,
     tableInfo
-})
+}
 export const splitHead = (data) => {
     let dp = Object.entries(data).map(ele => {
         return { [ele[0]]: ele[1].split('_') }
