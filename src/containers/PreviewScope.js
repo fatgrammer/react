@@ -4,7 +4,8 @@ import { headBlock } from './HeadProc'
 const mapStateToProps = state => {
     headBlock(state.theadPaks)
     return {
-        headBlock: headBlock(state.theadPaks)
+        headBlock: headBlock(state.theadPaks),
+        tableName: state.tableInfo.tableName
     }
 }
 const mapDispatchToProps = dispatch => {

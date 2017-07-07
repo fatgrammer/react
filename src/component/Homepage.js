@@ -12,11 +12,6 @@ const buttonStyle = {
 export const Homepage = () => (
     <div>
         <h1>Home</h1>
-        <Link to='/newTable'>
-            <span style={buttonStyle}>
-                newTable
-               </span>
-        </Link>
         <TableCategory />
     </div>
 )

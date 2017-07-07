@@ -11,7 +11,7 @@ export class Preview extends React.Component {
                 <span 
                 style={{float:'left',fontSize:'26px',lineHeight:'30px'}}>
                 TableName: </span>
-                <TableTitle onNameChange={props.onNameChange} />
+                <TableTitle initName={this.props.tableName} onNameChange={props.onNameChange} />
                 <br/>
                 <br/>
                 <Button onClick={() => props.onAddClick(mainId++)} id='addButton' value='新增单元' />
@@ -32,7 +32,7 @@ export class TableTitle extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            name: ''
+            name: this.props.initName
         }
         this.handleChange = this.handleChange.bind(this)
     }
