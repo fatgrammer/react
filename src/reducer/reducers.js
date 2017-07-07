@@ -93,6 +93,8 @@ const theadPak = (state, action) => {
                 ...state,
                 trie: state.trie.removeSubtree(action.prefix)
             }
+        default:
+            return state
     }
 }
 
@@ -108,7 +110,6 @@ const ruleTemp = [{
 ['placeHolder']
 ]
 const dataRule = (state = [], action) => {
-
     switch (action.type) {
         case 'ADD_OPTION':
             return state.map(t => {
@@ -172,6 +173,7 @@ const dataAction = (state = [], action) => {
             }, 'json');
             return state
         case 'TABLE_HEADS':
+        console.log('th action',action)
             $.getJSON(action.url + action.tableName, (res) => {
                 store.dispatch({
                     type: 'BUILD',
@@ -239,7 +241,16 @@ const popBox = (state = false, action) => {
 const tableInfo = (state = '', action) => {
     switch (action.type) {
         case 'TABLE_NAME':
+        console.log(action)
             return { tableName: action.tableName };
+        default:
+            return state;
+    }
+}
+const category = (state = '', action) => {
+    switch (action.type) {
+        case 'INIT_TABLELIST':
+            return state;
         default:
             return state;
     }
@@ -256,9 +267,6 @@ export const splitHead = (data) => {
         return { [ele[0]]: ele[1].split('_') }
     })
     return dp
-    // return Object.values(data).map(ele => {
-    //     return ele.split('_')
-    // })
 }
 export const consTrie = (headPaks = []) => {
     let data = []
