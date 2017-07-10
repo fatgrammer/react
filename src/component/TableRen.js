@@ -57,7 +57,6 @@ export class TheadRen extends Component {
             <thead>
                 {this.renderHeadPak(this.props.vhead)}
             </thead>
-            // </CSSTransitionGroup>
         )
     }
 }

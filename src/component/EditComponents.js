@@ -1,8 +1,6 @@
 import React from 'react'
 import { Button } from './Widget'
-import { connect } from 'react-redux'
 import { CSSTransitionGroup } from 'react-transition-group'
-import { PropTypes } from 'prop-types'
 
 export class EditBox extends React.Component {
     constructor(props) {

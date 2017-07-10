@@ -3,25 +3,32 @@ import { RuleBox } from '../component/RuleComponents'
 const mapStateToProps = state => {
     return {
         metaData: state.dataRule,
+        rawData: state.rawData,
         name: state.tableInfo
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-       saveRule: (data) => {
+        saveRule: (data) => {
             dispatch({
                 type: 'SAVE_RULE',
                 data
             })
         },
-       addOption: (fieldId, value) => {
+        addOption: (fieldId, value) => {
             dispatch({
                 type: 'ADD_OPTION',
                 fieldId,
                 value
             })
+        },
+        onRefBoxChange: (tableName) => {
+            dispatch({
+                type: 'GET_FIELD',
+                tableName
+            })
         }
-       
+
     }
 }
 export const RuleScope = connect(

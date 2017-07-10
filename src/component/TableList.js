@@ -33,15 +33,25 @@ export class TableList extends React.Component {
         return <div>
             <h1>TableName List</h1>
             <ul>
-                {
-                    this.state.tableList.map(tableName => {
-                        return <li><Link
-                            onClick={() => props.tableName(tableName)}
-                            style={buttonStyle} to='/newTable'>
-                            {tableName}
-                        </Link></li>
-                    })
-                }
+                <Link
+                    to='/newTable'>
+                    <span onClick={() => {
+                        props.tableName('')
+                    }} style={{
+                        ...buttonStyle,
+                        letterSpacing: '0px'
+                    }
+                    }>
+                        newTable
+               </span>
+                </Link>
+                {this.state.tableList.map(tableName => {
+                    return <li><Link
+                        onClick={() => props.tableName(tableName)}
+                        style={buttonStyle} to='/newTable'>
+                        {tableName}
+                    </Link></li>
+                })}
             </ul>
         </div>
     }

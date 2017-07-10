@@ -1,5 +1,3 @@
-import React from 'react'
-
 export class TableTrie {
     constructor(head, height, value = '') {
         this.headPrefix = head
