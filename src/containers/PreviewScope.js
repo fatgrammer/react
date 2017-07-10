@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import { Preview } from '../component/Preview'
 import { headBlock } from './HeadProc'
 const mapStateToProps = state => {
-    headBlock(state.theadPaks)
+    //headBlock(state.theadPaks)
     return {
         headBlock: headBlock(state.theadPaks)
     }

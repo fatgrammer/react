@@ -181,7 +181,7 @@ const dataAction = (state = [], action) => {
                 })
                 store.dispatch({
                     type: 'FETCH_RULE',
-                    url: 'http://192.168.1.42:20080/tableRule/',
+                    url: 'http://192.168.1.233:20080/tableRule/',
                     tableName: action.tableName
                 })
             })
