@@ -173,7 +173,7 @@ const dataAction = (state = [], action) => {
             }, 'json');
             return state
         case 'TABLE_HEADS':
-        console.log('th action',action)
+            console.log('th action',action)
             $.getJSON(action.url + action.tableName, (res) => {
                 store.dispatch({
                     type: 'BUILD',
