@@ -46,7 +46,7 @@ export class TableList extends React.Component {
                </span>
                 </Link>
                 {this.state.tableList.map(tableName => {
-                    return <li><Link
+                    return <li  key={tableName}><Link
                         onClick={() => props.tableName(tableName)}
                         style={buttonStyle} to='/newTable'>
                         {tableName}

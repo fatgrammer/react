@@ -2,7 +2,25 @@ import React from 'react'
 import { Button } from './Widget'
 import $ from 'jquery'
 export class RuleBox extends React.Component {
-
+    constructor(props) {
+        super(props)
+        this.state = {
+            tableName: '',
+            tableField: ''
+        }
+        this.handleName = this.handleName.bind(this)
+        this.handleField = this.handleField.bind(this)
+    }
+    handleName(tableName) {
+        this.setState({
+            tableName
+        })
+    }
+    handleField(tableField) {
+        this.setState({
+            tableField
+        })
+    }
     render() {
         const data = this.props.metaData.filter(t => t.shown)
         const key = data[0] ? data[0].fieldId : ''
@@ -66,45 +84,67 @@ export class RuleBox extends React.Component {
         </tr> : null
     }
     renRefBox(refBox) {
+        const props = this.props
         return refBox.length ?
             <tr>
                 <td>ForeignField</td>
                 <td>
-                    <RefSelects onSelectChange={this.props.onRefBoxChange} />
-                    <RefFields rawData={this.props.rawData}/>
+                    <RefSelects tableList={props.tableList}
+                        handleName={this.handleName}
+                        onSelectChange={props.onRefBoxChange} />
+
+                    <RefFields handleField={this.handleField}
+                        rawData={props.rawData} />
+                    <Button value='add'
+                        onClick={() =>
+                            props.addRefField(
+                                this.state.tableName, this.state.tableField
+                            )}
+                    />
                 </td>
             </tr>
             : null
     }
 }
 class RefFields extends React.Component {
+    constructor(props) {
+        super(props)
+        this.handleChange = this.handleChange.bind(this)
+        this.state = {
+            tableField: ''
+        }
+    }
+    handleChange(event) {
+        console.log('value./', event.target.value)
+        this.props.handleField(event.target.value)
+    }
     render() {
-        return <select>{this.props.rawData}</select>
+        const entries = Object.entries(this.props.rawData)
+        return <select onChange={this.handleChange}>{[<option key={-1}></option>, ...entries.map(head => {
+            return <option key={head[0]} value={head[1]} >{head[1]}</option>
+        })]}</select>
     }
 }
 class RefSelects extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            tableList: []
-        }
+
+        this.handleChange = this.handleChange.bind(this)
     }
-    componentDidMount() {
-        $.getJSON('http://192.168.1.249:20080/tableList', (ret) => {
-            console.log('ret', ret)
-            this.setState({
-                tableList: ret
-            })
-        })
+    handleChange(event) {
+        this.props.handleName(event.target.value)
+        this.props.onSelectChange(event.target.value)
     }
+
     render() {
-        return <select >{
-            [
-                <option selected='selected'></option>,
-                ...this.state.tableList.map(ele => {
-                    return <option>{ele}</option>
+        return <select onChange={this.handleChange} defaultValue=''>
+            {[
+                <option value={-1} key={-1} ></option>,
+                ...this.props.tableList.map(ele => {
+                    return <option value={ele} key={ele}>{ele}</option>
                 })
-            ]}</select>
+            ]}
+        </select>
     }
 }
 class OptionConf extends React.Component {

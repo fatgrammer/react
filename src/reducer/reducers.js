@@ -120,13 +120,24 @@ const dataRule = (state = [], action) => {
                 if (t.fieldId !== action.fieldId) {
                     return t
                 }
+                console.log('id?', action.fieldId)
                 return {
                     ...t,
                     select: [...t.select, action.value]
                 }
 
             })
-
+        case 'ADD_REFFIELD':
+            console.log('ADD?', action)
+            return state.map(t => {
+                if (t.fieldId !== action.fieldId) {
+                    return t
+                }
+                return {
+                    ...t,
+                    refBox: [...t.refBox, [action.tableName, action.field]]
+                }
+            })
         case 'POP_RULE':
             const ts = state.filter(t => {
                 return t.fieldId === action.fieldId
@@ -194,8 +205,18 @@ const dataAction = (state = [], action) => {
             return state
         case 'GET_HEADS':
             $.getJSON('http://192.168.1.249:20080/tableTemp/' + action.tableName, (data) => {
+                console.log('rawHead', data)
                 store.dispatch({
                     type: 'RAW_HEADS',
+                    data
+                })
+            })
+            return state
+
+        case 'GET_TABLELIST':
+            $.getJSON('http://192.168.1.249:20080/tableList', (data) => {
+                store.dispatch({
+                    type: 'TABLE_LIST',
                     data
                 })
             })
@@ -207,12 +228,20 @@ const dataAction = (state = [], action) => {
             return state
     }
 }
-const rawData = (state, action) => {
+const rawData = (state = [], action) => {
     switch (action.type) {
         case 'RAW_HEADS':
             return action.data
         default:
             return state;
+    }
+}
+const tableList = (state = [], action) => {
+    switch (action.type) {
+        case 'TABLE_LIST':
+            return action.data
+        default:
+            return state
     }
 }
 function compress(data = []) {
@@ -281,7 +310,9 @@ export const reducers = {
     dataAction,
     dataRule,
     popBox,
-    tableInfo
+    tableInfo,
+    rawData,
+    tableList
 }
 export const splitHead = (data) => {
     let dp = Object.entries(data).map(ele => {

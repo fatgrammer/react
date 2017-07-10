@@ -4,6 +4,7 @@ const mapStateToProps = state => {
     return {
         metaData: state.dataRule,
         rawData: state.rawData,
+        tableList: state.tableList,
         name: state.tableInfo
     }
 }
@@ -24,10 +25,21 @@ const mapDispatchToProps = dispatch => {
         },
         onRefBoxChange: (tableName) => {
             dispatch({
-                type: 'GET_FIELD',
+                type: 'GET_HEADS',
                 tableName
             })
-        }
+        },
+        addRefField: (tableName, field) => {
+            dispatch({
+                type: 'ADD_REFFIELD',
+                tableName,
+                field
+            })
+        },
+        /// warning
+        initTableList:dispatch({
+            type:'GET_TABLELIST'
+        })
 
     }
 }
