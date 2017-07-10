@@ -71,7 +71,7 @@ export class RuleBox extends React.Component {
                 <td>ForeignField</td>
                 <td>
                     <RefSelects onSelectChange={this.props.onRefBoxChange} />
-                    <RefFields />
+                    <RefFields rawData={this.props.rawData}/>
                 </td>
             </tr>
             : null
@@ -79,7 +79,7 @@ export class RuleBox extends React.Component {
 }
 class RefFields extends React.Component {
     render() {
-        return <select></select>
+        return <select>{this.props.rawData}</select>
     }
 }
 class RefSelects extends React.Component {
