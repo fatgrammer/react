@@ -6,6 +6,7 @@ let gTrieId = 0;
 const theadPaks = (state = [], action) => {
     switch (action.type) {
         case 'BUILD':
+            console.log('shit', action)
             const pData = consTrie(action.data)
             gTrieId = pData.length
             return pData.map(ele => {
@@ -107,7 +108,10 @@ const ruleTemp = [{
 }, {
     dateFormat: ''
 },
-['placeHolder']
+['placeHolder'],
+[
+    [{}]
+]
 ]
 const dataRule = (state = [], action) => {
     switch (action.type) {
@@ -134,6 +138,7 @@ const dataRule = (state = [], action) => {
                 radio: ruleTemp[0],
                 input: ruleTemp[1],
                 select: ruleTemp[2],
+                refBox: ruleTemp[3],
                 shown: true
             }
                 ]
@@ -173,16 +178,25 @@ const dataAction = (state = [], action) => {
             }, 'json');
             return state
         case 'TABLE_HEADS':
-        console.log('th action',action)
+            console.log('th action', action)
             $.getJSON(action.url + action.tableName, (res) => {
+                console.log('suc?')
                 store.dispatch({
                     type: 'BUILD',
                     data: splitHead(res)
                 })
                 store.dispatch({
                     type: 'FETCH_RULE',
-                    url: 'http://192.168.1.42:20080/tableRule/',
+                    url: 'http://192.168.1.249:20080/tableRule/',
                     tableName: action.tableName
+                })
+            })
+            return state
+        case 'GET_HEADS':
+            $.getJSON('http://192.168.1.249:20080/tableTemp/' + action.tableName, (data) => {
+                store.dispatch({
+                    type: 'RAW_HEADS',
+                    data
                 })
             })
             return state
@@ -191,6 +205,14 @@ const dataAction = (state = [], action) => {
             return state
         default:
             return state
+    }
+}
+const rawData = (state, action) => {
+    switch (action.type) {
+        case 'RAW_HEADS':
+            return action.data
+        default:
+            return state;
     }
 }
 function compress(data = []) {
@@ -214,7 +236,6 @@ function compress(data = []) {
 
 }
 function spread(data = {}) {
-    let res = []
     return data.reference.map(ele => {
         return {
             fieldId: Object.keys(ele)[0],
@@ -241,20 +262,20 @@ const popBox = (state = false, action) => {
 const tableInfo = (state = '', action) => {
     switch (action.type) {
         case 'TABLE_NAME':
-        console.log(action)
+            console.log(action)
             return { tableName: action.tableName };
         default:
             return state;
     }
 }
-const category = (state = '', action) => {
-    switch (action.type) {
-        case 'INIT_TABLELIST':
-            return state;
-        default:
-            return state;
-    }
-}
+// const category = (state = '', action) => {
+//     switch (action.type) {
+//         case 'INIT_TABLELIST':
+//             return state;
+//         default:
+//             return state;
+//     }
+// }
 export const reducers = {
     theadPaks,
     dataAction,
@@ -270,14 +291,13 @@ export const splitHead = (data) => {
 }
 export const consTrie = (headPaks = []) => {
     let data = []
-    let headPakId = 0
-    headPaks.map(headPak => {
+    headPaks.forEach(headPak => {
         const entry = Object.entries(headPak)[0]
         const key = entry[0]
-        const value = entry[1]
-        data.filter(dataPak => {
-            return dataPak.data.value === value[0]
-        }).length ? null :
+        const value = entry[1];
+        data.filter(dataPak =>
+            dataPak.data.value === value[0]
+        ).length ? null :
             data.push({
                 id: key,
                 data: new TableTrie([key], 0, value[0])
@@ -288,11 +308,11 @@ export const consTrie = (headPaks = []) => {
 }
 export const buildTrie = (headPaks = []) => {
     let data = []
-    let headPakId = 0
-    headPaks.map(headPak => {
-        data.filter(dataPak => {
-            return dataPak.value === headPak[0]
-        }).length ? null :
+    let headPakId = 0;
+    headPaks.forEach(headPak => {
+        data.filter(dataPak =>
+            dataPak.value === headPak[0]
+        ).length ? null :
             data.push(new TableTrie(['\uff04' + headPakId++], 0, headPak[0]))
         data[data.length - 1].upsertPak(headPak)
     })
