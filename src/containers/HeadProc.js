@@ -1,5 +1,5 @@
 export const headBlock = (metaData = []) => {
-    const maxDepth = metaData.map(headPak => headPak.trie.maxDepth).reduce((prev, next) => {
+    const maxDepth = metaData.map(headPak => {headPak.trie.inOrderData();return headPak.trie.maxDepth}).reduce((prev, next) => {
         return prev >= next ? prev : next
     }, 0)
     return metaData.map(ele => {
