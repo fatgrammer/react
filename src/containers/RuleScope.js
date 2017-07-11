@@ -29,18 +29,18 @@ const mapDispatchToProps = dispatch => {
                 tableName
             })
         },
-        addRefField: (tableName, field) => {
+        addRefField: (tableName, field,fieldId) => {
             dispatch({
                 type: 'ADD_REFFIELD',
                 tableName,
-                field
+                field,
+                fieldId
             })
         },
         /// warning
         initTableList:dispatch({
             type:'GET_TABLELIST'
         })
-
     }
 }
 export const RuleScope = connect(

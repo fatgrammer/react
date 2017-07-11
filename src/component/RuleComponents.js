@@ -1,6 +1,9 @@
 import React from 'react'
 import { Button } from './Widget'
 import $ from 'jquery'
+
+import RaisedButton from 'material-ui/RaisedButton';
+
 export class RuleBox extends React.Component {
     constructor(props) {
         super(props)
@@ -33,7 +36,6 @@ export class RuleBox extends React.Component {
         const refer = select.length ? select[0] : []
 
         const refBox = data.map(dataPak => dataPak.refBox)
-
         return <div key={key}>
             <h1>{key}------{name}</h1>
             <table>
@@ -41,13 +43,14 @@ export class RuleBox extends React.Component {
                     {this.renRadio(radio)}
                     {this.renInput(input)}
                     {this.renSelect(refer, key)}
-                    {this.renRefBox(refBox)}
+                    {this.renRefBox(refBox, key)}
                 </thead>
             </table>
             <OptionScope options={refer} />
-            <Button onClick={() => this.props.saveRule(
+            <Button primary onClick={() => this.props.saveRule(
                 this.props.metaData
             )} value='save' />
+            <FloatingBox data={refBox} />
         </div>
     }
     renRadio(radio) {
@@ -83,7 +86,7 @@ export class RuleBox extends React.Component {
             </td>
         </tr> : null
     }
-    renRefBox(refBox) {
+    renRefBox(refBox, fieldId) {
         const props = this.props
         return refBox.length ?
             <tr>
@@ -95,10 +98,10 @@ export class RuleBox extends React.Component {
 
                     <RefFields handleField={this.handleField}
                         rawData={props.rawData} />
-                    <Button value='add'
+                    <Button primary value='add' 
                         onClick={() =>
                             props.addRefField(
-                                this.state.tableName, this.state.tableField
+                                this.state.tableName, this.state.tableField, fieldId
                             )}
                     />
                 </td>
@@ -106,6 +109,7 @@ export class RuleBox extends React.Component {
             : null
     }
 }
+
 class RefFields extends React.Component {
     constructor(props) {
         super(props)
@@ -121,7 +125,7 @@ class RefFields extends React.Component {
     render() {
         const entries = Object.entries(this.props.rawData)
         return <select onChange={this.handleChange}>{[<option key={-1}></option>, ...entries.map(head => {
-            return <option key={head[0]} value={head[1]} >{head[1]}</option>
+            return <option key={head[0]} value={head} >{head[1]}</option>
         })]}</select>
     }
 }
@@ -147,6 +151,21 @@ class RefSelects extends React.Component {
         </select>
     }
 }
+class FloatingBox extends React.Component {
+    render() {
+
+                    console.log('missss',this.props.data)
+        return this.props.data.length > 0 ? <div id='refScope'>
+            <ul>
+                {this.props.data[0].map(ele => {
+                    return <li key={ele}> {ele.reduce((prev, next) => {
+                        return prev + '__' + next
+                    })}</li>
+                })}
+            </ul>
+        </div> : null
+    }
+}
 class OptionConf extends React.Component {
     constructor(props) {
         super(props)
@@ -169,7 +188,7 @@ class OptionConf extends React.Component {
     render() {
         return <span>
             <input style={{ float: 'left' }} onChange={this.handleChange} />
-            <Button onClick={this.handleClick()} id='addOp' value="add" />
+            <Button primary onClick={this.handleClick()} id='addOp' value="add" />
         </span>
     }
 }
@@ -185,3 +204,4 @@ class OptionScope extends React.Component {
         </div>
     }
 }
+

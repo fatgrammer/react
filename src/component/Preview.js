@@ -14,7 +14,7 @@ export class Preview extends React.Component {
                 <TableTitle initName={this.props.tableName} onNameChange={props.onNameChange} />
                 <br/>
                 <br/>
-                <Button onClick={() => props.onAddClick(mainId++)} id='addButton' value='新增单元' />
+                <Button onClick={() => props.onAddClick(mainId++)} secondary id='addButton' value='新增单元' />
                 <br />
                 <br />
                 <br />

@@ -28,7 +28,7 @@ export class Result extends React.Component {
         }
         return <div>
             <hr />
-            <Button id='result' value='完成' onClick={
+            <Button id='result' primary value='完成' onClick={
                 () => props.onResultClick('http://192.168.1.249:20080/customTable',
                     { data: JSON.stringify(list) })
             } /><br />
@@ -36,7 +36,7 @@ export class Result extends React.Component {
             <hr />
             {JSON.stringify(list)}
 
-            <Button id='test' value='test' onClick={
+            <Button primary id='test' value='test' onClick={
                 () => props.TEST(
                     'http://192.168.1.249:20080/tableTemp/',
                     this.props.head.tableName)

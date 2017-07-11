@@ -21,7 +21,6 @@ export class TableList extends React.Component {
     }
     componentDidMount() {
         $.getJSON('http://192.168.1.249:20080/tableList', (ret) => {
-            console.log('ret', ret)
             this.setState({
                 tableList: ret
             })
@@ -29,7 +28,6 @@ export class TableList extends React.Component {
     }
     render() {
         const props = this.props
-        console.log(props)
         return <div>
             <h1>TableName List</h1>
             <ul>
