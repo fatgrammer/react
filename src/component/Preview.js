@@ -2,23 +2,34 @@ import React from 'react'
 // import PropTypes from 'prop-types'
 import { Button } from './Widget'
 import { TheadRen } from './TableRen'
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
+import Toggle from 'material-ui/Toggle';
+
 let mainId = 0;
 export class Preview extends React.Component {
     render() {
         const props = this.props
         return (
             <div>
-                <span 
-                style={{float:'left',fontSize:'26px',lineHeight:'30px'}}>
-                TableName: </span>
+                <br />
+                <span
+                    style={{ float: 'left', fontSize: '26px', lineHeight: '30px' }}>
+                    TableName: </span>
                 <TableTitle initName={this.props.tableName} onNameChange={props.onNameChange} />
-                <br/>
-                <br/>
+                <br />
+                <br />
+                <span style={{ fontSize: '24px' }}>Type:</span>
+                <TableType
+                    onTypeChange={props.onTypeChange}
+                    tableType={props.tableType}
+                />
+                <br />
                 <Button onClick={() => props.onAddClick(mainId++)} secondary id='addButton' value='新增单元' />
                 <br />
-                <br />
-                <br />
                 <table>
+                    <thead>
+                        <FixHead maxDepth={this.props.maxDepth} />
+                    </thead>
                     <TheadRen
                         onHeadClick={props.onHeadClick}
                         onDataClick={props.onDataClick}
@@ -43,6 +54,59 @@ export class TableTitle extends React.Component {
         this.props.onNameChange(event.target.value)
     }
     render() {
-        return <input style={{float:'left'}} value={this.state.name} onChange={this.handleChange} />
+        return <input style={{ float: 'left' }} value={this.state.name} onChange={this.handleChange} />
     }
 }
+class TableType extends React.Component {
+    constructor(props) {
+        super(props)
+        this.handleChange = this.handleChange.bind(this)
+    }
+    componentDidMount() {
+        console.log('/??', this.props);
+    }
+    handleChange(event) {
+        // console.log(event.target.value)
+
+        //default type is floating, check the reduces
+        this.props.onTypeChange(event.target.value)
+    }
+    render() {
+        return <span><RadioButtonGroup key={this.props.tableType}
+            name="type"
+            onChange={this.handleChange}
+            defaultSelected={this.props.tableType}>
+
+            <RadioButton
+                value="floating"
+                label="Floating"
+            />
+            <RadioButton style={{
+                marginTop: '-30px',
+                marginLeft: '8em'
+            }}
+                value="fixing"
+                label="Fixing"
+            />
+        </RadioButtonGroup>
+            {this.props.tableType === 'fixing' ?
+                <Toggle labelPosition='left'
+                    label='FixHead: '
+                    defaultToggled={true}
+                    style={{ marginLeft: '1em', maxWidth: '40px' }}
+                /> : null}
+
+        </span>
+    }
+}
+class FixHead extends React.Component {
+    render() {
+        console.log('width', this.props.maxDepth)
+        return <tr>
+            <th colSpan={this.props.maxDepth}></th>
+            <th></th>
+        </tr>
+    }
+}
+
+

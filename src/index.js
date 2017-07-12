@@ -16,6 +16,9 @@ import { reducers } from './reducer/reducers'
 
 import { Homepage } from './component/Homepage'
 
+import injectTapEventPlugin from 'react-tap-event-plugin';
+
+injectTapEventPlugin();
 const history = createHistory()
 const middleware = routerMiddleware(history)
 export const store = createStore(combineReducers({

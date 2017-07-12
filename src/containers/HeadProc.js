@@ -1,7 +1,12 @@
+import { store } from '../index.js'
 export const headBlock = (metaData = []) => {
-    const maxDepth = metaData.map(headPak => {headPak.trie.inOrderData();return headPak.trie.maxDepth}).reduce((prev, next) => {
+    const maxDepth = metaData.map(headPak => { headPak.trie.inOrderData(); return headPak.trie.maxDepth }).reduce((prev, next) => {
         return prev >= next ? prev : next
     }, 0)
+    store.dispatch({
+        type: 'MAX_DEPTH',
+        maxDepth
+    })
     return metaData.map(ele => {
         return {
             data: boxHeight(ele.trie.inOrderData(), maxDepth),

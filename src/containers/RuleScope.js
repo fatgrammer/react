@@ -4,7 +4,7 @@ const mapStateToProps = state => {
     return {
         metaData: state.dataRule,
         rawData: state.rawData,
-        hide: state.floatBox
+        hide: state.floatBox,
         tableList: state.tableList,
         name: state.tableInfo
     }
