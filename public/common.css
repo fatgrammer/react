@@ -210,3 +210,14 @@ li{
     margin-right: 0.1em; 
     cursor:pointer   
 }
+.close{
+    height:20px;
+    line-height:20px;
+    color:#ff0024;
+    float:right;
+    font-size: 2em;
+    font-weight: 800;
+    padding: 0;
+    margin-right: 0.1em; 
+    cursor:pointer   
+}

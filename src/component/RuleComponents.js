@@ -26,7 +26,7 @@ export class RuleBox extends React.Component {
                     {this.renRefBox(refBox)}
                 </thead>
             </table>
-            <OptionScope options={refer} />
+            <OptionScope hide={this.props.hide} onCloseOptions={this.props.onCloseOptions} options={refer} />
             <Button onClick={() => this.props.saveRule(
                 this.props.metaData
             )} value='save' />
@@ -55,7 +55,7 @@ export class RuleBox extends React.Component {
         })
     }
     renSelect(refer, key) {
-        return refer.length ? <tr key={0} >
+        return refer.length ? <tr key={0}  onClick={this.props.onOpenOptions} >
             <td>reference</td>
             <td><select id='refBox' style={{ float: 'left' }}>
                 {refer.map(item => {
@@ -135,13 +135,15 @@ class OptionConf extends React.Component {
 }
 class OptionScope extends React.Component {
     render() {
-        return <div id='opScope'>
+        console.log("props", this.props.hide);
+        return this.props.hide ? <div id='opScope'>
             <span>Options</span>
+            <div onClick={()=>this.props.onCloseOptions()} className='close'>{`\u00d7`}</div>
             <ul>
                 {this.props.options.map(option => {
                     return <li key={option}>{option}</li>
                 })}
             </ul>
-        </div>
+        </div>: null
     }
 }

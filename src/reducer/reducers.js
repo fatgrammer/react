@@ -257,7 +257,16 @@ const popBox = (state = false, action) => {
 
     }
 }
-
+const floatBox =  (state = '', action) => {
+    switch(action.type) {
+        case 'OPEN':
+            return true
+        case 'CLOSE':
+            return false
+        default:
+            return state
+    }
+}
 const tableInfo = (state = '', action) => {
     switch (action.type) {
         case 'TABLE_NAME':
@@ -280,7 +289,8 @@ export const reducers = {
     dataAction,
     dataRule,
     popBox,
-    tableInfo
+    tableInfo,
+    floatBox
 }
 export const splitHead = (data) => {
     let dp = Object.entries(data).map(ele => {
