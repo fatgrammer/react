@@ -1,6 +1,12 @@
 import React from 'react'
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+
+const style = {
+    marginRight: 20,
+};
 
 export class GlobalRuleComponents extends React.Component {
     render() {
@@ -20,37 +26,24 @@ export class GlobalRuleComponents extends React.Component {
  * 表依赖关系规则
  */
 class AfterTable extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            value: 1
-        }
-                this.handleChange = this.handleChange.bind(this)
-
-    }
-
-    handleChange(event) {
-        console.log('eve',event.target)
-        this.setState(
-            {
-                value: event.target.value
-            }
-        )
-    }
-
+    state = {
+        value: 1,
+    };
+    handleChange = (event, index, value) => this.setState({ value });
     render() {
-        console.log(this.state)
         return (
             <tr>
                 <td>afterTalbe</td>
                 <td>
                     <SelectField value={this.state.value} onChange={this.handleChange}>
-                        <MenuItem value={1} label="5 am - 12 pm" primaryText="Morning" />
-                        <MenuItem value={2} label="12 pm - 5 pm" primaryText="Afternoon" />
-                        <MenuItem value={3} label="5 pm - 9 pm" primaryText="Evening" />
-                        <MenuItem value={4} label="9 pm - 5 am" primaryText="Night" />
+                        <MenuItem value={1} label="表1" primaryText="表1" />
+                        <MenuItem value={2} label="表2" primaryText="表2" />
+                        <MenuItem value={3} label="表3" primaryText="表3" />
+                        <MenuItem value={4} label="表4" primaryText="表4" />
                     </SelectField>
-                    <button>add</button>
+                    <FloatingActionButton mini={true} secondary={true} style={style}>
+                        <ContentAdd />
+                    </FloatingActionButton>
                 </td>
             </tr>
         )
@@ -60,23 +53,31 @@ class AfterTable extends React.Component {
  * 自动计算规则
  */
 class AutoCal extends React.Component {
+    state = {
+        value: 1,
+    };
+    handleChange = (event, index, value) => this.setState({ value });
     render() {
         return (
             <tr>
                 <td>autoCal</td>
                 <td>
-                    <select>
-                        <option>字段1</option>
-                        <option>字段2</option>
-                        <option>字段3</option>
-                    </select>
+                    <SelectField value={this.state.value} onChange={this.handleChange}>
+                        <MenuItem value={1} label="字段1" primaryText="字段1" />
+                        <MenuItem value={2} label="字段2" primaryText="字段2" />
+                        <MenuItem value={3} label="字段3" primaryText="字段3" />
+                        <MenuItem value={4} label="字段4" primaryText="字段4" />
+                    </SelectField>
                     <span>=</span>
-                    <select>
-                        <option>字段1</option>
-                        <option>字段2</option>
-                        <option>字段3</option>
-                    </select>
-                    <button>add</button>
+                    <SelectField value={this.state.value} onChange={this.handleChange}>
+                        <MenuItem value={1} label="字段1" primaryText="字段1" />
+                        <MenuItem value={2} label="字段2" primaryText="字段2" />
+                        <MenuItem value={3} label="字段3" primaryText="字段3" />
+                        <MenuItem value={4} label="字段4" primaryText="字段4" />
+                    </SelectField>
+                    <FloatingActionButton mini={true} secondary={true} style={style}>
+                        <ContentAdd />
+                    </FloatingActionButton>
                 </td>
             </tr>
         )
