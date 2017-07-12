@@ -153,8 +153,6 @@ class RefSelects extends React.Component {
 }
 class FloatingBox extends React.Component {
     render() {
-
-                    console.log('missss',this.props.data)
         return this.props.data.length > 0 ? <div id='refScope'>
             <ul>
                 {this.props.data[0].map(ele => {
@@ -194,7 +192,6 @@ class OptionConf extends React.Component {
 }
 class OptionScope extends React.Component {
     render() {
-        console.log("props", this.props.hide);
         return this.props.hide ? <div id='opScope'>
             <span>Options</span>
             <div onClick={()=>this.props.onCloseOptions()} className='close'>{`\u00d7`}</div>

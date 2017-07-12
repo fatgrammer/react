@@ -31,11 +31,13 @@ export class Result extends React.Component {
             <Button id='result' primary value='完成' onClick={
                 () => props.onResultClick('http://192.168.1.249:20080/customTable',
                     { data: JSON.stringify(list) })
-            } /><br />
-            <br /><br />
+            } />
+            <br />
+            <br />
+            <br />
             <hr />
             {JSON.stringify(list)}
-
+            <br/>
             <Button primary id='test' value='test' onClick={
                 () => props.TEST(
                     'http://192.168.1.249:20080/tableTemp/',

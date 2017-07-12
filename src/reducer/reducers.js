@@ -122,7 +122,7 @@ Array.prototype.equals = function (array) {
         return false;
 
     // compare lengths - can save a lot of time 
-    if (this.length != array.length)
+    if (this.length !== array.length)
         return false;
 
     for (var i = 0, l = this.length; i < l; i++) {
@@ -132,7 +132,7 @@ Array.prototype.equals = function (array) {
             if (!this[i].equals(array[i]))
                 return false;
         }
-        else if (this[i] != array[i]) {
+        else if (this[i] !== array[i]) {
             // Warning - two different object instances will never be equal: {x:20} != {x:20}
             return false;
         }
@@ -217,7 +217,6 @@ const dataAction = (state = [], action) => {
                     type: 'IMPORT_RULE',
                     data: spread(res)
                 })
-
             })
             return state
         case 'RESULT':
@@ -227,10 +226,16 @@ const dataAction = (state = [], action) => {
             return state
         case 'TABLE_HEADS':
             $.getJSON(action.url + action.tableName, (res) => {
-                console.log('suc?')
+                console.log('res', res)
+                const pData = splitHead(res)
+
                 store.dispatch({
                     type: 'BUILD',
-                    data: splitHead(res)
+                    data: pData
+                })
+                store.dispatch({
+                    type: 'TypeAndDepth',
+                    data: (pData)
                 })
                 store.dispatch({
                     type: 'FETCH_RULE',
@@ -317,6 +322,7 @@ const popBox = (state = false, action) => {
     switch (action.type) {
         case 'POP_HEAD':
             return true;
+        case 'DELETE_PAK':
         case 'CLOSE_POPBAR':
             return false;
         default:
@@ -324,8 +330,8 @@ const popBox = (state = false, action) => {
 
     }
 }
-const floatBox =  (state = '', action) => {
-    switch(action.type) {
+const floatBox = (state = '', action) => {
+    switch (action.type) {
         case 'OPEN':
             return true
         case 'CLOSE':
@@ -334,11 +340,25 @@ const floatBox =  (state = '', action) => {
             return state
     }
 }
-const tableInfo = (state = '', action) => {
+const tableInfo = (state = { maxDepth: 1, tableType: 'floating' }, action) => {
     switch (action.type) {
+        case 'TypeAndDepth':
+            return { ...state, tableType: action.tableType }
+        // return action.data.length ? {
+        //     ...state,
+        //     tableType: action.data[0].type[0],
+        // } : { ...state, tableType: 'floating' }
         case 'TABLE_NAME':
-            console.log(action)
-            return { tableName: action.tableName };
+            return { ...state, tableName: action.tableName };
+        case 'TABLE_TYPE':
+            console.log('tableType', action)
+            return { ...state, tableType: action.tableType }
+        case 'MAX_DEPTH':
+            return action.maxDepth > state.maxDepth ?
+                { ...state, maxDepth: action.maxDepth } :
+                state
+        case 'FIX_HEAD':
+            return { ...state }
         default:
             return state;
     }
@@ -370,6 +390,8 @@ export const splitHead = (data) => {
 }
 export const consTrie = (headPaks = []) => {
     let data = []
+    console.log('headPak', headPaks)
+
     headPaks.forEach(headPak => {
         const entry = Object.entries(headPak)[0]
         const key = entry[0]
@@ -385,15 +407,4 @@ export const consTrie = (headPaks = []) => {
     })
     return data
 }
-export const buildTrie = (headPaks = []) => {
-    let data = []
-    let headPakId = 0;
-    headPaks.forEach(headPak => {
-        data.filter(dataPak =>
-            dataPak.value === headPak[0]
-        ).length ? null :
-            data.push(new TableTrie(['\uff04' + headPakId++], 0, headPak[0]))
-        data[data.length - 1].upsertPak(headPak)
-    })
-    return data
-}
+
