@@ -6,7 +6,8 @@ const mapStateToProps = state => {
         headBlock: headBlock(state.theadPaks),
         tableName: state.tableInfo.tableName,
         tableType: state.tableInfo.tableType,
-        maxDepth: state.tableInfo.maxDepth
+        maxDepth: state.tableInfo.maxDepth,
+        fixHead: state.tableInfo.fixHead
     }
 }
 const mapDispatchToProps = dispatch => {

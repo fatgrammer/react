@@ -7,6 +7,19 @@ import Toggle from 'material-ui/Toggle';
 
 let mainId = 0;
 export class Preview extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            onFixHead: false
+        }
+        this.showFixHead = this.showFixHead.bind(this)
+    }
+    showFixHead() {
+        this.setState({
+            onFixHead: !this.state.onFixHead
+        })
+        console.log(this.state.onFixHead)
+    }
     render() {
         const props = this.props
         return (
@@ -22,13 +35,24 @@ export class Preview extends React.Component {
                 <TableType
                     onTypeChange={props.onTypeChange}
                     tableType={props.tableType}
-                />
+                /> {
+                    this.props.tableType === 'fixing' ?
+                        <FixHeadSwitch ON={this.state.onFixHead} showFixHead={this.showFixHead} /> : null
+                }
                 <br />
                 <Button onClick={() => props.onAddClick(mainId++)} secondary id='addButton' value='新增单元' />
                 <br />
+
                 <table>
                     <thead>
-                        <FixHead maxDepth={this.props.maxDepth} />
+                        {this.state.onFixHead ?
+                            props.tableType === 'fixing' ?
+                                <FixHead
+                                    fixHead={props.fixHead}
+                                    maxDepth={props.maxDepth} />
+                                : null
+                            : null
+                        }
                     </thead>
                     <TheadRen
                         onHeadClick={props.onHeadClick}
@@ -65,6 +89,7 @@ class TableType extends React.Component {
     componentDidMount() {
         console.log('/??', this.props);
     }
+
     handleChange(event) {
         // console.log(event.target.value)
 
@@ -72,7 +97,7 @@ class TableType extends React.Component {
         this.props.onTypeChange(event.target.value)
     }
     render() {
-        return <span><RadioButtonGroup key={this.props.tableType}
+        return <RadioButtonGroup key={this.props.tableType}
             name="type"
             onChange={this.handleChange}
             defaultSelected={this.props.tableType}>
@@ -89,23 +114,36 @@ class TableType extends React.Component {
                 label="Fixing"
             />
         </RadioButtonGroup>
-            {this.props.tableType === 'fixing' ?
-                <Toggle labelPosition='left'
-                    label='FixHead: '
-                    defaultToggled={true}
-                    style={{ marginLeft: '1em', maxWidth: '40px' }}
-                /> : null}
-
-        </span>
     }
 }
 class FixHead extends React.Component {
     render() {
-        console.log('width', this.props.maxDepth)
-        return <tr>
-            <th colSpan={this.props.maxDepth}></th>
-            <th></th>
-        </tr>
+        const props = this.props
+        console.log('width', this.props.fixHead)
+        return props.fixHead ? <tr>
+            <th colSpan={props.maxDepth}>{props.fixHead[0]}</th>
+            <th>{props.fixHead[1]}</th>
+        </tr> : null
+    }
+}
+let iid = 0;
+class FixHeadSwitch extends React.Component {
+    constructor(props) {
+        super(props)
+        this.handleChange = this.handleChange.bind(this)
+    }
+    handleChange() {
+        this.props.showFixHead()
+    }
+    render() {
+        return <Toggle onToggle={this.handleChange}
+            label='FixHead: '
+            defaultToggled={this.props.ON}
+            style={{
+                marginLeft: '1em',
+                maxWidth: '40px'
+            }}
+        />
     }
 }
 
