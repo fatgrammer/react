@@ -4,6 +4,7 @@ const mapStateToProps = state => {
     return {
         metaData: state.dataRule,
         rawData: state.rawData,
+        hide: state.floatBox
         tableList: state.tableList,
         name: state.tableInfo
     }
@@ -27,6 +28,18 @@ const mapDispatchToProps = dispatch => {
             dispatch({
                 type: 'GET_HEADS',
                 tableName
+            })
+        },
+        onOpenOptions: () => {
+            dispatch({
+                type: 'OPEN',
+                id: 'OPTIONS'
+            })
+        },
+        onCloseOptions: () => {
+            dispatch({
+                type: 'CLOSE',
+                id: 'OPTIONS'
             })
         },
         addRefField: (tableName, field,fieldId) => {

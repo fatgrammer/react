@@ -226,7 +226,6 @@ const dataAction = (state = [], action) => {
             }, 'json');
             return state
         case 'TABLE_HEADS':
-            console.log('th action', action)
             $.getJSON(action.url + action.tableName, (res) => {
                 console.log('suc?')
                 store.dispatch({
@@ -325,7 +324,16 @@ const popBox = (state = false, action) => {
 
     }
 }
-
+const floatBox =  (state = '', action) => {
+    switch(action.type) {
+        case 'OPEN':
+            return true
+        case 'CLOSE':
+            return false
+        default:
+            return state
+    }
+}
 const tableInfo = (state = '', action) => {
     switch (action.type) {
         case 'TABLE_NAME':
@@ -350,6 +358,7 @@ export const reducers = {
     dataRule,
     popBox,
     tableInfo,
+    floatBox,
     rawData,
     tableList
 }
