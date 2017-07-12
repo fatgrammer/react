@@ -109,10 +109,38 @@ const ruleTemp = [{
     dateFormat: ''
 },
 ['placeHolder'],
-[
-    [{}]
+[]
 ]
-]
+
+// Warn if overriding existing method
+if (Array.prototype.equals)
+    console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
+// attach the .equals method to Array's prototype to call it on any array
+Array.prototype.equals = function (array) {
+    // if the other array is a falsy value, return
+    if (!array)
+        return false;
+
+    // compare lengths - can save a lot of time 
+    if (this.length != array.length)
+        return false;
+
+    for (var i = 0, l = this.length; i < l; i++) {
+        // Check if we have nested arrays
+        if (this[i] instanceof Array && array[i] instanceof Array) {
+            // recurse into the nested arrays
+            if (!this[i].equals(array[i]))
+                return false;
+        }
+        else if (this[i] != array[i]) {
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+            return false;
+        }
+    }
+    return true;
+}
+// Hide method from for-in loops
+Object.defineProperty(Array.prototype, "equals", { enumerable: false });
 const dataRule = (state = [], action) => {
     switch (action.type) {
         case 'ADD_OPTION':
@@ -124,9 +152,29 @@ const dataRule = (state = [], action) => {
                     ...t,
                     select: [...t.select, action.value]
                 }
-
             })
-
+        case 'ADD_REFFIELD':
+            const lid = action.fieldId;
+            const fields = action.field.split(',')
+            return state.map(t => {
+                if (t.fieldId !== lid) {
+                    console.log('==', t.fieldId, 'd', lid)
+                    return t
+                }
+                if (t.refBox.filter(ele => {
+                    console.log('ele', ele, 'com', [action.tableName, ...fields])
+                    const eq = ele.equals([action.tableName, ...fields])
+                    console.log(eq)
+                    return eq;
+                }).length) {
+                    return t;
+                } else {
+                    return {
+                        ...t,
+                        refBox: [...t.refBox, [action.tableName, ...fields]]
+                    }
+                }
+            })
         case 'POP_RULE':
             const ts = state.filter(t => {
                 return t.fieldId === action.fieldId
@@ -193,8 +241,18 @@ const dataAction = (state = [], action) => {
             return state
         case 'GET_HEADS':
             $.getJSON('http://192.168.1.249:20080/tableTemp/' + action.tableName, (data) => {
+                console.log('rawHead', data)
                 store.dispatch({
                     type: 'RAW_HEADS',
+                    data
+                })
+            })
+            return state
+
+        case 'GET_TABLELIST':
+            $.getJSON('http://192.168.1.249:20080/tableList', (data) => {
+                store.dispatch({
+                    type: 'TABLE_LIST',
                     data
                 })
             })
@@ -206,12 +264,20 @@ const dataAction = (state = [], action) => {
             return state
     }
 }
-const rawData = (state, action) => {
+const rawData = (state = [], action) => {
     switch (action.type) {
         case 'RAW_HEADS':
             return action.data
         default:
             return state;
+    }
+}
+const tableList = (state = [], action) => {
+    switch (action.type) {
+        case 'TABLE_LIST':
+            return action.data
+        default:
+            return state
     }
 }
 function compress(data = []) {
@@ -242,6 +308,7 @@ function spread(data = {}) {
             radio: ruleTemp[0],
             input: ruleTemp[1],
             select: Object.values(ele)[0][1],
+            refBox: [],
             shown: false
         }
     })
@@ -284,13 +351,16 @@ const tableInfo = (state = '', action) => {
 //             return state;
 //     }
 // }
+
 export const reducers = {
     theadPaks,
     dataAction,
     dataRule,
     popBox,
     tableInfo,
-    floatBox
+    floatBox,
+    rawData,
+    tableList
 }
 export const splitHead = (data) => {
     let dp = Object.entries(data).map(ele => {

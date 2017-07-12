@@ -1,8 +1,29 @@
 import React from 'react'
 import { Button } from './Widget'
 import $ from 'jquery'
-export class RuleBox extends React.Component {
 
+import RaisedButton from 'material-ui/RaisedButton';
+
+export class RuleBox extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            tableName: '',
+            tableField: ''
+        }
+        this.handleName = this.handleName.bind(this)
+        this.handleField = this.handleField.bind(this)
+    }
+    handleName(tableName) {
+        this.setState({
+            tableName
+        })
+    }
+    handleField(tableField) {
+        this.setState({
+            tableField
+        })
+    }
     render() {
         const data = this.props.metaData.filter(t => t.shown)
         const key = data[0] ? data[0].fieldId : ''
@@ -15,7 +36,6 @@ export class RuleBox extends React.Component {
         const refer = select.length ? select[0] : []
 
         const refBox = data.map(dataPak => dataPak.refBox)
-
         return <div key={key}>
             <h1>{key}------{name}</h1>
             <table>
@@ -23,13 +43,14 @@ export class RuleBox extends React.Component {
                     {this.renRadio(radio)}
                     {this.renInput(input)}
                     {this.renSelect(refer, key)}
-                    {this.renRefBox(refBox)}
+                    {this.renRefBox(refBox, key)}
                 </thead>
             </table>
             <OptionScope hide={this.props.hide} onCloseOptions={this.props.onCloseOptions} options={refer} />
             <Button onClick={() => this.props.saveRule(
                 this.props.metaData
             )} value='save' />
+            <FloatingBox data={refBox} />
         </div>
     }
     renRadio(radio) {
@@ -65,46 +86,84 @@ export class RuleBox extends React.Component {
             </td>
         </tr> : null
     }
-    renRefBox(refBox) {
+    renRefBox(refBox, fieldId) {
+        const props = this.props
         return refBox.length ?
             <tr>
                 <td>ForeignField</td>
                 <td>
-                    <RefSelects onSelectChange={this.props.onRefBoxChange} />
-                    <RefFields rawData={this.props.rawData}/>
+                    <RefSelects tableList={props.tableList}
+                        handleName={this.handleName}
+                        onSelectChange={props.onRefBoxChange} />
+
+                    <RefFields handleField={this.handleField}
+                        rawData={props.rawData} />
+                    <Button primary value='add' 
+                        onClick={() =>
+                            props.addRefField(
+                                this.state.tableName, this.state.tableField, fieldId
+                            )}
+                    />
                 </td>
             </tr>
             : null
     }
 }
+
 class RefFields extends React.Component {
+    constructor(props) {
+        super(props)
+        this.handleChange = this.handleChange.bind(this)
+        this.state = {
+            tableField: ''
+        }
+    }
+    handleChange(event) {
+        console.log('value./', event.target.value)
+        this.props.handleField(event.target.value)
+    }
     render() {
-        return <select>{this.props.rawData}</select>
+        const entries = Object.entries(this.props.rawData)
+        return <select onChange={this.handleChange}>{[<option key={-1}></option>, ...entries.map(head => {
+            return <option key={head[0]} value={head} >{head[1]}</option>
+        })]}</select>
     }
 }
 class RefSelects extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            tableList: []
-        }
+
+        this.handleChange = this.handleChange.bind(this)
     }
-    componentDidMount() {
-        $.getJSON('http://192.168.1.249:20080/tableList', (ret) => {
-            console.log('ret', ret)
-            this.setState({
-                tableList: ret
-            })
-        })
+    handleChange(event) {
+        this.props.handleName(event.target.value)
+        this.props.onSelectChange(event.target.value)
     }
+
     render() {
-        return <select >{
-            [
-                <option selected='selected'></option>,
-                ...this.state.tableList.map(ele => {
-                    return <option>{ele}</option>
+        return <select onChange={this.handleChange} defaultValue=''>
+            {[
+                <option value={-1} key={-1} ></option>,
+                ...this.props.tableList.map(ele => {
+                    return <option value={ele} key={ele}>{ele}</option>
                 })
-            ]}</select>
+            ]}
+        </select>
+    }
+}
+class FloatingBox extends React.Component {
+    render() {
+
+                    console.log('missss',this.props.data)
+        return this.props.data.length > 0 ? <div id='refScope'>
+            <ul>
+                {this.props.data[0].map(ele => {
+                    return <li key={ele}> {ele.reduce((prev, next) => {
+                        return prev + '__' + next
+                    })}</li>
+                })}
+            </ul>
+        </div> : null
     }
 }
 class OptionConf extends React.Component {
@@ -129,7 +188,7 @@ class OptionConf extends React.Component {
     render() {
         return <span>
             <input style={{ float: 'left' }} onChange={this.handleChange} />
-            <Button onClick={this.handleClick()} id='addOp' value="add" />
+            <Button primary onClick={this.handleClick()} id='addOp' value="add" />
         </span>
     }
 }
@@ -147,3 +206,4 @@ class OptionScope extends React.Component {
         </div>: null
     }
 }
+

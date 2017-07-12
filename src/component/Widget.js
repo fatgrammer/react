@@ -1,10 +1,16 @@
 import React from 'react'
+
+import RaisedButton from 'material-ui/RaisedButton';
 export class Button extends React.Component {
     render() {
         return (
-            <div id={this.props.id} onClick={this.props.onClick}>
-                {this.props.glyphicon}{this.props.value}
-            </div>
+            <RaisedButton primary={this.props.primary}
+                style={{
+                    margin: 10
+                }}
+                secondary={this.props.secondary} label={this.props.value}
+                onClick={this.props.onClick} />
+
         )
     }
 }

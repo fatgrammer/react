@@ -28,15 +28,15 @@ export class EditBox extends React.Component {
                             actionId={headPak.id}
                             addButton={
                                 head.height < 2 ?
-                                    <span><Button id='nextLevel' glyphicon={<div id='cross' ></div>} value='增加下一级单元'
+                                    <span><Button primary id='nextLevel' glyphicon={<div id='cross' ></div>} value='增加下一级单元'
                                         onClick={
                                             () => props.onLvlAddClick(head.prefix, headPak.id, head.head)
                                         }
                                     /></span> : null}
                             delButton={head.height > 0 ?
-                                <Button id='delButton' value='删除' onClick={
+                                <Button secondary id='delButton' value='删除' onClick={
                                     () => props.onDelLvl(headPak.id, head.prefix)
-                                } /> : <Button id='delPakButton' value='DELPAK' onClick={
+                                } /> : <Button secondary id='delPakButton' value='DELPAK' onClick={
                                     () => props.onDelPak(headPak.id)
                                 } />
                             }

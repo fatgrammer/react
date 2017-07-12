@@ -21,4 +21,4 @@ yarn-debug.log*
 yarn-error.log*
 
 #dest_DIR
-/app
+/app/bundle.js
