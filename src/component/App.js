@@ -3,9 +3,8 @@ import { PreviewScope } from '../containers/PreviewScope'
 import { EditScope } from '../containers/EditScope'
 import { ResultScope } from '../containers/ResultScope'
 import { RuleScope } from '../containers/RuleScope'
+import { GlobalRuleScope } from '../containers/GlobalRuleScope'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
-
 
 import { Link } from 'react-router-dom'
 export const App = () => {
@@ -26,6 +25,7 @@ export const App = () => {
             <EditScope />
             <ResultScope />
             <RuleScope />
+            <GlobalRuleScope />
         </div>
     </MuiThemeProvider>
 }
