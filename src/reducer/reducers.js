@@ -356,7 +356,7 @@ const tableInfo = (state = { maxDepth: 1, tableType: 'floating' }, action) => {
             console.log('tableType', action)
             return { ...state, tableType: action.tableType }
         case 'MAX_DEPTH':
-            return {...state} 
+            return state
         case 'FIX_HEAD':
             return { ...state }
         default:
