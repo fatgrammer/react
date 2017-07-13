@@ -227,7 +227,7 @@ const dataAction = (state = [], action) => {
                 const fixHead = res['fixHead']
                 fixHead ? delete res['fixHead'] : null;
                 const pData = splitHead(res);
-                console.log('length.....',pData)
+                console.log('length.....', pData)
                 const type = res.type
                 store.dispatch({
                     type: 'BUILD',
@@ -341,7 +341,7 @@ const floatBox = (state = '', action) => {
             return state
     }
 }
-const tableInfo = (state = { maxDepth: 1, tableType: 'floating' }, action) => {
+const tableInfo = (state = { tableType: 'floating' }, action) => {
     switch (action.type) {
         case 'TypeAndHead':
             console.log('FixHead', action.fixHead)
@@ -351,12 +351,13 @@ const tableInfo = (state = { maxDepth: 1, tableType: 'floating' }, action) => {
                 fixHead: action.fixHead || []
             }
         case 'TABLE_NAME':
-            return { ...state, tableName: action.tableName };
+            return {
+                ...state,
+                tableName: action.tableName,
+            };
         case 'TABLE_TYPE':
             console.log('tableType', action)
             return { ...state, tableType: action.tableType }
-        case 'MAX_DEPTH':
-            return state
         case 'FIX_HEAD':
             return { ...state }
         default:

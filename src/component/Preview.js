@@ -4,6 +4,7 @@ import { Button } from './Widget'
 import { TheadRen } from './TableRen'
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import Toggle from 'material-ui/Toggle';
+import TextField from 'material-ui/TextField';
 
 let mainId = 0;
 export class Preview extends React.Component {
@@ -22,6 +23,7 @@ export class Preview extends React.Component {
     }
     render() {
         const props = this.props
+        // console.log('?????',this.state.onFixHead,'.,.',this.props.tableType)
         return (
             <div>
                 <br />
@@ -72,13 +74,18 @@ export class TableTitle extends React.Component {
         this.handleChange = this.handleChange.bind(this)
     }
     handleChange(event) {
-        this.setState({
-            name: event.target.value
-        });
+        // this.setState({
+        //     name: event.target.value
+        // });
         this.props.onNameChange(event.target.value)
     }
+    // render() {
+    //     return <input style={{ float: 'left' }} value={this.props.initName} onChange={(event) => { this.props.onNameChange(event.target.value) }} />
+    // }
     render() {
-        return <input style={{ float: 'left' }} value={this.state.name} onChange={this.handleChange} />
+        return <TextField hintText='tableName here' onChange={this.handleChange}
+            defaultValue={this.props.initName}
+        />
     }
 }
 class TableType extends React.Component {
@@ -91,8 +98,6 @@ class TableType extends React.Component {
     }
 
     handleChange(event) {
-        // console.log(event.target.value)
-
         //default type is floating, check the reduces
         this.props.onTypeChange(event.target.value)
     }
@@ -116,17 +121,26 @@ class TableType extends React.Component {
         </RadioButtonGroup>
     }
 }
+
 class FixHead extends React.Component {
     render() {
         const props = this.props
-        console.log('width', this.props.fixHead)
-        return props.fixHead ? <tr>
-            <th colSpan={props.maxDepth}>{props.fixHead[0]}</th>
-            <th>{props.fixHead[1]}</th>
+        const fixHead = props.fixHead || ['', '']
+        // console.log('width', fixHead)
+        return fixHead ? <tr>
+            <th colSpan={props.maxDepth} >
+                <TextField 
+                    hintText={fixHead[0]}
+                />
+            </th>
+            <th>
+                <TextField 
+                    hintText={fixHead[1]}
+                />
+            </th>
         </tr> : null
     }
 }
-let iid = 0;
 class FixHeadSwitch extends React.Component {
     constructor(props) {
         super(props)

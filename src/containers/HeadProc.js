@@ -1,6 +1,5 @@
 import { store } from '../index.js'
 export const headBlock = (metaData = []) => {
-
     const maxDepth = calcMaxDepth(metaData);
     return metaData.map(ele => {
         return {
@@ -10,14 +9,12 @@ export const headBlock = (metaData = []) => {
         }
     })
 }
-const calcMaxDepth = (metaData) => {
+export const calcMaxDepth = (metaData) => {
     const maxDepth = metaData.map(headPak => { headPak.trie.inOrderData(); return headPak.trie.maxDepth }).reduce((prev, next) => {
         return prev >= next ? prev : next
     }, 0)
     return maxDepth
 }
-
-
 const boxHeight = (boxStacks, maxDepth) => {
     return boxStacks.map(
         boxStack => {

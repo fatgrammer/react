@@ -29,7 +29,7 @@ export class TableList extends React.Component {
     render() {
         const props = this.props
         return <div>
-            <h1>TableName List</h1>
+            <h3>TableName List</h3>
             <ul>
                 <Link
                     to='/newTable'>

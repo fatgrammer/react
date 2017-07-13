@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 
 import { App } from './component/App'
+import { FillApp } from './component/FillApp'
 
 import { Route } from 'react-router'
 
@@ -37,6 +38,8 @@ ReactDOM.render(
             <div>
                 <Route exact path='/' component={Homepage} />
                 <Route path='/newTable' component={App} />
+                <Route path='/fill' component={FillApp} />
+                
             </div>
         </ConnectedRouter>
     </Provider>,
