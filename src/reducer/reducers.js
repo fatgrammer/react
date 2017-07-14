@@ -223,6 +223,7 @@ const dataAction = (state = [], action) => {
             }, 'json');
             return state
         case 'TABLE_HEADS':
+        console.log('wwwwww')
             $.getJSON(action.url + action.tableName, (res) => {
                 const fixHead = res['fixHead']
                 fixHead ? delete res['fixHead'] : null;
@@ -247,7 +248,6 @@ const dataAction = (state = [], action) => {
             return state
         case 'GET_HEADS':
             $.getJSON('http://192.168.1.249:20080/tableTemp/' + action.tableName, (data) => {
-                console.log('rawHead', data)
                 store.dispatch({
                     type: 'RAW_HEADS',
                     data
@@ -356,10 +356,16 @@ const tableInfo = (state = { tableType: 'floating' }, action) => {
                 tableName: action.tableName,
             };
         case 'TABLE_TYPE':
-            console.log('tableType', action)
             return { ...state, tableType: action.tableType }
-        case 'FIX_HEAD':
-            return { ...state }
+        case 'ALT_FIXHEAD':
+            const fixHead = state.fixHead || ['']
+            const tmp = [...fixHead.slice(0, action.id),
+            action.text,
+            ...fixHead.slice(action.id + 1)]
+            return {
+                ...state,
+                fixHead: tmp
+            }
         default:
             return state;
     }

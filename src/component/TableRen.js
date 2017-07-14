@@ -48,6 +48,7 @@ export class TheadRen extends Component {
 }
 export class SimpleRen extends React.Component {
     render() {
+        let trid = 0;
         const headsList = this.props.headsList
         const type = this.props.type
         const tableForm = type === 'floating' ?
@@ -57,7 +58,7 @@ export class SimpleRen extends React.Component {
                 })}</tr>
             })
             : [
-                <tr>
+                <tr key={trid++}>
                     {!headsList.length || headsList[0].map(
                         ele => <th rowSpan={ele.rowSpan}
                             colSpan={ele.colSpan}>
@@ -68,7 +69,6 @@ export class SimpleRen extends React.Component {
 
                     return <tr>
                         {heads.map(head => {
-                            console.log('head', head)
                             return <th key={head.headField}
                                 colSpan={head.colSpan}
                                 rowSpan={head.rowSpan}>
@@ -78,7 +78,6 @@ export class SimpleRen extends React.Component {
                         <td>content</td>
                     </tr >
                 })]
-        console.log(tableForm)
         return <thead>
             {tableForm}
         </thead>

@@ -316,7 +316,6 @@ export class TableTrie {
 function existInChildren(node, value) {
     // console.log('in', node.value)
     return node.children.filter(t => {
-        console.log('t',t.value, 'vale', value)
         return t.value === value
     }).length
 }

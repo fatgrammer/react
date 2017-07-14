@@ -11,7 +11,7 @@ export class Preview extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            onFixHead: false
+            onFixHead: true
         }
         this.showFixHead = this.showFixHead.bind(this)
     }
@@ -19,12 +19,14 @@ export class Preview extends React.Component {
         this.setState({
             onFixHead: !this.state.onFixHead
         })
-        console.log(this.state.onFixHead)
     }
+
     render() {
         const props = this.props
+
         // console.log('?????',this.state.onFixHead,'.,.',this.props.tableType)
         return (
+
             <div>
                 <br />
                 <span
@@ -50,6 +52,7 @@ export class Preview extends React.Component {
                         {this.state.onFixHead ?
                             props.tableType === 'fixing' ?
                                 <FixHead
+                                    onFixHeadChange={props.onFixHeadChange}
                                     fixHead={props.fixHead}
                                     maxDepth={props.maxDepth} />
                                 : null
@@ -93,9 +96,6 @@ class TableType extends React.Component {
         super(props)
         this.handleChange = this.handleChange.bind(this)
     }
-    componentDidMount() {
-        console.log('/??', this.props);
-    }
 
     handleChange(event) {
         //default type is floating, check the reduces
@@ -123,19 +123,24 @@ class TableType extends React.Component {
 }
 
 class FixHead extends React.Component {
+
     render() {
         const props = this.props
         const fixHead = props.fixHead || ['', '']
         // console.log('width', fixHead)
         return fixHead ? <tr>
             <th colSpan={props.maxDepth} >
-                <TextField 
-                    hintText={fixHead[0]}
+                <TextField id='fixhead_0' onChange={
+                    (event) => {
+                        return props.onFixHeadChange(0, event.target.value)
+                    }
+                }
+                    value={fixHead[0]}
                 />
             </th>
             <th>
-                <TextField 
-                    hintText={fixHead[1]}
+                <TextField id='fixhead_1' onChange={(event) => props.onFixHeadChange(1, event.target.value)}
+                    value={fixHead[1]}
                 />
             </th>
         </tr> : null

@@ -119,7 +119,6 @@ class RefFields extends React.Component {
         }
     }
     handleChange(event) {
-        console.log('value./', event.target.value)
         this.props.handleField(event.target.value)
     }
     render() {

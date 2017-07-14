@@ -9,6 +9,16 @@ const floatjson = '[[{"headField":"1.学校名称","colSpan":1,"rowSpan":2},{"he
 const data = JSON.parse(fixjson)
 export const FillApp = () => (
     <div>
+        <Link to='/'
+            style={{
+                marginLeft: '40%',
+                borderRadius: '3px',
+                fontSize: '2em',
+                padding: '8px',
+                backgroundColor: 'wheat',
+                height: '30px',
+                width: '100px'
+            }}>return Homepage</Link>
         <h1>FillDataHere</h1>
         <table>
             <FillScope />
@@ -26,7 +36,6 @@ class FillScope extends React.Component {
     }
     componentDidMount() {
         $.getJSON('http://192.168.1.249:20080/fixingHead/1-1', (ret) => {
-            console.log(ret)
             this.setState({
                 headsList: ret
             })

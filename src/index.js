@@ -30,6 +30,7 @@ export const store = createStore(combineReducers({
 )
 
 
+store.dispatch(push('/'))
 
 
 ReactDOM.render(

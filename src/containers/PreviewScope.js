@@ -8,9 +8,8 @@ const mapStateToProps = state => {
         tableName: state.tableInfo.tableName,
         tableType: state.tableInfo.tableType,
         maxDepth: maxDepth,
-        fixHead: state.tableInfo.fixHead,
+        fixHead: state.tableInfo.fixHead
         ///warning
-
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -46,10 +45,18 @@ const mapDispatchToProps = dispatch => {
                 tableType
             })
         },
-        changeMaxDepth: (maxDepth) => {
+        // changeMaxDepth: (maxDepth) => {
+        //     dispatch({
+        //         type: 'MAX_DEPTH',
+        //         maxDepth
+        //     })
+        // },
+        onFixHeadChange: (id, text) => {
             dispatch({
-                tyep: 'MAX_DEPTH',
-                maxDepth
+                type: 'ALT_FIXHEAD',
+                id,
+                text,
+
             })
         }
     }
