@@ -30,11 +30,11 @@ export class GlobalRuleComponents extends React.Component {
             <div>
                 <table>
                     <thead>
-                        <AfterTable tableList={this.props.tableList} getAfterTable={this.props.getAfterTable} />
+                        <AfterTable tableList={this.props.tableList} addAfterTable={this.props.addAfterTable} />
                         <AutoCal />
                     </thead>
                 </table>
-                <Option delAfterTable={this.props.delAfterTable} />
+                <Option delAfterTable={this.props.delAfterTable} afterList={this.props.afterList} />
             </div>
         )
     }
@@ -46,7 +46,7 @@ class AfterTable extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            value: 0
+            value: null
         };
     }
     handleChange = (event, index, value) => this.setState({ value });
@@ -56,9 +56,9 @@ class AfterTable extends React.Component {
                 <td>afterTalbe</td>
                 <td>
                     <SelectField value={this.state.value} onChange={this.handleChange}>
-                        {this.props.tableList.map((ele, i) => <MenuItem value={i} key={i} label={ele} primaryText={ele} />)}
+                        {this.props.tableList.map((ele, i) => <MenuItem value={ele} key={i} label={ele} primaryText={ele} />)}
                     </SelectField>
-                    <FloatingActionButton mini={true} secondary={true} style={buttonStyle} onClick={()=>this.props.getAfterTable()} >
+                    <FloatingActionButton mini={true} secondary={true} style={buttonStyle} onClick={()=>this.props.addAfterTable(this.state.value)} >
                         <ContentAdd />
                     </FloatingActionButton>
                 </td>
@@ -110,7 +110,7 @@ class Option extends React.Component {
     render() {
         return (
             <div>
-                <Paper style={paperStyle} zDepth={3} rounded={true} children={<ListExampleSimple key="111" delAfterTable={this.props.delAfterTable} />} />
+                <Paper style={paperStyle} zDepth={3} rounded={true} children={<ListExampleSimple key="111" delAfterTable={this.props.delAfterTable} afterList={this.props.afterList} />} />
             </div>
         )
     }
@@ -122,12 +122,14 @@ class ListExampleSimple extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = { list: ["表1", "表2", "表3"] }
+        //let data = this.props.afterList
+        //console.log(data)
+        //this.state = { list: this.props.afterList }
     }
     render() {
         return (
             <List>
-                {this.state.list.map((ele, i) => <ListItem primaryText={ele} key={i} rightIcon={<ActionDeleteForever onClick={() => this.props.delAfterTable({ele})}/>} />)}
+                {this.props.afterList.map((ele, i) => <ListItem primaryText={ele} key={i} rightIcon={<ActionDeleteForever onClick={() => this.props.delAfterTable(ele)}/>} />)}
             </List>
         )
     }

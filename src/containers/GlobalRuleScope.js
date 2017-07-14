@@ -19,9 +19,18 @@ const mapDispatchToProps = dispatch => {
                 type: 'GETAFTERTABLE'
             })
         },
-        delAfterTable: (value='') =>{
+        addAfterTable: (value= '') =>{
+            console.log("value", value)
             dispatch({
-                type: 'DELAFTERTABLE'
+                type: 'ADDAFTERTABLE',
+                value: value
+            })
+        },
+        delAfterTable: (value= '') =>{
+            console.log("value", value)
+            dispatch({
+                type: 'DELAFTERTABLE',
+                value : value
             })
         }
     }

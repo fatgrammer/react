@@ -1,20 +1,23 @@
 import { store } from '../index.js'
 
 const tempGlobalRule = {
-    afterTable: ["表1", "表2", "表3"],
+    afterTable: [],
     autoCal: []
 }
 
-export const globalRule = (state = [], action) => {
+export const globalRule = (state = tempGlobalRule.afterTable, action) => {
     switch (action.type) {
         case 'GETAFTERTABLE':
-            console.log(tempGlobalRule.afterTable)
-            return tempGlobalRule.afterTable;
+            return [...state];
         case 'ADDAFTERTABLE':
-            // tempGlobalRule.afterTable.push(action.data)
-            return [...state, action.value]
+            if(!action.value)
+                return state
+            if(state.length == 0)
+                return [...state, action.value]
+            else
+                return state.map(ele => ele != action.value).reduce((ele1, ele2) => ele1 && ele2) ? [...state, action.value] : state
         case 'DELAFTERTABLE':
-            return state.afterTable.filter(ele => ele !== action.value)
+            return state.filter(ele => ele !== action.value)
         default:
             return state
     }
