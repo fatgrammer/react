@@ -50,6 +50,6 @@ export class Result extends React.Component {
     componentDidMount() {
         this.props.TEST(
             'http://192.168.1.249:20080/tableTemp/',
-            this.props.head.tableName)
+            this.props.head.tableName||'')
     }
 }

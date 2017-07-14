@@ -1,7 +1,9 @@
 import { TableTrie } from '../custom_table/HeadProps'
 // import PropTypes from 'prop-types'
 import { store } from '../index.js'
+import { globalRule } from './GlobalRuleReducer.js'
 import $ from 'jquery'
+
 let gTrieId = 0;
 const theadPaks = (state = [], action) => {
     switch (action.type) {
@@ -246,7 +248,8 @@ const dataAction = (state = [], action) => {
             })
             return state
         case 'GET_HEADS':
-            $.getJSON('http://192.168.1.249:20080/tableTemp/' + action.tableName, (data) => {
+            const tableName = action.tableName || ''
+            $.getJSON('http://192.168.1.249:20080/tableTemp/' + tableName, (data) => {
                 console.log('rawHead', data)
                 store.dispatch({
                     type: 'RAW_HEADS',
@@ -381,7 +384,8 @@ export const reducers = {
     tableInfo,
     floatBox,
     rawData,
-    tableList
+    tableList,
+    globalRule
 }
 export const splitHead = (data) => {
     let dp = Object.entries(data).map(ele => {
