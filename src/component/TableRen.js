@@ -11,21 +11,7 @@ export class TheadRen extends Component {
         }
     }
 
-    renderHorizontalThead(headsList = []) {
-        return Object.values(headsList).map(heads => {
-            return <tr>{Object.values(heads).map(head => {
-                return <th colSpan={head.colSpan} rowSpan={head.rowSpan}>{head.headField}</th>
-            })}</tr>
-        })
-    }
-    renderVerticalHeads(headsList = []) {
-        return Object.values(headsList).map(heads => {
-            return <tr>{Object.values(heads).map(head => {
-                return <th colSpan={head.rowSpan}>{head.headField}</th>
-            })
-            }<td>content</td></tr >
-        })
-    }
+
     renderHeadPak(headPakList = []) {
         let gIdx = -1;
         let LocalBarKey = 0;
@@ -60,7 +46,43 @@ export class TheadRen extends Component {
         )
     }
 }
+export class SimpleRen extends React.Component {
+    render() {
+        let trid = 0;
+        const headsList = this.props.headsList
+        const type = this.props.type
+        const tableForm = type === 'floating' ?
+            headsList.map(heads => {
+                return <tr>{Object.values(heads).map(head => {
+                    return <th colSpan={head.colSpan} rowSpan={head.rowSpan}>{head.headField}</th>
+                })}</tr>
+            })
+            : [
+                <tr key={trid++}>
+                    {!headsList.length || headsList[0].map(
+                        ele => <th rowSpan={ele.rowSpan}
+                            colSpan={ele.colSpan}>
+                            {ele.headField}
+                        </th>)}
+                </tr>
+                , ...headsList.slice(1).map(heads => {
 
+                    return <tr>
+                        {heads.map(head => {
+                            return <th key={head.headField}
+                                colSpan={head.colSpan}
+                                rowSpan={head.rowSpan}>
+                                {head.headField}
+                            </th>
+                        })}
+                        <td>content</td>
+                    </tr >
+                })]
+        return <thead>
+            {tableForm}
+        </thead>
+    }
+}
 export class Th extends React.Component {
     render() {
         return <th onClick={this.props.onHeadClick} rowSpan={this.props.rowSpan} colSpan={this.props.colSpan} > {this.props.children}</th>

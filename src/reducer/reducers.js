@@ -19,12 +19,10 @@ const theadPaks = (state = [], action) => {
                 }
             })
         case 'ADD':
-            console.log(action.id)
             const tId = '\uff04' + gTrieId++
             return [...state, {
                 id: tId,
                 trie: new TableTrie([tId], 0),
-                // trie: testTrie[0], 
                 shownProp: false
             }];
         case 'DELETE_PAK':
@@ -227,17 +225,21 @@ const dataAction = (state = [], action) => {
             }, 'json');
             return state
         case 'TABLE_HEADS':
+        console.log('wwwwww')
             $.getJSON(action.url + action.tableName, (res) => {
-                console.log('res', res)
-                const pData = splitHead(res)
-
+                const fixHead = res['fixHead']
+                fixHead ? delete res['fixHead'] : null;
+                const pData = splitHead(res);
+                console.log('length.....', pData)
+                const type = res.type
                 store.dispatch({
                     type: 'BUILD',
-                    data: pData
+                    data: pData.slice(1)
                 })
                 store.dispatch({
-                    type: 'TypeAndDepth',
-                    data: (pData)
+                    type: 'TypeAndHead',
+                    data: type,
+                    fixHead,
                 })
                 store.dispatch({
                     type: 'FETCH_RULE',
@@ -247,9 +249,7 @@ const dataAction = (state = [], action) => {
             })
             return state
         case 'GET_HEADS':
-            const tableName = action.tableName || ''
-            $.getJSON('http://192.168.1.249:20080/tableTemp/' + tableName, (data) => {
-                console.log('rawHead', data)
+            $.getJSON('http://192.168.1.249:20080/tableTemp/' + action.tableName, (data) => {
                 store.dispatch({
                     type: 'RAW_HEADS',
                     data
@@ -343,25 +343,31 @@ const floatBox = (state = '', action) => {
             return state
     }
 }
-const tableInfo = (state = { maxDepth: 1, tableType: 'floating' }, action) => {
+const tableInfo = (state = { tableType: 'floating' }, action) => {
     switch (action.type) {
-        case 'TypeAndDepth':
-            return { ...state, tableType: action.tableType }
-        // return action.data.length ? {
-        //     ...state,
-        //     tableType: action.data[0].type[0],
-        // } : { ...state, tableType: 'floating' }
+        case 'TypeAndHead':
+            console.log('FixHead', action.fixHead)
+            return {
+                ...state,
+                tableType: action.data || 'floating',
+                fixHead: action.fixHead || []
+            }
         case 'TABLE_NAME':
-            return { ...state, tableName: action.tableName };
+            return {
+                ...state,
+                tableName: action.tableName,
+            };
         case 'TABLE_TYPE':
-            console.log('tableType', action)
             return { ...state, tableType: action.tableType }
-        case 'MAX_DEPTH':
-            return action.maxDepth > state.maxDepth ?
-                { ...state, maxDepth: action.maxDepth } :
-                state
-        case 'FIX_HEAD':
-            return { ...state }
+        case 'ALT_FIXHEAD':
+            const fixHead = state.fixHead || ['']
+            const tmp = [...fixHead.slice(0, action.id),
+            action.text,
+            ...fixHead.slice(action.id + 1)]
+            return {
+                ...state,
+                fixHead: tmp
+            }
         default:
             return state;
     }

@@ -12,7 +12,7 @@ const buttonStyle = {
     fontFamily: 'fantasy'
 }
 
-export class TableList extends React.Component {
+export class FillList extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -31,22 +31,11 @@ export class TableList extends React.Component {
         return <div>
             <h3>TableName List</h3>
             <ul>
-                <Link
-                    to='/newTable'>
-                    <span onClick={() => {
-                        props.tableName('')
-                    }} style={{
-                        ...buttonStyle,
-                        letterSpacing: '0px'
-                    }
-                    }>
-                        newTable
-               </span>
-                </Link>
+     
                 {this.state.tableList.map(tableName => {
                     return <li  key={tableName}><Link
                         onClick={() => props.tableName(tableName)}
-                        style={buttonStyle} to='/newTable'>
+                        style={buttonStyle} to='/fill'>
                         {tableName}
                     </Link></li>
                 })}

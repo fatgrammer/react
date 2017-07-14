@@ -1,6 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import { TableCategory } from '../containers/TableCategory'
+import { FillCategory } from '../containers/FillCategory'
 const buttonStyle = {
     float: 'left',
     fontSize: '26px',
@@ -11,7 +12,20 @@ const buttonStyle = {
 }
 export const Homepage = () => (
     <div>
-        <h1>Home</h1>
-        <TableCategory />
+        <span style={{
+            float: 'left'
+        }}>
+            <h1>Home</h1>
+            <h2>Custom Table</h2>
+            <TableCategory />
+        </span>
+        <span style={{
+            float: 'left',
+            marginTop: '4em',
+            marginLeft: '2em'
+        }}>
+            <h2>FillData</h2>
+            <FillCategory />
+        </span>
     </div>
 )

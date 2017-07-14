@@ -1,12 +1,15 @@
 import { connect } from 'react-redux'
 import { Preview } from '../component/Preview'
-import { headBlock } from './HeadProc'
+import { headBlock, calcMaxDepth } from './HeadProc'
 const mapStateToProps = state => {
+    const maxDepth = calcMaxDepth(state.theadPaks);
     return {
         headBlock: headBlock(state.theadPaks),
         tableName: state.tableInfo.tableName,
         tableType: state.tableInfo.tableType,
-        maxDepth: state.tableInfo.maxDepth
+        maxDepth: maxDepth,
+        fixHead: state.tableInfo.fixHead
+        ///warning
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -40,6 +43,20 @@ const mapDispatchToProps = dispatch => {
             dispatch({
                 type: 'TABLE_TYPE',
                 tableType
+            })
+        },
+        // changeMaxDepth: (maxDepth) => {
+        //     dispatch({
+        //         type: 'MAX_DEPTH',
+        //         maxDepth
+        //     })
+        // },
+        onFixHeadChange: (id, text) => {
+            dispatch({
+                type: 'ALT_FIXHEAD',
+                id,
+                text,
+
             })
         }
     }
