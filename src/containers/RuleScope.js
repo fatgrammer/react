@@ -3,7 +3,7 @@ import { RuleBox } from '../component/RuleComponents'
 const mapStateToProps = state => {
     return {
         metaData: state.dataRule,
-        rawData: state.rawData,
+        fieldList: state.rawData.fieldList,
         hide: state.floatBox,
         tableList: state.tableList,
         name: state.tableInfo

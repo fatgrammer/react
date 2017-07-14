@@ -2,7 +2,8 @@ import { connect } from 'react-redux'
 import { TableList } from '../component/TableList'
 const mapStateToProps = state => {
     return {
-        TableList: state.dataAction
+        TableList: state.dataAction,
+        destination: 'newTable'
     }
 }
 const mapDispatchToProps = dispatch => {

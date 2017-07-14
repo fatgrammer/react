@@ -8,7 +8,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import { Link } from 'react-router-dom'
 export const App = () => {
-    return     <MuiThemeProvider>
+    return <MuiThemeProvider>
         <div>
             <Link to='/'
                 style={{

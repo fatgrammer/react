@@ -6,7 +6,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 
 import { App } from './component/App'
 import { FillApp } from './component/FillApp'
-
+import { ConstRefApp } from './component/ConstRefApp'
 import { Route } from 'react-router'
 
 import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux'
@@ -40,7 +40,7 @@ ReactDOM.render(
                 <Route exact path='/' component={Homepage} />
                 <Route path='/newTable' component={App} />
                 <Route path='/fill' component={FillApp} />
-                
+                <Route path='/constRef' component={ConstRefApp} />
             </div>
         </ConnectedRouter>
     </Provider>,

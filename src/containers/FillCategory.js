@@ -1,8 +1,9 @@
 import { connect } from 'react-redux'
-import { FillList } from '../component/FillList'
+import { TableNameList } from '../component/TableNameList'
 const mapStateToProps = state => {
     return {
-        TableList: state.dataAction
+        TableList: state.dataAction,
+        destination: '/fill'
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -18,4 +19,4 @@ const mapDispatchToProps = dispatch => {
 export const FillCategory = connect(
     mapStateToProps,
     mapDispatchToProps
-)(FillList)
+)(TableNameList)

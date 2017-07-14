@@ -76,7 +76,7 @@ export class RuleBox extends React.Component {
         })
     }
     renSelect(refer, key) {
-        return refer.length ? <tr key={0}  onClick={this.props.onOpenOptions} >
+        return refer.length ? <tr key={0} onClick={this.props.onOpenOptions} >
             <td>reference</td>
             <td><select id='refBox' style={{ float: 'left' }}>
                 {refer.map(item => {
@@ -97,8 +97,8 @@ export class RuleBox extends React.Component {
                         onSelectChange={props.onRefBoxChange} />
 
                     <RefFields handleField={this.handleField}
-                        rawData={props.rawData} />
-                    <Button primary value='add' 
+                        fieldList={props.fieldList} />
+                    <Button primary value='add'
                         onClick={() =>
                             props.addRefField(
                                 this.state.tableName, this.state.tableField, fieldId
@@ -122,10 +122,15 @@ class RefFields extends React.Component {
         this.props.handleField(event.target.value)
     }
     render() {
-        const entries = Object.entries(this.props.rawData)
-        return <select onChange={this.handleChange}>{[<option key={-1}></option>, ...entries.map(head => {
-            return <option key={head[0]} value={head} >{head[1]}</option>
-        })]}</select>
+        const entries = this.props.fieldList ? Object.entries(this.props.fieldList) : []
+        return <select onChange={this.handleChange}>
+            {[<option key={-1}></option>
+                , ...entries.map(head => {
+                    return <option key={head[0]} value={head} >
+                        {head[1]}
+                    </option>
+                })]}
+        </select>
     }
 }
 class RefSelects extends React.Component {
@@ -193,13 +198,13 @@ class OptionScope extends React.Component {
     render() {
         return this.props.hide ? <div id='opScope'>
             <span>Options</span>
-            <div onClick={()=>this.props.onCloseOptions()} className='close'>{`\u00d7`}</div>
+            <div onClick={() => this.props.onCloseOptions()} className='close'>{`\u00d7`}</div>
             <ul>
                 {this.props.options.map(option => {
                     return <li key={option}>{option}</li>
                 })}
             </ul>
-        </div>: null
+        </div> : null
     }
 }
 
