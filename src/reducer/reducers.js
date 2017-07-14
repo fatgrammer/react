@@ -1,7 +1,9 @@
 import { TableTrie } from '../custom_table/HeadProps'
 // import PropTypes from 'prop-types'
 import { store } from '../index.js'
+import { globalRule } from './GlobalRuleReducer.js'
 import $ from 'jquery'
+
 let gTrieId = 0;
 const theadPaks = (state = [], action) => {
     switch (action.type) {
@@ -387,7 +389,8 @@ export const reducers = {
     tableInfo,
     floatBox,
     rawData,
-    tableList
+    tableList,
+    globalRule
 }
 export const splitHead = (data) => {
     let dp = Object.entries(data).map(ele => {
