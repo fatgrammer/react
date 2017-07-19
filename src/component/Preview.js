@@ -45,6 +45,7 @@ export class Preview extends React.Component {
                 }
                 <br />
                 <Button onClick={() => props.onAddClick(mainId++)} secondary id='addButton' value='新增单元' />
+                <Button onClick={props.showGRule} primary id='addButton' value='全局规则' />
                 <br />
 
                 <table>

@@ -3,6 +3,7 @@ body{
     color: #333333; 
     font-size: 13px;
     background-color: #f5f5f5;
+    overflow-x: hidden;
 } 
 a{color:#2d374b;text-decoration:none} 
 a:hover{color:#cd0200;text-decoration:none} 
@@ -121,14 +122,13 @@ table thead tr td {
 }
 #opScope{
 
-    width: 30%;
-    height:50%;
-    background-color: #fffaee;
+   width: 40%;
+    /* height:70%; */
     position: absolute;
+    top: 20px;
+    right: 0px;
     bottom: 20px;
-    right: 20%;
-    box-shadow: 0px 0px 10px 1px #888;
-    z-index: 5;
+    z-index: 4; 
 }
 .popText{
     color: #707070;
@@ -190,25 +190,8 @@ li{
     float:left;
     width:100%
 }
-#cross {
- margin-top:0.6em;
- margin-left: 1.5em;
-  background: #2cc3e8;
-  height: 12px;
-  position: relative;
-  width: 4px;
-  float:left;
-}
-#cross:after {
-  background: #2cc3e8;
-  content: "";
-  height: 4px;
-  left: -4px;
-  position: absolute;
-  top: 4px;
-  width: 12px;
-}
-#closeX{
+
+ #closeX{
     height:20px;
     line-height:20px;
     color:#ff0024;
@@ -229,4 +212,22 @@ li{
     padding: 0;
     margin-right: 0.1em; 
     cursor:pointer   
+} 
+.ruleBox {
+    width: 40%;
+    /* height:70%; */
+    position: absolute;
+    top: 20px;
+    right: 0px;
+    bottom: 20px;
+    z-index: 4;
+}
+#globalRuleBox {
+    width: 40%;
+    /* height:70%; */
+    position: absolute;
+    top: 20px;
+    right: 0px;
+    bottom: 20px;
+    z-index: 4;
 }

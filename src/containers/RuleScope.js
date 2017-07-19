@@ -6,7 +6,8 @@ const mapStateToProps = state => {
         fieldList: state.rawData.fieldList,
         hide: state.floatBox,
         tableList: state.tableList,
-        name: state.tableInfo
+        name: state.tableInfo,
+        shown: state.ruleBox
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -15,6 +16,11 @@ const mapDispatchToProps = dispatch => {
             dispatch({
                 type: 'SAVE_RULE',
                 data
+            })
+        },
+        closeRuleBox:()=>{
+            dispatch({
+                type:'CLOSE_RULEBOX'
             })
         },
         addOption: (fieldId, value) => {

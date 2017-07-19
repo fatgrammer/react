@@ -9,7 +9,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Link } from 'react-router-dom'
 export const App = () => {
     return <MuiThemeProvider>
-        <div>
+        <div >
             <Link to='/'
                 style={{
                     marginLeft: '40%',

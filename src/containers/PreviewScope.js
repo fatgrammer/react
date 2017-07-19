@@ -32,6 +32,9 @@ const mapDispatchToProps = dispatch => {
                 fieldId,
                 name
             })
+            dispatch({
+                type: 'SHOW_RULEBOX'
+            })
         },
         onNameChange: (tableName) => {
             dispatch({
@@ -57,6 +60,12 @@ const mapDispatchToProps = dispatch => {
                 id,
                 text,
 
+            })
+        },
+        //globle rule
+        showGRule:()=>{
+            dispatch({
+                type: 'SHOW_GRULEBOX'
             })
         }
     }

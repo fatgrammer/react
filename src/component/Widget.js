@@ -7,11 +7,16 @@ export class Button extends React.Component {
             <RaisedButton primary={this.props.primary}
                 style={{
                     margin: 10,
-                    minWidth:'2em'
+                    minWidth: '2em'
                 }}
                 secondary={this.props.secondary} label={this.props.value}
                 onClick={this.props.onClick} />
 
         )
+    }
+}
+export class RedX extends React.Component {
+    render() {
+        return <div id='closeX' {...this.props} onClick={this.props.onClick}>{`\u00d7`}</div>
     }
 }

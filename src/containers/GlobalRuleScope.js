@@ -4,7 +4,8 @@ import { GlobalRuleComponents } from '../component/GlobalRuleComponents'
 const mapStateToProps = state => {
     return {
         tableList: state.tableList,
-        afterList: state.globalRule
+        afterList: state.globalRule,
+        shown: state.GRuleShown
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -29,6 +30,11 @@ const mapDispatchToProps = dispatch => {
             dispatch({
                 type: 'DELAFTERTABLE',
                 value : value
+            })
+        },
+        closeGRuleBox:()=>{
+            dispatch({
+                type:'CLOSE_GRULEBOX'
             })
         }
     }

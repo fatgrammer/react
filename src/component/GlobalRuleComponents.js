@@ -6,7 +6,8 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import Paper from 'material-ui/Paper';
 import { List, ListItem } from 'material-ui/List';
 import ActionDeleteForever from 'material-ui/svg-icons/action/delete-forever';
-
+import { Slide_FX } from './FX';
+import { RedX } from './Widget'
 const buttonStyle = {
     marginRight: 20,
 };
@@ -27,15 +28,20 @@ export class GlobalRuleComponents extends React.Component {
 
     render() {
         return (
-            <div>
-                <table>
-                    <thead>
-                        <AfterTable tableList={this.props.tableList} addAfterTable={this.props.addAfterTable} />
-                        <AutoCal />
-                    </thead>
-                </table>
-                <Option delAfterTable={this.props.delAfterTable} afterList={this.props.afterList} />
-            </div>
+            <Slide_FX>{
+                this.props.shown ?
+                    <Paper zDepth={3} rounded={true} className='ruleBox'>
+                        <RedX onClick={this.props.closeGRuleBox}/>
+                        <table>
+                            <caption style={{ fontSize: '2em' }}>Table Rule</caption>
+                            <thead>
+                                <AfterTable tableList={this.props.tableList} addAfterTable={this.props.addAfterTable} />
+                                <AutoCal />
+                            </thead>
+                        </table>
+                        <Option delAfterTable={this.props.delAfterTable} afterList={this.props.afterList} />
+                    </Paper> : null}
+            </Slide_FX>
         )
     }
 }
@@ -58,7 +64,7 @@ class AfterTable extends React.Component {
                     <SelectField value={this.state.value} onChange={this.handleChange}>
                         {this.props.tableList.map((ele, i) => <MenuItem value={ele} key={i} label={ele} primaryText={ele} />)}
                     </SelectField>
-                    <FloatingActionButton mini={true} secondary={true} style={buttonStyle} onClick={()=>this.props.addAfterTable(this.state.value)} >
+                    <FloatingActionButton mini={true} secondary={true} style={buttonStyle} onClick={() => this.props.addAfterTable(this.state.value)} >
                         <ContentAdd />
                     </FloatingActionButton>
                 </td>
@@ -129,7 +135,7 @@ class ListExampleSimple extends React.Component {
     render() {
         return (
             <List>
-                {this.props.afterList.map((ele, i) => <ListItem primaryText={ele} key={i} rightIcon={<ActionDeleteForever onClick={() => this.props.delAfterTable(ele)}/>} />)}
+                {this.props.afterList.map((ele, i) => <ListItem primaryText={ele} key={i} rightIcon={<ActionDeleteForever onClick={() => this.props.delAfterTable(ele)} />} />)}
             </List>
         )
     }

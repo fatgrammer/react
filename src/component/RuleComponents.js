@@ -1,9 +1,12 @@
 import React from 'react'
 import { Button } from './Widget'
 import $ from 'jquery'
+import Paper from 'material-ui/Paper';
 
+import { RedX } from './Widget'
+import { CSSTransitionGroup } from 'react-transition-group'
 import RaisedButton from 'material-ui/RaisedButton';
-
+import { Slide_FX } from './FX'
 export class RuleBox extends React.Component {
     constructor(props) {
         super(props)
@@ -36,22 +39,28 @@ export class RuleBox extends React.Component {
         const refer = select.length ? select[0] : []
 
         const refBox = data.map(dataPak => dataPak.refBox)
-        return <div key={key}>
-            <h1>{key}------{name}</h1>
-            <table>
-                <thead>
-                    {this.renRadio(radio)}
-                    {this.renInput(input)}
-                    {this.renSelect(refer, key)}
-                    {this.renRefBox(refBox, key)}
-                </thead>
-            </table>
-            <OptionScope hide={this.props.hide} onCloseOptions={this.props.onCloseOptions} options={refer} />
-            <Button onClick={() => this.props.saveRule(
-                this.props.metaData
-            )} value='save' />
-            <FloatingBox data={refBox} />
-        </div>
+
+
+        return <Slide_FX>
+            {this.props.shown ? <Paper className="ruleBox" zDepth={3} rounded={true}>
+                <RedX onClick={this.props.closeRuleBox} />
+                <div key={key}>
+                    <h1>{key}------{name}</h1>
+                    <table>
+                        <thead>
+                            {this.renRadio(radio)}
+                            {this.renInput(input)}
+                            {this.renSelect(refer, key)}
+                            {this.renRefBox(refBox, key)}
+                        </thead>
+                    </table>
+
+                    <Button onClick={() => this.props.saveRule(
+                        this.props.metaData
+                    )} value='save' />
+                    <FloatingBox data={refBox} />
+                </div></Paper> : null}
+        </Slide_FX>
     }
     renRadio(radio) {
         return radio.map(rule => {
@@ -76,13 +85,17 @@ export class RuleBox extends React.Component {
         })
     }
     renSelect(refer, key) {
-        return refer.length ? <tr key={0} onClick={this.props.onOpenOptions} >
+        return refer.length ? <tr key={0} onMouseEnter={this.props.onOpenOptions}
+            onMouseLeave={this.props.onCloseOptions}>
             <td>reference</td>
-            <td><select id='refBox' style={{ float: 'left' }}>
+            <td ><select id='refBox' style={{ float: 'left' }}>
                 {refer.map(item => {
                     return <option key={item}>{item}</option>
                 })}</select>
                 <OptionConf addOption={this.props.addOption} fieldId={key} />
+                <OptionScope
+                    hide={this.props.hide}
+                    onCloseOptions={this.props.onCloseOptions} options={refer} />
             </td>
         </tr> : null
     }
@@ -157,7 +170,7 @@ class RefSelects extends React.Component {
 }
 class FloatingBox extends React.Component {
     render() {
-        return this.props.data.length > 0 ? <div id='refScope'>
+        return this.props.data.length > 0 ? <Paper zDepth={3} rounded={true} id='opScope'>
             <ul>
                 {this.props.data[0].map(ele => {
                     return <li key={ele}> {ele.reduce((prev, next) => {
@@ -165,7 +178,7 @@ class FloatingBox extends React.Component {
                     })}</li>
                 })}
             </ul>
-        </div> : null
+        </Paper> : null
     }
 }
 class OptionConf extends React.Component {
@@ -196,15 +209,16 @@ class OptionConf extends React.Component {
 }
 class OptionScope extends React.Component {
     render() {
-        return this.props.hide ? <div id='opScope'>
+        return this.props.hide ? <Paper zDepth={3} rounded={true}
+            id='opScope'>  
             <span>Options</span>
-            <div onClick={() => this.props.onCloseOptions()} className='close'>{`\u00d7`}</div>
+            {/* <RedX onMouseOut={this.props.onCloseOptions} /> */}
             <ul>
                 {this.props.options.map(option => {
                     return <li key={option}>{option}</li>
                 })}
             </ul>
-        </div> : null
+        </Paper> : null
     }
 }
 

@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button } from './Widget'
+import { Button, RedX } from './Widget'
 import { CSSTransitionGroup } from 'react-transition-group'
-
+import { Slide_FX } from './FX'
 export class EditBox extends React.Component {
     constructor(props) {
         super(props);
@@ -52,26 +52,17 @@ export class EditBox extends React.Component {
                     })
                 })
             });
-        return (
-            <CSSTransitionGroup
-                transitionName="background"
-                transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}
-                component='div'
-            >
-                {this.props.display ?
-                    <div className='popHead' id='popHead'>
-                        <div onClick={
-                            () => props.onCloseEdit()
-                        }
-                            id='closeX'>{`\u00d7`}</div>
-                        <span style={{ marginLeft: '40%' }} className='popText'>表单元属性</span>
-                        <ul>
-                            {popContent}
-                        </ul>
-                    </div > : null
-                }
-            </CSSTransitionGroup>
+        return (<Slide_FX>
+            {this.props.display ?
+                <div className='popHead' id='popHead'>
+                    <RedX onClick={props.onCloseEdit} />
+                    <span style={{ marginLeft: '40%' }} className='popText'>表单元属性</span>
+                    <ul>
+                        {popContent}
+                    </ul>
+                </div > : null
+            }
+        </Slide_FX>
         )
     }
 }

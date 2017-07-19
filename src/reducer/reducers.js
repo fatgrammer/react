@@ -2,7 +2,7 @@ import { TableTrie } from '../custom_table/HeadProps'
 // import PropTypes from 'prop-types'
 import { globalRule } from './GlobalRuleReducer.js'
 import { tableInfo, rawData } from './DataAndInfo'
-import { dataAction, ruleTemp} from './DataEvents'
+import { dataAction, ruleTemp } from './DataEvents'
 
 let gTrieId = 0;
 const theadPaks = (state = [], action) => {
@@ -211,11 +211,38 @@ const popBox = (state = false, action) => {
         case 'POP_HEAD':
             return true;
         case 'DELETE_PAK':
+        case 'SHOW_RULEBOX':
+        case 'SHOW_GRULEBOX':
         case 'CLOSE_POPBAR':
             return false;
         default:
             return state;
 
+    }
+}
+const ruleBox = (state = false, action) => {
+    switch (action.type) {
+        case 'SHOW_RULEBOX':
+            console.log('shiowwwww')
+            return true;
+        case 'POP_HEAD':
+        case 'SHOW_GRULEBOX':
+        case 'CLOSE_RULEBOX':
+            return false;
+        default:
+            return state
+    }
+}
+const GRuleShown = (state = false, action) => {
+    switch (action.type) {
+        case 'SHOW_GRULEBOX':
+            return true
+        case 'CLOSE_GRULEBOX':
+        case 'SHOW_RULEBOX':
+        case 'POP_HEAD':
+            return false;
+        default:
+            return state
     }
 }
 const floatBox = (state = '', action) => {
@@ -247,7 +274,11 @@ export const reducers = {
     floatBox,
     rawData,
     tableList,
-    globalRule
+    globalRule,
+    ruleBox,
+    GRuleShown
+
+
 }
 
 export const consTrie = (headPaks = []) => {
