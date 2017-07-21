@@ -1,4 +1,3 @@
-import { store } from '../index.js'
 
 const tempGlobalRule = {
     afterTable: [],
@@ -12,10 +11,10 @@ export const globalRule = (state = tempGlobalRule.afterTable, action) => {
         case 'ADDAFTERTABLE':
             if(!action.value)
                 return state
-            if(state.length == 0)
+            if(state.length === 0)
                 return [...state, action.value]
             else
-                return state.map(ele => ele != action.value).reduce((ele1, ele2) => ele1 && ele2) ? [...state, action.value] : state
+                return state.map(ele => ele !== action.value).reduce((ele1, ele2) => ele1 && ele2) ? [...state, action.value] : state
         case 'DELAFTERTABLE':
             return state.filter(ele => ele !== action.value)
         default:

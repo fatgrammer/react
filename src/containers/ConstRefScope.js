@@ -3,7 +3,8 @@ import { ConstRefBox } from '../component/ConstRefComponents'
 const mapStateToProps = state => {
     return {
         tableName: state.tableInfo.tableName,
-        fieldList: state.rawData.fieldList
+        fieldList: state.rawData.fieldList,
+        cRefData: state.constRef.data
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -13,7 +14,9 @@ const mapDispatchToProps = dispatch => {
                 type: 'GET_HEADS',
                 tableName
             })
-        }
+        },
+        getCRefData: dispatch({ type: 'GET_CREFDATA' })
+
     }
 }
 export const ConstRefScope = connect(

@@ -18,14 +18,12 @@ export const dataAction = (state = [], action) => {
             return state
         case 'RESULT':
             $.post(action.url, action.data, function (response) {
-                alert(response)
             }, 'json');
             return state
         case 'TABLE_HEADS':
-            console.log('wwwwww')
             $.getJSON(action.url + action.tableName, (res) => {
                 const fixHead = res['fixHead']
-                fixHead ? delete res['fixHead'] : null;
+                !fixHead || delete res['fixHead']
                 const pData = splitHead(res);
                 const type = res['tableType']
                 console.log('length.....', res)
@@ -46,7 +44,7 @@ export const dataAction = (state = [], action) => {
             })
             return state
         case 'GET_HEADS':
-        console.log('???');
+            console.log('???');
             $.getJSON('http://192.168.1.249:20080/tableTemp/' + action.tableName, (data) => {
                 store.dispatch({
                     type: 'RAW_HEADS',
@@ -63,8 +61,14 @@ export const dataAction = (state = [], action) => {
                 })
             })
             return state
+        case 'GET_CREFDATA':
+            $.getJSON('http://192.168.1.249:20080/constRef/1-1' ,(data)=>{
+                store.dispatch({
+                    type:'CONSTREF_DATA',
+                    data
+                })
+            })
         case 'TEST':
-            alert()
             return state
         default:
             return state

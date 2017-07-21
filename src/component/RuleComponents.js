@@ -1,12 +1,12 @@
 import React from 'react'
 import { Button } from './Widget'
-import $ from 'jquery'
+// import $ from 'jquery'
 import Paper from 'material-ui/Paper';
 
 import { RedX } from './Widget'
-import { CSSTransitionGroup } from 'react-transition-group'
-import RaisedButton from 'material-ui/RaisedButton';
-import { Slide_FX } from './FX'
+// import { CSSTransitionGroup } from 'react-transition-group'
+// import RaisedButton from 'material-ui/RaisedButton';
+import { SlideFX } from './FX'
 export class RuleBox extends React.Component {
     constructor(props) {
         super(props)
@@ -41,7 +41,7 @@ export class RuleBox extends React.Component {
         const refBox = data.map(dataPak => dataPak.refBox)
 
 
-        return <Slide_FX>
+        return <SlideFX>
             {this.props.shown ? <Paper className="ruleBox" zDepth={3} rounded={true}>
                 <RedX onClick={this.props.closeRuleBox} />
                 <div key={key}>
@@ -58,9 +58,8 @@ export class RuleBox extends React.Component {
                     <Button onClick={() => this.props.saveRule(
                         this.props.metaData
                     )} value='save' />
-                    <FloatingBox data={refBox} />
                 </div></Paper> : null}
-        </Slide_FX>
+        </SlideFX>
     }
     renRadio(radio) {
         return radio.map(rule => {
@@ -102,7 +101,8 @@ export class RuleBox extends React.Component {
     renRefBox(refBox, fieldId) {
         const props = this.props
         return refBox.length ?
-            <tr>
+            <tr onMouseEnter={this.props.showRefBox}
+                onMouseLeave={this.props.closeRefBox}>
                 <td>ForeignField</td>
                 <td>
                     <RefSelects tableList={props.tableList}
@@ -117,6 +117,7 @@ export class RuleBox extends React.Component {
                                 this.state.tableName, this.state.tableField, fieldId
                             )}
                     />
+                    <FloatingBox shown={this.props.refBoxShown} data={refBox} />
                 </td>
             </tr>
             : null
@@ -170,7 +171,8 @@ class RefSelects extends React.Component {
 }
 class FloatingBox extends React.Component {
     render() {
-        return this.props.data.length > 0 ? <Paper zDepth={3} rounded={true} id='opScope'>
+        return this.props.shown ? (this.props.data.length > 0 ? <Paper zDepth={3} rounded={true} id='opScope'>
+           <h5>FK Field</h5>
             <ul>
                 {this.props.data[0].map(ele => {
                     return <li key={ele}> {ele.reduce((prev, next) => {
@@ -178,7 +180,7 @@ class FloatingBox extends React.Component {
                     })}</li>
                 })}
             </ul>
-        </Paper> : null
+        </Paper> : null) : null
     }
 }
 class OptionConf extends React.Component {
@@ -210,7 +212,7 @@ class OptionConf extends React.Component {
 class OptionScope extends React.Component {
     render() {
         return this.props.hide ? <Paper zDepth={3} rounded={true}
-            id='opScope'>  
+            id='opScope'>
             <span>Options</span>
             {/* <RedX onMouseOut={this.props.onCloseOptions} /> */}
             <ul>

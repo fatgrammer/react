@@ -1,7 +1,10 @@
-const constRefReducer = (state = [], action) => {
+export const constRef = (state = {}, action) => {
     switch (action.type) {
-        case '_LIST':
-            return state
+        case 'CONSTREF_DATA':
+            console.log(action.data)
+            return {
+                data: action.data
+            }
         default:
             return state
     }

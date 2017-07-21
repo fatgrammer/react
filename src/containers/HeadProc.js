@@ -1,4 +1,4 @@
-import { store } from '../index.js'
+// import { store } from '../index.js'
 export const headBlock = (metaData = []) => {
     const maxDepth = calcMaxDepth(metaData);
     return metaData.map(ele => {

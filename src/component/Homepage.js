@@ -3,14 +3,7 @@ import React from 'react'
 import { TableCategory } from '../containers/TableCategory'
 import { FillCategory } from '../containers/FillCategory'
 import { ConstRefCategory } from '../containers/ConstRefCategory'
-const buttonStyle = {
-    float: 'left',
-    fontSize: '26px',
-    lineHeight: '30px',
-    color: 'red',
-    fontWeight: 'bold',
-    fontFamily: 'fantasy'
-}
+
 const headstyle = {
     float: 'left',
     marginTop: '4em',

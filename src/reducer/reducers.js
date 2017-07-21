@@ -3,7 +3,7 @@ import { TableTrie } from '../custom_table/HeadProps'
 import { globalRule } from './GlobalRuleReducer.js'
 import { tableInfo, rawData } from './DataAndInfo'
 import { dataAction, ruleTemp } from './DataEvents'
-
+import { constRef } from './ConstantReducer'
 let gTrieId = 0;
 const theadPaks = (state = [], action) => {
     switch (action.type) {
@@ -255,6 +255,16 @@ const floatBox = (state = '', action) => {
             return state
     }
 }
+const refBox = (state = false, action) => {
+    switch (action.type) {
+        case 'SHOW_REFBOX':
+            return true;
+        case 'CLOSE_REFBOX':
+            return false;
+        default:
+            return state
+    }
+}
 
 // const category = (state = '', action) => {
 //     switch (action.type) {
@@ -276,7 +286,9 @@ export const reducers = {
     tableList,
     globalRule,
     ruleBox,
-    GRuleShown
+    GRuleShown,
+    refBox,
+    constRef
 
 
 }

@@ -26,7 +26,7 @@ export class Result extends React.Component {
                 return { ...prev, ...next }
             }, {})
         }
-        list['tableType'] === 'fixing' ? null : delete list['fixHead']
+        list['tableType'] === 'fixing' || delete list['fixHead']
         return <div>
             <hr />
             <Button id='result' primary value='完成' onClick={

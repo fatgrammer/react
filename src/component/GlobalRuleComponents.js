@@ -6,7 +6,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import Paper from 'material-ui/Paper';
 import { List, ListItem } from 'material-ui/List';
 import ActionDeleteForever from 'material-ui/svg-icons/action/delete-forever';
-import { Slide_FX } from './FX';
+import { SlideFX } from './FX';
 import { RedX } from './Widget'
 const buttonStyle = {
     marginRight: 20,
@@ -21,17 +21,12 @@ const paperStyle = {
 
 
 export class GlobalRuleComponents extends React.Component {
-
-    constructor(props) {
-        super(props)
-    }
-
     render() {
         return (
-            <Slide_FX>{
+            <SlideFX>{
                 this.props.shown ?
                     <Paper zDepth={3} rounded={true} className='ruleBox'>
-                        <RedX onClick={this.props.closeGRuleBox}/>
+                        <RedX onClick={this.props.closeGRuleBox} />
                         <table>
                             <caption style={{ fontSize: '2em' }}>Table Rule</caption>
                             <thead>
@@ -41,7 +36,7 @@ export class GlobalRuleComponents extends React.Component {
                         </table>
                         <Option delAfterTable={this.props.delAfterTable} afterList={this.props.afterList} />
                     </Paper> : null}
-            </Slide_FX>
+            </SlideFX>
         )
     }
 }
@@ -110,13 +105,15 @@ class AutoCal extends React.Component {
  * 弹框
  */
 class Option extends React.Component {
-    constructor(props) {
-        super(props)
-    }
     render() {
         return (
             <div>
-                <Paper style={paperStyle} zDepth={3} rounded={true} children={<ListExampleSimple key="111" delAfterTable={this.props.delAfterTable} afterList={this.props.afterList} />} />
+                <Paper style={paperStyle} zDepth={3}
+                    rounded={true}
+                ><ListExampleSimple key="111"
+                    delAfterTable={this.props.delAfterTable}
+                    afterList={this.props.afterList} />
+                </Paper>
             </div>
         )
     }
@@ -125,13 +122,6 @@ class Option extends React.Component {
  * 弹框内部列表
  */
 class ListExampleSimple extends React.Component {
-
-    constructor(props) {
-        super(props)
-        //let data = this.props.afterList
-        //console.log(data)
-        //this.state = { list: this.props.afterList }
-    }
     render() {
         return (
             <List>

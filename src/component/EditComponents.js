@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button, RedX } from './Widget'
-import { CSSTransitionGroup } from 'react-transition-group'
-import { Slide_FX } from './FX'
+import { SlideFX } from './FX'
 export class EditBox extends React.Component {
     constructor(props) {
         super(props);
@@ -28,7 +27,7 @@ export class EditBox extends React.Component {
                             actionId={headPak.id}
                             addButton={
                                 head.height < 2 ?
-                                    <span><Button primary id='nextLevel' glyphicon={<div id='cross' ></div>} value='增加下一级单元'
+                                    <span><Button primary id='nextLevel' value='增加下一级单元'
                                         onClick={
                                             () => props.onLvlAddClick(head.prefix, headPak.id, head.head)
                                         }
@@ -52,7 +51,7 @@ export class EditBox extends React.Component {
                     })
                 })
             });
-        return (<Slide_FX>
+        return (<SlideFX>
             {this.props.display ?
                 <div className='popHead' id='popHead'>
                     <RedX onClick={props.onCloseEdit} />
@@ -62,7 +61,7 @@ export class EditBox extends React.Component {
                     </ul>
                 </div > : null
             }
-        </Slide_FX>
+        </SlideFX>
         )
     }
 }

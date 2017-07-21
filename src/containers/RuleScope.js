@@ -7,7 +7,8 @@ const mapStateToProps = state => {
         hide: state.floatBox,
         tableList: state.tableList,
         name: state.tableInfo,
-        shown: state.ruleBox
+        shown: state.ruleBox,
+        refBoxShown: state.refBox
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -18,9 +19,9 @@ const mapDispatchToProps = dispatch => {
                 data
             })
         },
-        closeRuleBox:()=>{
+        closeRuleBox: () => {
             dispatch({
-                type:'CLOSE_RULEBOX'
+                type: 'CLOSE_RULEBOX'
             })
         },
         addOption: (fieldId, value) => {
@@ -48,7 +49,7 @@ const mapDispatchToProps = dispatch => {
                 id: 'OPTIONS'
             })
         },
-        addRefField: (tableName, field,fieldId) => {
+        addRefField: (tableName, field, fieldId) => {
             dispatch({
                 type: 'ADD_REFFIELD',
                 tableName,
@@ -56,9 +57,19 @@ const mapDispatchToProps = dispatch => {
                 fieldId
             })
         },
+        showRefBox: () => {
+            dispatch({
+                type: 'SHOW_REFBOX'
+            })
+        },
+        closeRefBox: () => {
+            dispatch({
+                type: 'CLOSE_REFBOX'
+            })
+        },
         /// warning
-        initTableList:dispatch({
-            type:'GET_TABLELIST'
+        initTableList: dispatch({
+            type: 'GET_TABLELIST'
         })
     }
 }

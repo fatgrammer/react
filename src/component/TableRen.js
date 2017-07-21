@@ -49,8 +49,12 @@ export class TheadRen extends Component {
 export class SimpleRen extends React.Component {
     render() {
         let trid = 0;
-        const headsList = this.props.headsList
-        const type = this.props.type
+        const headsList = this.props.headsData.headsList
+        const type = this.props.headsData.tableType
+        // const pList = headsList.filter(heads=>heads)
+
+        if (this.props.headsData === '') return null
+        console.log('ssss', this.props.headsData)
         const tableForm = type === 'floating' ?
             headsList.map(heads => {
                 return <tr>{Object.values(heads).map(head => {
@@ -75,7 +79,7 @@ export class SimpleRen extends React.Component {
                                 {head.headField}
                             </th>
                         })}
-                        <td>content</td>
+                         {type === 'floating' || <td>content</td>} 
                     </tr >
                 })]
         return <thead>
