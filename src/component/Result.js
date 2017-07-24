@@ -27,11 +27,13 @@ export class Result extends React.Component {
             }, {})
         }
         list['tableType'] === 'fixing' || delete list['fixHead']
+        list['fixHeadShown'] || delete list['fixHead']
+        delete list['fixHeadShown']
         return <div>
             <hr />
             <Button id='result' primary value='完成' onClick={
                 () => props.onResultClick('http://192.168.1.249:20080/customTable',
-                    { data: JSON.stringify(list) })
+                    list)
             } />
             <br />
             <br />

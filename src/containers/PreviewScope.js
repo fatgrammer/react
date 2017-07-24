@@ -8,7 +8,8 @@ const mapStateToProps = state => {
         tableName: state.tableInfo.tableName,
         tableType: state.tableInfo.tableType,
         maxDepth: maxDepth,
-        fixHead: state.tableInfo.fixHead
+        fixHead: state.tableInfo.fixHead,
+        fixHeadShown: state.tableInfo.fixHeadShown
         ///warning
     }
 }
@@ -63,9 +64,14 @@ const mapDispatchToProps = dispatch => {
             })
         },
         //globle rule
-        showGRule:()=>{
+        showGRule: () => {
             dispatch({
                 type: 'SHOW_GRULEBOX'
+            })
+        },
+        showFixHead: () => {
+            dispatch({
+                type: 'SHOW_FIXHEAD'
             })
         }
     }

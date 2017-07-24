@@ -6,7 +6,11 @@ import { store } from '../index.js'
 export const dataAction = (state = [], action) => {
     switch (action.type) {
         case 'SAVE_RULE':
-            console.log(compress(action.data))
+            const cData = { data: JSON.stringify(compress(action.data)) }
+            console.log(cData)
+            $.post('http://192.168.1.249:20080/tableRule', cData, (res) => {
+                alert("Save Successfully")
+            })
             return state;
         case 'FETCH_RULE':
             $.getJSON(action.url + action.tableName, (res) => {
@@ -17,7 +21,13 @@ export const dataAction = (state = [], action) => {
             })
             return state
         case 'RESULT':
-            $.post(action.url, action.data, function (response) {
+            console.log(action.data.tableName.trim())
+            if (!action.data.tableName.trim()) {
+                alert('Input tableName please')
+                return state
+            }
+            const resultData = { data: JSON.stringify(action.data) }
+            $.post(action.url, resultData, function (response) {
             }, 'json');
             return state
         case 'TABLE_HEADS':
@@ -62,9 +72,9 @@ export const dataAction = (state = [], action) => {
             })
             return state
         case 'GET_CREFDATA':
-            $.getJSON('http://192.168.1.249:20080/constRef/1-1' ,(data)=>{
+            $.getJSON('http://192.168.1.249:20080/constRef/' + action.tableName, (data) => {
                 store.dispatch({
-                    type:'CONSTREF_DATA',
+                    type: 'CONSTREF_DATA',
                     data
                 })
             })

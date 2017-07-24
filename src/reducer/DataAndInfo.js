@@ -1,4 +1,4 @@
-export const tableInfo = (state = { tableType: 'floating' }, action) => {
+export const tableInfo = (state = { tableType: 'floating', fixHeadShown: true }, action) => {
     switch (action.type) {
         case 'TypeAndHead':
             console.log('FixHead', action.fixHead)
@@ -23,6 +23,12 @@ export const tableInfo = (state = { tableType: 'floating' }, action) => {
                 ...state,
                 fixHead: tmp
             }
+        case 'SHOW_FIXHEAD':
+            return {
+                ...state,
+                fixHeadShown: !state.fixHeadShown
+            }
+
         default:
             return state;
     }
@@ -30,7 +36,7 @@ export const tableInfo = (state = { tableType: 'floating' }, action) => {
 export const rawData = (state = {}, action) => {
     switch (action.type) {
         case 'RAW_HEADS':
-            const fieldList =  action.data
+            const fieldList = action.data
             delete fieldList['fixHead']
             delete fieldList['tableType']
             console.log('rawdata', fieldList)

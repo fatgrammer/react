@@ -10,15 +10,7 @@ let mainId = 0;
 export class Preview extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            onFixHead: true
-        }
-        this.showFixHead = this.showFixHead.bind(this)
-    }
-    showFixHead() {
-        this.setState({
-            onFixHead: !this.state.onFixHead
-        })
+     
     }
 
     render() {
@@ -41,7 +33,7 @@ export class Preview extends React.Component {
                     tableType={props.tableType}
                 /> {
                     this.props.tableType === 'fixing' ?
-                        <FixHeadSwitch ON={this.state.onFixHead} showFixHead={this.showFixHead} /> : null
+                        <FixHeadSwitch ON={this.props.fixHeadShown} showFixHead={this.props.showFixHead} /> : null
                 }
                 <br />
                 <Button onClick={() => props.onAddClick(mainId++)} secondary id='addButton' value='新增单元' />
@@ -50,7 +42,7 @@ export class Preview extends React.Component {
 
                 <table>
                     <thead>
-                        {this.state.onFixHead ?
+                        {this.props.fixHeadShown ?
                             props.tableType === 'fixing' ?
                                 <FixHead
                                     onFixHeadChange={props.onFixHeadChange}
@@ -81,14 +73,14 @@ export class TableTitle extends React.Component {
         // this.setState({
         //     name: event.target.value
         // });
-        this.props.onNameChange(event.target.value)
+        this.props.onNameChange(event.target.value.trim())
     }
     // render() {
     //     return <input style={{ float: 'left' }} value={this.props.initName} onChange={(event) => { this.props.onNameChange(event.target.value) }} />
     // }
     render() {
         return <TextField hintText='tableName here' onChange={this.handleChange}
-            defaultValue={this.props.initName}
+            value={this.props.initName}
         />
     }
 }

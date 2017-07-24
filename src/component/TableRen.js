@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-
+import TextField from 'material-ui/TextField';
+import { Button } from './Widget'
 
 export let globalHeadId = 0
 export class TheadRen extends Component {
@@ -53,25 +54,30 @@ export class SimpleRen extends React.Component {
         const type = this.props.headsData.tableType
         // const pList = headsList.filter(heads=>heads)
 
-        if (this.props.headsData === '') return null
         console.log('ssss', this.props.headsData)
+
+
+
         const tableForm = type === 'floating' ?
             headsList.map(heads => {
                 return <tr>{Object.values(heads).map(head => {
-                    return <th colSpan={head.colSpan} rowSpan={head.rowSpan}>{head.headField}</th>
+                    return <th colSpan={head.colSpan} rowSpan={head.rowSpan}>
+                        {head.headField}
+                    </th>
                 })}</tr>
             })
             : [
                 <tr key={trid++}>
-                    {!headsList.length || headsList[0].map(
-                        ele => <th rowSpan={ele.rowSpan}
-                            colSpan={ele.colSpan}>
-                            {ele.headField}
-                        </th>)}
+                    {!headsList.length ||
+                        headsList[0].map(
+                            ele => <th key={ele.headField} rowSpan={ele.rowSpan}
+                                colSpan={ele.colSpan}>
+                                {ele.headField}
+                            </th>
+                        )}
                 </tr>
                 , ...headsList.slice(1).map(heads => {
-
-                    return <tr>
+                    return <tr key={heads[0].headField}>
                         {heads.map(head => {
                             return <th key={head.headField}
                                 colSpan={head.colSpan}
@@ -79,12 +85,15 @@ export class SimpleRen extends React.Component {
                                 {head.headField}
                             </th>
                         })}
-                         {type === 'floating' || <td>content</td>} 
+                        {<td><TextField id={heads[0].headField} value='' /></td>}
                     </tr >
                 })]
+        console.log("type is ", type)
         return <thead>
             {tableForm}
         </thead>
+
+
     }
 }
 export class Th extends React.Component {
@@ -98,18 +107,18 @@ export class Td extends React.Component {
         return <td onClick={this.props.onDataClick} >{this.props.children}</td>
     }
 }
-export class TbodyRen extends Component {
-    renderTbody(length = 0) {
-        let ret = new Array(length)
-        ret.fill(<td>content</td>)
-        return ret;
-    }
-    render() {
-        return (
-            <tbody><tr>{this.renderTbody(this.props.length)}</tr></tbody>
-        )
-    }
-}
+// export class TbodyRen extends Component {
+//     renderTbody(length = 0) {
+//         let ret = new Array(length)
+//         ret.fill(<td>content</td>)
+//         return ret;
+//     }
+//     render() {
+//         return (
+//             <tbody><tr>{this.renderTbody(this.props.length)}</tr></tbody>
+//         )
+//     }
+// }
 
 
 

@@ -4,6 +4,7 @@ import { globalRule } from './GlobalRuleReducer.js'
 import { tableInfo, rawData } from './DataAndInfo'
 import { dataAction, ruleTemp } from './DataEvents'
 import { constRef } from './ConstantReducer'
+import { fillData } from './FillData'
 let gTrieId = 0;
 const theadPaks = (state = [], action) => {
     switch (action.type) {
@@ -288,7 +289,8 @@ export const reducers = {
     ruleBox,
     GRuleShown,
     refBox,
-    constRef
+    constRef,
+    fillData
 
 
 }

@@ -4,7 +4,8 @@ const mapStateToProps = state => {
     return {
         tableName: state.tableInfo.tableName,
         fieldList: state.rawData.fieldList,
-        cRefData: state.constRef.data
+        cRefData: state.constRef.data,
+        tableType: state.tableInfo.tableType
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -15,7 +16,16 @@ const mapDispatchToProps = dispatch => {
                 tableName
             })
         },
-        getCRefData: dispatch({ type: 'GET_CREFDATA' })
+        getCRefData: (tableName) => dispatch({
+            type: 'GET_CREFDATA',
+            tableName
+        }),
+        handleType: (tableType) => {
+            dispatch({
+                type: 'TABLE_TYPE',
+                tableType
+            })
+        }
 
     }
 }
