@@ -13,10 +13,11 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
     return {
-        saveRule: (data) => {
+        saveRule: (data,tableName) => {
             dispatch({
                 type: 'SAVE_RULE',
-                data
+                data,
+                tableName
             })
         },
         closeRuleBox: () => {

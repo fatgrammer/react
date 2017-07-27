@@ -59,8 +59,12 @@ const mapDispatchToProps = dispatch => {
             dispatch({
                 type: 'ALT_FIXHEAD',
                 id,
-                text,
-
+                text
+            })
+        },
+        closeFixHead: () => {
+            dispatch({
+                type: 'CLOSE_FIXHEAD'
             })
         },
         //globle rule

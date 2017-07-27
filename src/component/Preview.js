@@ -10,15 +10,14 @@ let mainId = 0;
 export class Preview extends React.Component {
     constructor(props) {
         super(props)
-     
-    }
 
+    }
+   
     render() {
         const props = this.props
 
-        // console.log('?????',this.state.onFixHead,'.,.',this.props.tableType)
-        return (
 
+        return (
             <div>
                 <br />
                 <span

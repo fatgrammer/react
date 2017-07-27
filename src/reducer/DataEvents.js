@@ -6,7 +6,12 @@ import { store } from '../index.js'
 export const dataAction = (state = [], action) => {
     switch (action.type) {
         case 'SAVE_RULE':
-            const cData = { data: JSON.stringify(compress(action.data)) }
+            const cData = {
+                data: JSON.stringify({
+                    tableName: action.tableName,
+                    reference: compress(action.data)
+                })
+            }
             console.log(cData)
             $.post('http://192.168.1.249:20080/tableRule', cData, (res) => {
                 alert("Save Successfully")
@@ -32,11 +37,19 @@ export const dataAction = (state = [], action) => {
             return state
         case 'TABLE_HEADS':
             $.getJSON(action.url + action.tableName, (res) => {
+
+                console.log('length.....', res)
                 const fixHead = res['fixHead']
-                !fixHead || delete res['fixHead']
+                if (!fixHead){
+                    store.dispatch({
+                        type:'CLOSE_FIXHEAD'
+                    })
+                }
+                fixHead ?  delete res['fixHead'] :null
+
                 const pData = splitHead(res);
                 const type = res['tableType']
-                console.log('length.....', res)
+
                 store.dispatch({
                     type: 'BUILD',
                     data: pData.slice(1)
@@ -54,7 +67,6 @@ export const dataAction = (state = [], action) => {
             })
             return state
         case 'GET_HEADS':
-            console.log('???');
             $.getJSON('http://192.168.1.249:20080/tableTemp/' + action.tableName, (data) => {
                 store.dispatch({
                     type: 'RAW_HEADS',
@@ -100,6 +112,7 @@ export const ruleTemp = [{
 ]
 
 function compress(data = []) {
+    console.log('before compress', data)
     return data.map(ele => {
         return ele.select[0] === 'placeHolder' ?
             {
@@ -111,8 +124,7 @@ function compress(data = []) {
         return ele.select.length
     }).map(ele => {
         return {
-            [ele.fieldId]:
-            ele.select
+            [ele.fieldId]: [ele.name, ele.select]
         }
     }).reduce((prev, next) => {
         return [...prev, next]

@@ -18,14 +18,16 @@ export class FillTable extends React.Component {
                 headsData: ret
             })
         })
+        this.props.fetchRule('http://192.168.1.249:20080/tableRule/',this.props.tableName)
     }
     render() {
+        console.log('tableRule', this.props.tableRule)
 
         if (this.state.headsData === '') return null
 
         const refer = this.state.headsData.headsList[0].length
         let trid = 0;
-        console.log('propss', this.props.fillData)
+        console.log('propss', this.props.floatingData)
         return <table>
             <caption>
                 {this.state.headsData.tableType === 'fixing' ||
@@ -34,11 +36,11 @@ export class FillTable extends React.Component {
                     />
 
                 }</caption>
-
-            <SimpleRen headsData={this.state.headsData} />
-
+            <SimpleRen headsData={this.state.headsData} tableRule={this.props.tableRule}/>
+            {console.log('istype', this.props.tableType)}
+            {this.state.headsData.tableType === 'fixing' ? null :
             <tbody>
-                {this.props.fillData.map(ele => {
+                {this.props.floatingData.map(ele => {
                     let lid = 0;
                     return <tr key={trid++}>
                         {ele.map(
@@ -48,7 +50,7 @@ export class FillTable extends React.Component {
                         )}
                     </tr>
                 })}
-            </tbody>
+            </tbody>}
         </table>
     }
 }

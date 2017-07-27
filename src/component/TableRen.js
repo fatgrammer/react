@@ -53,11 +53,7 @@ export class SimpleRen extends React.Component {
         const headsList = this.props.headsData.headsList
         const type = this.props.headsData.tableType
         // const pList = headsList.filter(heads=>heads)
-
-        console.log('ssss', this.props.headsData)
-
-
-
+        console.log("ffff?",type);
         const tableForm = type === 'floating' ?
             headsList.map(heads => {
                 return <tr>{Object.values(heads).map(head => {
@@ -68,15 +64,15 @@ export class SimpleRen extends React.Component {
             })
             : [
                 <tr key={trid++}>
-                    {!headsList.length ||
-                        headsList[0].map(
+                    {this.props.headsData.fixHead ?
+                        this.props.headsData.fixHead.map(
                             ele => <th key={ele.headField} rowSpan={ele.rowSpan}
                                 colSpan={ele.colSpan}>
                                 {ele.headField}
                             </th>
-                        )}
+                        ) : null}
                 </tr>
-                , ...headsList.slice(1).map(heads => {
+                , ...headsList.map(heads => {
                     return <tr key={heads[0].headField}>
                         {heads.map(head => {
                             return <th key={head.headField}
@@ -85,7 +81,7 @@ export class SimpleRen extends React.Component {
                                 {head.headField}
                             </th>
                         })}
-                        {<td><TextField id={heads[0].headField} value='' /></td>}
+                        {<td><TextField id={heads[0].headField} value='content' /></td>}
                     </tr >
                 })]
         console.log("type is ", type)

@@ -309,7 +309,7 @@ export class TableTrie {
             }   
         })
         node = node.children[node.children.length - 1]
-        this.width = calcWidth(this)
+        this.width = calcWidth(this) || 1
     }
 }
 

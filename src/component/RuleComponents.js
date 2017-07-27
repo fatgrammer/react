@@ -56,7 +56,8 @@ export class RuleBox extends React.Component {
                     </table>
 
                     <Button onClick={() => this.props.saveRule(
-                        this.props.metaData
+                        this.props.metaData,
+                        this.props.name.tableName
                     )} value='save' />
                 </div></Paper> : null}
         </SlideFX>

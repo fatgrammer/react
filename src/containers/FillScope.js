@@ -3,7 +3,9 @@ import { FillTable } from '../component/FillTable'
 const mapStateToProps = state => {
     return {
         tableName: state.tableInfo.tableName,
-        fillData: state.fillData
+        tableType: state.tableInfo.tableType,
+        floatingData: state.fillData.floatingData,
+        tableRule: state.dataRule
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -12,6 +14,11 @@ const mapDispatchToProps = dispatch => {
             type: 'ADD_FloatingData',
             data
         }),
+        fetchRule:(url,tableName) => dispatch({
+            type: 'FETCH_RULE',
+            url,
+            tableName
+        })
     }
 }
 export const FillScope = connect(
