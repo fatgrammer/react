@@ -49,11 +49,17 @@ export class TheadRen extends Component {
 }
 export class SimpleRen extends React.Component {
     render() {
+        console.log("rule data", this.props.tableRule)
+        const CDPak = {}
+        this.props.tableRule.
+            forEach(ele => {
+                CDPak[[ele.fieldId]] = ele.select
+            })
+        console.log(CDPak)
         let trid = 0;
         const headsList = this.props.headsData.headsList
         const type = this.props.headsData.tableType
-        // const pList = headsList.filter(heads=>heads)
-        console.log("ffff?",type);
+                    console.log('sdasd',this.props.headsData)
         const tableForm = type === 'floating' ?
             headsList.map(heads => {
                 return <tr>{Object.values(heads).map(head => {
@@ -84,12 +90,9 @@ export class SimpleRen extends React.Component {
                         {<td><TextField id={heads[0].headField} value='content' /></td>}
                     </tr >
                 })]
-        console.log("type is ", type)
         return <thead>
             {tableForm}
         </thead>
-
-
     }
 }
 export class Th extends React.Component {

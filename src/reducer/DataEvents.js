@@ -131,7 +131,7 @@ function compress(data = []) {
     }, [])
 
 }
-function spread(data = {}) {
+export function spread(data = {}) {
     return data.reference.map(ele => {
         return {
             fieldId: Object.keys(ele)[0],

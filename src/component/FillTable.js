@@ -13,44 +13,33 @@ export class FillTable extends React.Component {
     }
     componentDidMount() {
         $.getJSON('http://192.168.1.249:20080/adaptiveHead/' + this.props.tableName, (ret) => {
-            console.log('ret', ret)
             this.setState({
                 headsData: ret
             })
         })
-        this.props.fetchRule('http://192.168.1.249:20080/tableRule/',this.props.tableName)
+        this.props.fetchRule('http://192.168.1.249:20080/tableRule/', this.props.tableName)
     }
     render() {
-        console.log('tableRule', this.props.tableRule)
-
         if (this.state.headsData === '') return null
-
         const refer = this.state.headsData.headsList[0].length
-        let trid = 0;
-        console.log('propss', this.props.floatingData)
         return <table>
-            <caption>
-                {this.state.headsData.tableType === 'fixing' ||
-                    <Button value="ADD" secondary
-                        onClick={() => this.props.addLine(Array(refer).fill().map(e => 'hex'))}
-                    />
-
-                }</caption>
-            <SimpleRen headsData={this.state.headsData} tableRule={this.props.tableRule}/>
+            <caption>{this.state.headsData.tableType === 'fixing' ||
+                <Button value="ADD" secondary
+                    onClick={() => this.props.addLine(Array(refer).fill().map(e => 'hex'))}
+                />
+            }</caption>
+            <SimpleRen headsData={this.state.headsData} tableRule={this.props.tableRule} />
             {console.log('istype', this.props.tableType)}
             {this.state.headsData.tableType === 'fixing' ? null :
-            <tbody>
-                {this.props.floatingData.map(ele => {
-                    let lid = 0;
-                    return <tr key={trid++}>
-                        {ele.map(
-                            t => {
-                                return <td key={lid++}><TextField style={{maxWidth:'12em'}}/></td>
-                            }
-                        )}
-                    </tr>
-                })}
-            </tbody>}
+                <tbody>
+                    {this.props.floatingData.map((ele, trid) =>
+                        <tr key={trid}>
+                            {ele.map(
+                                (t, lid) => <td key={lid}><TextField style={{ maxWidth: '12em' }} /></td>
+                            )}
+                        </tr>
+                    )}
+                </tbody>}
         </table>
     }
 }
