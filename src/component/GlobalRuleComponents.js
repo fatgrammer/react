@@ -7,7 +7,8 @@ import Paper from 'material-ui/Paper';
 import { List, ListItem } from 'material-ui/List';
 import ActionDeleteForever from 'material-ui/svg-icons/action/delete-forever';
 import { SlideFX } from './FX';
-import { RedX } from './Widget'
+import { RedX, Button } from './Widget'
+import $ from 'jquery'
 const buttonStyle = {
     marginRight: 20,
 };
@@ -21,6 +22,13 @@ const paperStyle = {
 
 
 export class GlobalRuleComponents extends React.Component {
+    componentWillMount() {
+        this.props.getRawHeads(this.props.tableName)
+        $.getJSON('http://192.168.1.249:20080/globalRule/' + this.props.tableName, (data) => {
+            console.log('init', data)
+            this.props.initCalcEle(data.expression)
+        })
+    }
     render() {
         return (
             <SlideFX>{
@@ -31,7 +39,15 @@ export class GlobalRuleComponents extends React.Component {
                             <caption style={{ fontSize: '2em' }}>Table Rule</caption>
                             <thead>
                                 <AfterTable tableList={this.props.tableList} addAfterTable={this.props.addAfterTable} />
-                                <AutoCal />
+                                <AutoCal
+                                    delCalcEle={this.props.delCalcEle}
+                                    fieldList={this.props.fieldList}
+                                    addRuleElement={this.props.addRuleElement}
+                                    calcRuleSeq={this.props.calcRuleSeq}
+                                    altCalcEle={this.props.altCalcEle}
+                                    saveCalcEle={this.props.saveCalcEle}
+                                    tableName={this.props.tableName}
+                                />
                             </thead>
                         </table>
                         <Option delAfterTable={this.props.delAfterTable} afterList={this.props.afterList} />
@@ -59,9 +75,9 @@ class AfterTable extends React.Component {
                     <SelectField value={this.state.value} onChange={this.handleChange}>
                         {this.props.tableList.map((ele, i) => <MenuItem value={ele} key={i} label={ele} primaryText={ele} />)}
                     </SelectField>
-                    <FloatingActionButton mini={true} secondary={true} style={buttonStyle} onClick={() => this.props.addAfterTable(this.state.value)} >
+                    <Button secondary value='+' onClick={() => this.props.addAfterTable(this.state.value)} >
                         <ContentAdd />
-                    </FloatingActionButton>
+                    </Button>
                 </td>
             </tr>
         )
@@ -75,12 +91,14 @@ class AutoCal extends React.Component {
         value: 1,
     };
     handleChange = (event, index, value) => this.setState({ value });
+
     render() {
+
         return (
             <tr>
                 <td>autoCal</td>
                 <td>
-                    <SelectField value={this.state.value} onChange={this.handleChange}>
+                    {/* <SelectField value={this.state.value} onChange={this.handleChange}>
                         <MenuItem value={1} label="字段1" primaryText="字段1" />
                         <MenuItem value={2} label="字段2" primaryText="字段2" />
                         <MenuItem value={3} label="字段3" primaryText="字段3" />
@@ -96,9 +114,69 @@ class AutoCal extends React.Component {
                     <FloatingActionButton mini={true} secondary={true} style={buttonStyle}>
                         <ContentAdd />
                     </FloatingActionButton>
+                    <br /> */}
+
+                    <Button value='FieldElement'
+                        onClick={() => this.props.addRuleElement('fieldElement')} />
+                    <Button value='Operator'
+                        onClick={() => this.props.addRuleElement('operator')} />
+                    {this.props.calcRuleSeq.map((ele, idx) =>
+                        ele.eleType === 'fieldElement' ?
+                            <FieldSelector
+                                calcRuleSeq={this.props.calcRuleSeq}
+                                altCalcEle={this.props.altCalcEle}
+                                delCalcEle={this.props.delCalcEle}
+                                key={ele.id} id={ele.id}
+                                fieldList={this.props.fieldList} /> :
+                            <OperatorSelector
+                                calcRuleSeq={this.props.calcRuleSeq}
+                                altCalcEle={this.props.altCalcEle}
+                                delCalcEle={this.props.delCalcEle}
+                                key={ele.id} id={ele.id} />
+                    )}
+                    <Button value='save'
+                        onClick={() => this.props.saveCalcEle(this.props.tableName)} primary />
                 </td>
             </tr>
         )
+    }
+}
+class FieldSelector extends React.Component {
+    state = {
+        value: this.props.calcRuleSeq.filter(ele => ele.id === this.props.id)[0]
+    }
+    handleChange = (event, index, value) => {
+        this.setState({ value })
+        this.props.altCalcEle(event.target.innerHTML, this.props.id)
+    };
+    render() {
+        const cEle = this.props.calcRuleSeq.filter(ele => ele.id === this.props.id)[0];
+        console.log('ahhhhh', cEle.element);
+        return <span><SelectField value={cEle.element} key='fieldElement' onChange={this.handleChange}>
+            {Object.values(this.props.fieldList).map((ele, lid) =>
+                <MenuItem key={lid} value={ele} label={ele} primaryText={ele} />
+            )}
+        </SelectField><Button onClick={() => this.props.delCalcEle(this.props.id)} value='del' secondary /></span>
+    }
+}
+class OperatorSelector extends React.Component {
+    state = {
+        value: 0
+    }
+    handleChange = (event, index, value) => {
+        this.setState({ value });
+
+        this.props.altCalcEle(event.target.innerHTML, this.props.id)
+    }
+    render() {
+        const cEle = this.props.calcRuleSeq.filter(ele => ele.id === this.props.id)[0];
+        return <span><SelectField value={cEle.element} key='operator' onChange={this.handleChange}>
+            <MenuItem value='+' label='+' primaryText='+' />
+            <MenuItem value='-' label='-' primaryText='-' />
+            <MenuItem value='*' label='*' primaryText='*' />
+            <MenuItem value='/' label='/' primaryText='/' />
+            <MenuItem value='=' label='=' primaryText='=' />
+        </SelectField><Button onClick={() => this.props.delCalcEle(this.props.id)} value='del' secondary /></span>
     }
 }
 /**

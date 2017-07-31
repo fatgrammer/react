@@ -1,6 +1,6 @@
 import { TableTrie } from '../custom_table/HeadProps'
 // import PropTypes from 'prop-types'
-import { globalRule } from './GlobalRuleReducer.js'
+import { globalRule,autoCalc } from './GlobalRuleReducer.js'
 import { tableInfo, rawData } from './DataAndInfo'
 import { dataAction, ruleTemp } from './DataEvents'
 import { constRef } from './ConstantReducer'
@@ -290,9 +290,8 @@ export const reducers = {
     GRuleShown,
     refBox,
     constRef,
-    fillData
-
-
+    fillData,
+    autoCalc
 }
 
 export const consTrie = (headPaks = []) => {

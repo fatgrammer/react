@@ -41,7 +41,7 @@ export class RuleBox extends React.Component {
         const refBox = data.map(dataPak => dataPak.refBox)
 
 
-        return <SlideFX>
+        return <SlideFX >
             {this.props.shown ? <Paper className="ruleBox" zDepth={3} rounded={true}>
                 <RedX onClick={this.props.closeRuleBox} />
                 <div key={key}>

@@ -43,7 +43,6 @@ export const rawData = (state = {}, action) => {
             const fieldList = action.data
             delete fieldList['fixHead']
             delete fieldList['tableType']
-            console.log('rawdata', fieldList)
             return {
                 ...state,
                 fieldList: fieldList || {}

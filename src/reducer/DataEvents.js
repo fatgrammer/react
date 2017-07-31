@@ -90,6 +90,11 @@ export const dataAction = (state = [], action) => {
                     data
                 })
             })
+        case 'POST_CALCRULE':
+            $.post("http://192.168.1.249:20080/globalRule/"+ action.tableName,action.data,(data)=>{
+                console.log('suc')
+            } )
+            return state
         case 'TEST':
             return state
         default:
