@@ -25,7 +25,6 @@ export class GlobalRuleComponents extends React.Component {
     componentWillMount() {
         this.props.getRawHeads(this.props.tableName)
         $.getJSON('http://192.168.1.249:20080/globalRule/' + this.props.tableName, (data) => {
-            console.log('init', data)
             this.props.initCalcEle(data.expression)
         })
     }
@@ -98,24 +97,6 @@ class AutoCal extends React.Component {
             <tr>
                 <td>autoCal</td>
                 <td>
-                    {/* <SelectField value={this.state.value} onChange={this.handleChange}>
-                        <MenuItem value={1} label="字段1" primaryText="字段1" />
-                        <MenuItem value={2} label="字段2" primaryText="字段2" />
-                        <MenuItem value={3} label="字段3" primaryText="字段3" />
-                        <MenuItem value={4} label="字段4" primaryText="字段4" />
-                    </SelectField>
-                    <span>=</span>
-                    <SelectField value={this.state.value} onChange={this.handleChange}>
-                        <MenuItem value={1} label="字段1" primaryText="字段1" />
-                        <MenuItem value={2} label="字段2" primaryText="字段2" />
-                        <MenuItem value={3} label="字段3" primaryText="字段3" />
-                        <MenuItem value={4} label="字段4" primaryText="字段4" />
-                    </SelectField>
-                    <FloatingActionButton mini={true} secondary={true} style={buttonStyle}>
-                        <ContentAdd />
-                    </FloatingActionButton>
-                    <br /> */}
-
                     <Button value='FieldElement'
                         onClick={() => this.props.addRuleElement('fieldElement')} />
                     <Button value='Operator'
@@ -142,20 +123,21 @@ class AutoCal extends React.Component {
     }
 }
 class FieldSelector extends React.Component {
-    state = {
-        value: this.props.calcRuleSeq.filter(ele => ele.id === this.props.id)[0]
-    }
+    // state = {
+    //     value: this.props.calcRuleSeq.filter(ele => ele.id === this.props.id)[0]
+    // }
     handleChange = (event, index, value) => {
-        this.setState({ value })
-        this.props.altCalcEle(event.target.innerHTML, this.props.id)
+        // this.setState({ value })
+        this.props.altCalcEle(value, this.props.id)
     };
     render() {
+        // console.log('flist', this.props.fieldList)
         const cEle = this.props.calcRuleSeq.filter(ele => ele.id === this.props.id)[0];
-        console.log('ahhhhh', cEle.element);
         return <span><SelectField value={cEle.element} key='fieldElement' onChange={this.handleChange}>
-            {Object.values(this.props.fieldList).map((ele, lid) =>
-                <MenuItem key={lid} value={ele} label={ele} primaryText={ele} />
-            )}
+            {Object.entries(this.props.fieldList).map(ele => {
+                {/* console.log('elemenet', ele) */ }
+                return <MenuItem key={ele[1]} value={ele[0]} label={ele[1]} primaryText={ele[1]} />
+            })}
         </SelectField><Button onClick={() => this.props.delCalcEle(this.props.id)} value='del' secondary /></span>
     }
 }

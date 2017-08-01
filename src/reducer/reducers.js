@@ -5,11 +5,11 @@ import { tableInfo, rawData } from './DataAndInfo'
 import { dataAction, ruleTemp } from './DataEvents'
 import { constRef } from './ConstantReducer'
 import { fillData } from './FillData'
+import {calcData} from './Calculator'
 let gTrieId = 0;
 const theadPaks = (state = [], action) => {
     switch (action.type) {
         case 'BUILD':
-            console.log('shit', action)
             const pData = consTrie(action.data)
             gTrieId = pData.length
             return pData.map(ele => {
@@ -35,7 +35,6 @@ const theadPaks = (state = [], action) => {
                 return theadPak(t, action)
             })
         case 'POP_HEAD':
-            console.log('phead ', action)
             return state.map(t => {
                 return theadPak(t, action)
             })
@@ -148,13 +147,10 @@ const dataRule = (state = [], action) => {
             const fields = action.field.split(',')
             return state.map(t => {
                 if (t.fieldId !== lid) {
-                    console.log('==', t.fieldId, 'd', lid)
                     return t
                 }
                 if (t.refBox.filter(ele => {
-                    console.log('ele', ele, 'com', [action.tableName, ...fields])
                     const eq = ele.equals([action.tableName, ...fields])
-                    console.log(eq)
                     return eq;
                 }).length) {
                     return t;
@@ -224,7 +220,6 @@ const popBox = (state = false, action) => {
 const ruleBox = (state = false, action) => {
     switch (action.type) {
         case 'SHOW_RULEBOX':
-            console.log('shiowwwww')
             return true;
         case 'POP_HEAD':
         case 'SHOW_GRULEBOX':
@@ -291,12 +286,12 @@ export const reducers = {
     refBox,
     constRef,
     fillData,
-    autoCalc
+    autoCalc,
+    calcData
 }
 
 export const consTrie = (headPaks = []) => {
     let data = []
-    console.log('headPak', headPaks)
 
     headPaks.forEach(headPak => {
         const entry = Object.entries(headPak)[0]

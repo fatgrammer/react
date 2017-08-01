@@ -15,7 +15,7 @@ export const tableInfo = (state = { tableType: 'floating', fixHeadShown: true },
         case 'TABLE_TYPE':
             return { ...state, tableType: action.tableType }
         case 'ALT_FIXHEAD':
-            const fixHead = state.fixHead //|| ['']
+            const fixHead = state.fixHead || ['']
             const tmp = [...fixHead.slice(0, action.id),
             action.text,
             ...fixHead.slice(action.id + 1)]

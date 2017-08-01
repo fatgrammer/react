@@ -5,7 +5,6 @@ export const fillData = (
     }, action) => {
     switch (action.type) {
         case 'ADD_FloatingData':
-            console.log('action', action.data)
             return {
                 ...state,
                 floatingData: [...state.floatingData, action.data]

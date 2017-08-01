@@ -33,12 +33,10 @@ export const autoCalc = (state = [], action) => {
         case 'DEL_CALCELE':
             return state.filter((ele, idx) => action.id !== ele.id)
         case 'ALT_CALCELE':
-            console.log('t.id', state, "  ", action.id)
             return state.map(t => {
                 if (t.id !== action.id) {
                     return t
                 }
-                console.log('alt', action.eleVal);
                 return {
                     ...t,
                     element: action.eleVal
@@ -46,7 +44,6 @@ export const autoCalc = (state = [], action) => {
             })
         case 'SAVE_CALCELE':
             const cData = compress(state)
-            console.log('cData', cData)
             if (!validate(cData)) {
                 return state;
             }
@@ -59,7 +56,11 @@ export const autoCalc = (state = [], action) => {
             })
             return state
         case 'INIT_CALCELE':
-        console.log(action.initData)
+            if (!action.initData){
+                fdid = 0;
+                return [];
+            }
+            fdid = action.initData.length + 1
             return action.initData;
         default:
             return state

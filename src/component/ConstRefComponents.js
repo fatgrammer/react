@@ -11,8 +11,6 @@ export class ConstRefBox extends React.Component {
         this.props.getCRefData(this.props.tableName)
     }
     render() {
-        console.log(this.props.fieldList)
-        console.log('refData', this.props.cRefData)
         const props = this.props
 
         return <div>

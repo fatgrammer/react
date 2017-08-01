@@ -12,7 +12,6 @@ export const dataAction = (state = [], action) => {
                     reference: compress(action.data)
                 })
             }
-            console.log(cData)
             $.post('http://192.168.1.249:20080/tableRule', cData, (res) => {
                 alert("Save Successfully")
             })
@@ -26,7 +25,6 @@ export const dataAction = (state = [], action) => {
             })
             return state
         case 'RESULT':
-            console.log(action.data.tableName.trim())
             if (!action.data.tableName.trim()) {
                 alert('Input tableName please')
                 return state
@@ -38,7 +36,6 @@ export const dataAction = (state = [], action) => {
         case 'TABLE_HEADS':
             $.getJSON(action.url + action.tableName, (res) => {
 
-                console.log('length.....', res)
                 const fixHead = res['fixHead']
                 if (!fixHead){
                     store.dispatch({
@@ -67,6 +64,7 @@ export const dataAction = (state = [], action) => {
             })
             return state
         case 'GET_HEADS':
+        console.log('getHeaads')
             $.getJSON('http://192.168.1.249:20080/tableTemp/' + action.tableName, (data) => {
                 store.dispatch({
                     type: 'RAW_HEADS',
@@ -117,7 +115,6 @@ export const ruleTemp = [{
 ]
 
 function compress(data = []) {
-    console.log('before compress', data)
     return data.map(ele => {
         return ele.select[0] === 'placeHolder' ?
             {
