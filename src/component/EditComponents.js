@@ -27,13 +27,13 @@ export class EditBox extends React.Component {
                             actionId={headPak.id}
                             addButton={
                                 head.height < 2 ?
-                                    <span><Button primary id='nextLevel' value='增加下一级单元'
+                                    <span><Button primary id='nextLevel' value='Add Subcell'
                                         onClick={
                                             () => props.onLvlAddClick(head.prefix, headPak.id, head.head)
                                         }
                                     /></span> : null}
                             delButton={head.height > 0 ?
-                                <Button secondary id='delButton' value='删除' onClick={
+                                <Button secondary id='delButton' value='Delete' onClick={
                                     () => props.onDelLvl(headPak.id, head.prefix)
                                 } /> : <Button secondary id='delPakButton' value='DELPAK' onClick={
                                     () => props.onDelPak(headPak.id)
@@ -46,7 +46,7 @@ export class EditBox extends React.Component {
                         >
                             <span style={{
                                 float: 'left'
-                            }} className='popText'>表单元名称{Array(head.height + 2).join('--')}</span>
+                            }} className='popText'>Cell Name{Array(head.height + 2).join('--')}</span>
                         </Li>
                     })
                 })
@@ -55,7 +55,7 @@ export class EditBox extends React.Component {
             {this.props.display ?
                 <div className='popHead' id='popHead'>
                     <RedX onClick={props.onCloseEdit} />
-                    <span style={{ marginLeft: '40%' }} className='popText'>表单元属性</span>
+                    <span style={{ marginLeft: '40%' }} className='popText'>Cell Properties</span>
                     <ul>
                         {popContent}
                     </ul>

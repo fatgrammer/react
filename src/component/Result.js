@@ -31,7 +31,7 @@ export class Result extends React.Component {
         delete list['fixHeadShown']
         return <div>
             <hr />
-            <Button id='result' primary value='完成' onClick={
+            <Button id='result' primary value='Checkout' onClick={
                 () => props.onResultClick('http://192.168.1.249:20080/customTable',
                     list)
             } />
@@ -41,7 +41,7 @@ export class Result extends React.Component {
             <hr />
             {JSON.stringify(list)}
             <br />
-            <Button primary id='test' value='test???' onClick={
+            <Button primary id='test' value='Debug' onClick={
                 () => props.TEST(
                     'http://192.168.1.249:20080/tableTemp/',
                     this.props.head.tableName)

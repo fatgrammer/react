@@ -5,7 +5,7 @@ import { tableInfo, rawData } from './DataAndInfo'
 import { dataAction, ruleTemp } from './DataEvents'
 import { constRef } from './ConstantReducer'
 import { fillData } from './FillData'
-import {calcData} from './Calculator'
+// import {calcData} from './Calculator'
 let gTrieId = 0;
 const theadPaks = (state = [], action) => {
     switch (action.type) {
@@ -286,8 +286,8 @@ export const reducers = {
     refBox,
     constRef,
     fillData,
-    autoCalc,
-    calcData
+    autoCalc
+    // calcData
 }
 
 export const consTrie = (headPaks = []) => {

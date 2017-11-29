@@ -35,8 +35,8 @@ export class Preview extends React.Component {
                         <FixHeadSwitch ON={this.props.fixHeadShown} showFixHead={this.props.showFixHead} /> : null
                 }
                 <br />
-                <Button onClick={() => props.onAddClick(mainId++)} secondary id='addButton' value='新增单元' />
-                <Button onClick={props.showGRule} primary id='addButton' value='全局规则' />
+                <Button onClick={() => props.onAddClick(mainId++)} secondary id='addButton' value='New Cell' />
+                <Button onClick={props.showGRule} primary id='addButton' value='Global Control' />
                 <br />
 
                 <table>
