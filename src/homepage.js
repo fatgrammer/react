@@ -5,6 +5,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
+import { Link } from 'react-router-dom'
 
 import {
   Table,
@@ -16,7 +17,8 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 const centralize = { textAlign: 'center' }
-const URL = "http://192.168.1.102:8000/"
+export const URL = "http://192.168.1.102:8000/"
+
 export class Homepage extends React.Component {
   constructor(props) {
     super(props)
@@ -85,7 +87,7 @@ export class Homepage extends React.Component {
       url: URL + "list/" + word,
       type: "POST",
       success: (res) => {
-        this.fetchWithPage(this.state.cPage-1)
+        this.fetchWithPage(this.state.cPage - 1)
       }
     })
   }
@@ -93,7 +95,7 @@ export class Homepage extends React.Component {
     const pNum = e.target.innerText
     this.fetchWithPage(pNum - 1)
     this.setState({
-      cPage : pNum
+      cPage: pNum
     })
   }
 
@@ -102,7 +104,11 @@ export class Homepage extends React.Component {
     return (
       <MuiThemeProvider>
         <div style={centralize}>
-          <h1 name="Top">Word Count ... {this.state.count}</h1>
+          <div name="Top" style={{ 'fontSize': '3em' }}>Word Count ... {this.state.count}</div>
+          <div ><Link style={{ 'color': 'red', 'position': 'absolute', 'marginLeft': '8em', 'fontSize': '2em' }}
+            to='/flashing' >
+            Flashing
+          </Link></div>
           <a
             style={{
               position: "fixed", left: "90%", top: "80%", cursor: "pointer",
@@ -115,8 +121,8 @@ export class Homepage extends React.Component {
             onKeyPress={this.handleKeyPress} />
           <br />
           {Array(this.state.pageCount).fill().map((_, i) => {
-           
-            return  <FloatingActionButton secondary={this.state.cPage-1 === i} key={i} mini={true} onClick={this.clickNum}>{i + 1}</FloatingActionButton>
+
+            return <FloatingActionButton secondary={this.state.cPage - 1 === i} key={i} mini={true} onClick={this.clickNum}>{i + 1}</FloatingActionButton>
           }
           )}
           <br />
